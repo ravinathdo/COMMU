@@ -8,7 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Template</title>
+        <title>Commu | Admin </title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -57,7 +57,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
                     <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu.php';?>
+                        <?php include './_menu.php'; ?>
                     </nav>
 
                 </div>
@@ -71,15 +71,83 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         </div>
 
 
-
+        <h3>Inventory</h3>
+        <hr>
         <div class="row">
-            <div class="col-md-8">.col-md-8</div>
-            <div class="col-md-4">.col-md-4</div>
+            <div class="col-md-2"></div>
+
+            <form>
+                <div class="col-md-6">
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Event Title</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Item </label>
+                        <select class="form-control" >
+                            <option>--select--</option>
+                        </select> 
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">QTY</label>
+                        <input type="text"class="form-control" />
+                    </div>
+                   
+                    <!--                    <div class="form-group">
+                                            <label for="exampleInputFile">Photo</label>
+                                            <input type="file" id="exampleInputFile">
+                                            <p class="help-block">Related photo upload here.</p>
+                                        </div>-->
+
+                 
+
+                </div>
+                <div class="col-md-4">
+                     <div class="form-group">
+                        <label for="exampleInputPassword1">From Date</label>
+                        <input type="date" class="form-control" id="exampleInputEmail1" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">To Date</label>
+                        <input type="date" class="form-control" id="exampleInputEmail1" >
+                    </div>
+                       <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
         </div>
 
 
 
-
+        <table id="example" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Reserve ID</th>
+                    <th>Event Name</th>
+                    <th>Item Requested</th>
+                    <th>created Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Reserve ID</th>
+                    <th>Event Name</th>
+                    <th>Item Requested</th>
+                    <th>created Date</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr>
+                    <td>3</td>
+                    <td>Funaral</td>
+                    <td>Hut [4]</td>
+                    <td>10-10-2017</td>
+                    <td><button type="button" class="btn btn-warning">Deactive</button></td>
+                </tr>
+            </tbody>
+        </table>
 
 
 
@@ -130,7 +198,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 </div>
                 <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Funding</a></h2>
+                    <h2><a href="index.html">Community</a></h2>
                     <div class="agileits-social">
                         <ul>
                             <li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -352,5 +420,14 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             });
         </script>
         <!-- //here ends scrolling icon -->
+
+
+        <!--data table-->
+        <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#example').DataTable();
+            });
+        </script>
     </body>
 </html>

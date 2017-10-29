@@ -8,7 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Template</title>
+        <title>Commu | Admin </title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -36,7 +36,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
             </div>
             <div class="w3layouts_header_left">
-                <?php include './_top.php'; ?>
+                 <?php include './_top.php'; ?>
             </div>
             <div class="clearfix"> </div>
         </div>
@@ -57,7 +57,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
                     <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu.php';?>
+                        <?php include './_menu.php'; ?>
                     </nav>
 
                 </div>
@@ -71,18 +71,53 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         </div>
 
 
+        <h3>Inventory</h3>
+        <hr>
+        
+        
+     
+        
+        
+        
 
-        <div class="row">
-            <div class="col-md-8">.col-md-8</div>
-            <div class="col-md-4">.col-md-4</div>
+
+     
+
+
+ <div class="row">
+            <div class="col-md-6">   <div id='calendar'></div></div>
+            <div class="col-md-6">
+                   <table id="example" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Reserve ID</th>
+                    <th>Event Name</th>
+                    <th>Item Requested</th>
+                    <th>created Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Reserve ID</th>
+                    <th>Event Name</th>
+                    <th>Item Requested</th>
+                    <th>created Date</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr>
+                    <td>3</td>
+                    <td>Funaral</td>
+                    <td>Hut [4]</td>
+                    <td>10-10-2017</td>
+                    <td><button type="button" class="btn btn-warning">Remove</button></td>
+                </tr>
+            </tbody>
+        </table>
+            </div>
         </div>
-
-
-
-
-
-
-
 
 
         <!-- footer -->
@@ -130,7 +165,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 </div>
                 <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Funding</a></h2>
+                    <h2><a href="index.html">Community</a></h2>
                     <div class="agileits-social">
                         <ul>
                             <li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -352,5 +387,88 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             });
         </script>
         <!-- //here ends scrolling icon -->
+
+
+        <!--data table-->
+        <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#example').DataTable();
+            });
+        </script>
+        
+        <!--full calander-->
+        <script src="js/moment.min.js" type="text/javascript"></script>
+        <script src="js/fullcalendar.js" type="text/javascript"></script>
+        <script>
+
+	$(document).ready(function() {
+
+		$('#calendar').fullCalendar({
+			defaultDate: '2017-10-12',
+			editable: true,
+			eventLimit: true, // allow "more" link when too many events
+			events: [
+				{
+					title: 'All Day Event',
+					start: '2017-10-01'
+				},
+				{
+					title: 'Long Event',
+					start: '2017-10-07',
+					end: '2017-10-10'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: '2017-10-09T16:00:00'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: '2017-10-16T16:00:00'
+				},
+				{
+					title: 'Conference',
+					start: '2017-10-11',
+					end: '2017-10-13'
+				},
+				{
+					title: 'Meeting',
+					start: '2017-10-12T10:30:00',
+					end: '2017-10-12T12:30:00'
+				},
+				{
+					title: 'Lunch',
+					start: '2017-10-12T12:00:00'
+				},
+				{
+					title: 'Meeting',
+					start: '2017-10-12T14:30:00'
+				},
+				{
+					title: 'Happy Hour',
+					start: '2017-10-12T17:30:00'
+				},
+				{
+					title: 'Dinner',
+					start: '2017-10-12T20:00:00'
+				},
+				{
+					title: 'Birthday Party',
+					start: '2017-10-13T07:00:00'
+				},
+				{
+					title: 'Click for Google',
+					url: 'http://google.com/',
+					start: '2017-10-28'
+				}
+			]
+		});
+		
+	});
+
+</script>
+        
     </body>
 </html>

@@ -4,11 +4,13 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php session_start();?>
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Template</title>
+        <title>Commu</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -22,6 +24,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
     </head>	
     <body>
+        
         <!-- banner -->
         <div class="header">
 
@@ -57,24 +60,23 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
                     <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu.php';?>
+                        <?php include './_menu.php'; ?>
                     </nav>
 
                 </div>
-                <div class="w3_agile_search">
-                    <form action="#" method="post">
-                        <input type="search" name="Search" placeholder="Search Keywords..." required="" />
-                        <input type="submit" value="Search">
-                    </form>
-                </div>
+                
             </nav>
         </div>
 
 
 
+
+
+
         <div class="row">
-            <div class="col-md-8">.col-md-8</div>
-            <div class="col-md-4">.col-md-4</div>
+            <div class="col-md-3">.col-md-8</div>
+            <div class="col-md-5">Post</div>
+            <div class="col-md-4">News</div>
         </div>
 
 
@@ -130,7 +132,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 </div>
                 <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Funding</a></h2>
+                    <h2><a href="index.html">Community</a></h2>
                     <div class="agileits-social">
                         <ul>
                             <li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -164,11 +166,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <div class="signin-form profile">
                             <h3 class="agileinfo_sign">Sign In</h3>	
                             <div class="login-form">
-                                <form action="#" method="post">
-                                    <input type="email" name="email" placeholder="E-mail" required="">
+                                <form action="index.php" method="post">
+                                    <input type="text" name="username" placeholder="Username" required="">
                                     <input type="password" name="password" placeholder="Password" required="">
                                     <div class="tp">
-                                        <input type="submit" value="Sign In">
+                                        <input type="submit" name="btnLogin" value="Sign In">
                                     </div>
                                 </form>
                             </div>

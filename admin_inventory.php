@@ -8,7 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Template</title>
+        <title>Commu | Admin </title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -36,7 +36,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
             </div>
             <div class="w3layouts_header_left">
-                <?php include './_top.php'; ?>
+                 <?php include './_top.php'; ?>
             </div>
             <div class="clearfix"> </div>
         </div>
@@ -57,7 +57,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
                     <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu.php';?>
+                        <?php include './_menu.php'; ?>
                     </nav>
 
                 </div>
@@ -71,15 +71,80 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         </div>
 
 
-
+        <h3>Manage Post</h3>
+        <hr>
         <div class="row">
-            <div class="col-md-8">.col-md-8</div>
+            <div class="col-md-2"></div>
+            <div class="col-md-6">
+
+                <form>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Post Title</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Description</label>
+                        <textarea class="form-control" ></textarea>
+                    </div>
+<!--                    <div class="form-group">
+                        <label for="exampleInputFile">Photo</label>
+                        <input type="file" id="exampleInputFile">
+                        <p class="help-block">Related photo upload here.</p>
+                    </div>-->
+                  
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                
+            </div>
             <div class="col-md-4">.col-md-4</div>
         </div>
 
 
 
-
+<table id="example" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Post Title</th>
+                    <th>Likes</th>
+                    <th>Posted Date</th>
+                    <th>Posted Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                   <th>News Title</th>
+                    <th>Likes</th>
+                    <th>Posted Date</th>
+                    <th>Posted Date</th>
+                    <th>Status</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr>
+                    <td>post 11</td>
+                    <td><i class="fa fa-thumbs-down"></i> 11  <i class="fa fa-thumbs-up"></i> 3</td>
+                    <td>Created By</td>
+                    <td>Approved By</td>
+                    <td><button type="button" class="btn btn-warning">Deactive</button></td>
+                  
+                </tr>
+                <tr>
+                   <td>Post 11</td>
+                   <td><i class="fa fa-thumbs-down"></i> 11  <i class="fa fa-thumbs-up"></i> 3</td>
+                    <td>Created By</td>
+                    <td>Approved By</td>
+                    <td><button type="button" class="btn btn-success">Active</button></td>
+                </tr>
+                <tr>
+                   <td>post 11</td>
+                   <td><i class="fa fa-thumbs-down"></i> 11  <i class="fa fa-thumbs-up"></i> 3</td>
+                    <td>Created By</td>
+                    <td>Approved By</td>
+                    <td><button type="button" class="btn btn-danger">Closed</button></td>
+                </tr>
+            </tbody>
+        </table>
 
 
 
@@ -130,7 +195,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 </div>
                 <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Funding</a></h2>
+                    <h2><a href="index.html">Community</a></h2>
                     <div class="agileits-social">
                         <ul>
                             <li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -352,5 +417,14 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             });
         </script>
         <!-- //here ends scrolling icon -->
+        
+        
+        <!--data table-->
+        <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
+          <script type="text/javascript">
+            $(document).ready(function () {
+                $('#example').DataTable();
+            });
+        </script>
     </body>
 </html>

@@ -4,6 +4,7 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
+<?php session_start();?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -35,11 +36,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
             </div>
             <div class="w3layouts_header_left">
-                <ul>
-                    <li><a href="#" data-toggle="modal" data-target="#myModal2">Community Management System</a></li>
-                    <li><a href="#" data-toggle="modal" data-target="#myModal2"><i class="fa fa-user" aria-hidden="true"></i> Sign in</a></li>
-                    <li><a href="#" data-toggle="modal" data-target="#myModal3"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Sign up</a></li>
-                </ul>
+              <?php include './_top.php'; ?>
             </div>
             <div class="clearfix"> </div>
         </div>
@@ -60,7 +57,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
                     <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu_manager.php';?>
+                        <?php include './_menu.php';?>
                     </nav>
 
                 </div>

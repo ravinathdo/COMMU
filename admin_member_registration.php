@@ -8,7 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Template</title>
+        <title>Commu | Member Reg</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -36,7 +36,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
             </div>
             <div class="w3layouts_header_left">
-                <?php include './_top.php'; ?>
+                 <?php include './_top.php'; ?>
             </div>
             <div class="clearfix"> </div>
         </div>
@@ -57,7 +57,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
                     <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu.php';?>
+                        <?php include './_menu.php'; ?>
                     </nav>
 
                 </div>
@@ -71,17 +71,120 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         </div>
 
 
+        <h3>Member Registration</h3>
+        <hr>
 
         <div class="row">
-            <div class="col-md-8">.col-md-8</div>
-            <div class="col-md-4">.col-md-4</div>
+            <div class="col-md-2">
+
+
+            </div>  
+            <form >
+                <div class="col-md-5">
+
+
+
+                    <div class="form-group">
+                        <label for="exampleInputName2">First Name</label>
+                        <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">Last Name</label>
+                        <input type="text" class="form-control" id="exampleInputEmail2" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">NIC</label>
+                        <input type="text" class="form-control" id="exampleInputEmail2" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">Username</label>
+                        <input type="text" class="form-control" id="exampleInputEmail2" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">Current Address</label>
+                        <textarea  class="form-control"> </textarea>
+
+                    </div>
+
+
+
+                </div>
+
+                <div class="col-md-5">
+
+                    <div class="form-group">
+                        <label for="exampleInputName2">Experties</label>
+                        <select class="form-control"> 
+                            <option>--select--</option>
+                            <option>Software Engineer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">Permenant Address</label>
+                        <textarea  class="form-control"> </textarea>
+
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+
+                </div>
+            </form>
         </div>
 
 
 
 
 
+        <hr>
 
+        <table id="example" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>NIC</th>
+                    <th>Age</th>
+                    <th>permanent Address</th>
+                    <th>Status</th>
+                    <th>Created By</th>
+                    <th>Approved By</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>NIC</th>
+                    <th>Age</th>
+                    <th>permanent Address</th>
+                    <th>Status</th>
+                    <th>Created By</th>
+                    <th>Approved By</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr>
+                    <td>Tiger Nixon</td>
+                    <td>System Architect</td>
+                    <td>Edinburgh</td>
+                    <td>61</td>
+                    <td>2011/04/25</td>
+                    <td><button type="button" class="btn btn-warning">Pending Approval</button></td>
+                    <td>Created By</td>
+                    <td>Approved By</td>
+                </tr>
+                <tr>
+                    <td>Garrett Winters</td>
+                    <td>Accountant</td>
+                    <td>Tokyo</td>
+                    <td>63</td>
+                    <td>2011/07/25</td>
+                    <td><button type="button" class="btn btn-success">Approved</button></td>
+                    <td>Created By</td>
+                    <td>Approved By</td>
+                </tr>
+            </tbody>
+        </table>
 
 
 
@@ -130,7 +233,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 </div>
                 <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Funding</a></h2>
+                    <h2><a href="index.html">Community</a></h2>
                     <div class="agileits-social">
                         <ul>
                             <li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -232,11 +335,19 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         <!-- //Counter required files -->
 
 
-
+        <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
         <script src="js/mainScript.js"></script>
         <script src="js/rgbSlide.min.js"></script>
         <!-- carousal -->
         <script src="js/slick.js" type="text/javascript" charset="utf-8"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#example').DataTable();
+            });
+        </script>
+
+
         <script type="text/javascript">
             $(document).on('ready', function () {
                 $(".center").slick({

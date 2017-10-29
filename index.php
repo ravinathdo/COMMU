@@ -8,7 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Template</title>
+        <title>Commu</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -22,6 +22,21 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
     </head>	
     <body>
+             <?php
+        include './model/UserModel.php';
+        if (isset($_POST['btnLogin'])) {
+
+            $flag = doLogin();
+            
+            if ($flag) {
+               // echo 'User Found';
+               header('Location:home.php');
+            }else{
+                
+                echo '<p class="bg-danger">Invalid Username or Password</p>';
+            }
+        }
+        ?>
         <!-- banner -->
         <div class="header">
 
@@ -36,7 +51,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
             </div>
             <div class="w3layouts_header_left">
-                <?php include './_top.php'; ?>
+                <ul>
+                    <li><a href="#" data-toggle="modal" data-target="#myModal2">Community Management System</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#myModal2"><i class="fa fa-user" aria-hidden="true"></i> Sign in</a></li>
+                    <!--<li><a href="#" data-toggle="modal" data-target="#myModal3"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Sign Up </a></li>-->
+                </ul>
             </div>
             <div class="clearfix"> </div>
         </div>
@@ -57,7 +76,20 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
                     <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu.php';?>
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="index.php"><span data-hover="Home">Home</span></a></li>
+                            <li><a href="#"><span data-hover="About Us">About Us</span></a></li>
+                            <li><a href="#"><span data-hover="Events">Events</span></a></li>
+                            <li><a href="#"><span data-hover="Events">News</span></a></li>
+                            <!--                            <li class="dropdown">
+                                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span data-hover="Short Codes">Short Codes</span> <b class="caret"></b></a>
+                                                            <ul class="dropdown-menu agile_short_dropdown">
+                                                                <li><a href="icons.html">Web Icons</a></li>
+                                                                <li><a href="typography.html">Typography</a></li>
+                                                            </ul>
+                                                        </li>-->
+                            <li><a href="#"><span data-hover="Mail Us">Mail Us</span></a></li>
+                        </ul>
                     </nav>
 
                 </div>
@@ -69,6 +101,50 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
             </nav>
         </div>
+        
+        
+        
+        <div class="header_mid">
+		<div class="w3layouts_header_mid">
+			<ul>
+				<li>
+					<div class="header_contact_details_agile"><i class="fa fa-envelope-o" aria-hidden="true"></i>
+						<div class="w3l_header_contact_details_agile">
+							 <div class="header-contact-detail-title">Send us a Message</div> 
+							<a href="mailto:info@example.com">info@example.com</a>
+						</div>
+				   </div>
+			    </li>
+				<li>
+					<div class="header_contact_details_agile"><i class="fa fa-phone" aria-hidden="true"></i>
+						<div class="w3l_header_contact_details_agile">
+							 <div class="header-contact-detail-title">Give us a Call</div> 
+							<a class="w3l_header_contact_details_agile-info_inner"> 919-993-1000 </a>
+						</div>
+				   </div>
+			    </li>
+				<li>
+					<div class="header_contact_details_agile"><i class="fa fa-clock-o" aria-hidden="true"></i>
+						<div class="w3l_header_contact_details_agile">
+							 <div class="header-contact-detail-title">Opening Hours</div> 
+							<a class="w3l_header_contact_details_agile-info_inner">Mon - Sat: 7:00 - 18:00</a>
+						</div>
+				   </div>
+			    </li>
+				<li>
+					<div class="header_contact_details_agile"><i class="fa fa-map-marker" aria-hidden="true"></i>
+						<div class="w3l_header_contact_details_agile">
+							 <div class="header-contact-detail-title">3007 Sarah Drive</div> 
+								<a class="w3l_header_contact_details_agile-info_inner">Sri Lanka, LA 70538 </a>
+						</div>
+				   </div>
+			    </li>
+			</ul>
+		</div>
+	</div>
+
+
+   
 
 
 
@@ -130,7 +206,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 </div>
                 <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Funding</a></h2>
+                    <h2><a href="index.html">Community</a></h2>
                     <div class="agileits-social">
                         <ul>
                             <li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -164,11 +240,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <div class="signin-form profile">
                             <h3 class="agileinfo_sign">Sign In</h3>	
                             <div class="login-form">
-                                <form action="#" method="post">
-                                    <input type="email" name="email" placeholder="E-mail" required="">
+                                <form action="index.php" method="post">
+                                    <input type="text" name="username" placeholder="Username" required="">
                                     <input type="password" name="password" placeholder="Password" required="">
                                     <div class="tp">
-                                        <input type="submit" value="Sign In">
+                                        <input type="submit" name="btnLogin" value="Sign In">
                                     </div>
                                 </form>
                             </div>
