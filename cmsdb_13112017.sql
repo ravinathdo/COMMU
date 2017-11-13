@@ -31,9 +31,11 @@ CREATE TABLE `cms_election` (
   PRIMARY KEY (`id`),
   KEY `FK_cms_election_user` (`usercreated`),
   CONSTRAINT `FK_cms_election_user` FOREIGN KEY (`usercreated`) REFERENCES `cms_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Data for the table `cms_election` */
+
+insert  into `cms_election`(`id`,`electiontitle`,`startdatetime`,`enddatetime`,`status`,`usercreated`,`datecreated`) values (1,'new precident 2017',NULL,NULL,NULL,NULL,'2017-11-05 14:26:53');
 
 /*Table structure for table `cms_election_vote` */
 
@@ -49,9 +51,11 @@ CREATE TABLE `cms_election_vote` (
   KEY `FK_cms_election_vote_member` (`memberid`),
   CONSTRAINT `FK_cms_election_vote_election` FOREIGN KEY (`electionid`) REFERENCES `cms_election` (`id`),
   CONSTRAINT `FK_cms_election_vote_member` FOREIGN KEY (`memberid`) REFERENCES `cms_member` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `cms_election_vote` */
+
+insert  into `cms_election_vote`(`id`,`electionid`,`memberid`,`vote`) values (1,1,2,5),(2,1,3,10);
 
 /*Table structure for table `cms_expertise` */
 
@@ -126,7 +130,7 @@ CREATE TABLE `cms_member` (
 
 /*Data for the table `cms_member` */
 
-insert  into `cms_member`(`id`,`firstname`,`lastname`,`nic`,`username`,`email`,`currentaddress`,`experticeid`,`permanentaddress`,`authstatus`,`datecreated`,`autorizeby`) values (1,'Thisara','Perera','8877887788V','admin','thisara@gmai',NULL,0,'Kadawatha','Authorized','2017-10-28 09:23:00',1),(2,'Gayan','Fernando','8788778878V','mem','gaya@gmail.com','cusrret,colombo',1,'gampaha','Authorized','2017-10-28 19:34:58',1),(3,'Kamala','Mathu','8877665566V','manager','manager@gmail','manager,gampaha',1,'colombo','Authorized','2017-10-28 19:37:45',1);
+insert  into `cms_member`(`id`,`firstname`,`lastname`,`nic`,`username`,`email`,`currentaddress`,`experticeid`,`permanentaddress`,`authstatus`,`datecreated`,`autorizeby`) values (1,'Thisara','Perera','8877887788V','admin','thisara@gmai',NULL,0,'Kadawatha','Authorized','2017-10-28 21:53:00',1),(2,'Gayan','Fernando','8788778878V','mem','gaya@gmail.com','cusrret,colombo',1,'gampaha','Authorized','2017-10-29 08:04:58',1),(3,'Kamala','Mathu','8877665566V','manager','manager@gmail','manager,gampaha',1,'colombo','Authorized','2017-10-29 08:07:45',1);
 
 /*Table structure for table `cms_news` */
 
@@ -201,7 +205,7 @@ CREATE TABLE `cms_user` (
 
 /*Data for the table `cms_user` */
 
-insert  into `cms_user`(`id`,`username`,`password`,`role`,`datecreated`,`status`,`member_id`) values (1,'admin','*667F407DE7C6AD07358FA38DAED7828A72014B4E','ADMIN','2017-10-28 09:33:51','ACT',1),(2,'mem','*667F407DE7C6AD07358FA38DAED7828A72014B4E','MEMBER','2017-10-28 19:35:25','ACT',2),(3,'manager','*667F407DE7C6AD07358FA38DAED7828A72014B4E','MANAGER','2017-10-28 19:36:10','ACT',3);
+insert  into `cms_user`(`id`,`username`,`password`,`role`,`datecreated`,`status`,`member_id`) values (1,'admin','*667F407DE7C6AD07358FA38DAED7828A72014B4E','ADMIN','2017-10-28 22:03:51','ACT',1),(2,'mem','*667F407DE7C6AD07358FA38DAED7828A72014B4E','MEMBER','2017-10-29 08:05:25','ACT',2),(3,'manager','*667F407DE7C6AD07358FA38DAED7828A72014B4E','MANAGER','2017-10-29 08:06:10','ACT',3);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
