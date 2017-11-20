@@ -4,7 +4,7 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php session_start();?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -36,7 +36,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
             </div>
             <div class="w3layouts_header_left">
-                 <?php include './_top.php'; ?>
+                <?php include './_top.php'; ?>
             </div>
             <div class="clearfix"> </div>
         </div>
@@ -79,59 +79,116 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 
             </div>  
-            <form >
+            <form action="admin_member_registration.php" method="post">
                 <div class="col-md-5">
 
 
 
                     <div class="form-group">
                         <label for="exampleInputName2">First Name</label>
-                        <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+                        <input type="text" name="firstname" class="form-control" id="exampleInputName2" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail2">Last Name</label>
-                        <input type="text" class="form-control" id="exampleInputEmail2" placeholder="">
+                        <input type="text" name="lastname" class="form-control" id="exampleInputEmail2" placeholder="">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail2">NIC</label>
-                        <input type="text" class="form-control" id="exampleInputEmail2" placeholder="">
+                        <input type="text" name="nic" class="form-control" id="exampleInputEmail2" placeholder="">
                     </div>
+
                     <div class="form-group">
-                        <label for="exampleInputEmail2">Username</label>
-                        <input type="text" class="form-control" id="exampleInputEmail2" placeholder="">
+                        <label for="exampleInputEmail2">Email</label>
+                        <input type="text" name="email" class="form-control" id="exampleInputEmail2" placeholder="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">Current Address</label>
+                        <textarea  name="currentaddress" class="form-control"> </textarea>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail2">Current Address</label>
-                        <textarea  class="form-control"> </textarea>
-
+                        <textarea  name="permanentaddress" class="form-control"> </textarea>
                     </div>
-
-
 
                 </div>
 
                 <div class="col-md-5">
 
                     <div class="form-group">
-                        <label for="exampleInputName2">Experties</label>
-                        <select class="form-control"> 
+                        <label for="exampleInputName2">Expert In</label>
+                        <select name="experticeid" class="form-control"> 
                             <option>--select--</option>
                             <option>Software Engineer</option>
                         </select>
                     </div>
-
                     <div class="form-group">
-                        <label for="exampleInputEmail2">Permenant Address</label>
-                        <textarea  class="form-control"> </textarea>
-
+                        <label for="exampleInputName2">User Role </label>
+                        <select name="role" class="form-control"> 
+                            <option>--select--</option>
+                            <option value="MEMBER">MEMBER</option>
+                            <option value="MANAGER">MANAGER</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Register</button>
+
+
+                    <button type="submit" name="btnReg" class="btn btn-primary">Register</button>
 
                 </div>
             </form>
+
+            <?php
+            include './model/DB.php';
+
+            if (isset($_POST['btnReg'])) {
+
+                $sql = " INSERT INTO `cmsdb`.`cms_member`
+            (`firstname`,
+             `lastname`,
+             `nic`,
+             `email`,
+             `currentaddress`,
+             `experticeid`,
+             `permanentaddress`,
+             `authstatus`,
+             `role`,
+             `usercreated`)
+VALUES ('" . $_POST['firstname'] . "',
+        '" . $_POST['lastname'] . "',
+        '" . $_POST['nic'] . "',
+        '" . $_POST['email'] . "',
+        '" . $_POST['currentaddress'] . "',
+        '" . $_POST['experticeid'] . "',
+        '" . $_POST['permanentaddress'] . "',
+        'Authorized',
+        '" . $_POST['role'] . "',
+        '" . $_SESSION['ssn_user']['id'] . "'); ";
+
+
+                $regNo = setData($sql);
+                $username = 'MEM' . $regNo;
+                $sqlUpdate = "UPDATE cms_member SET username = '$username' WHERE id = " . $regNo;
+                setUpdate($sqlUpdate);
+
+                //new user creted
+
+                $sqlUsr = " INSERT INTO `cmsdb`.`cms_user`
+            (`username`,
+             `password`,
+             `role`,
+             `status`,
+             `member_id`)
+VALUES ( '$username',
+        PASSWORD('$username'),
+        '" . $_POST['role'] . "',
+        'ACT',
+        '$regNo'); ";
+                
+                setData($sqlUsr);
+            }
+            ?>
         </div>
-
-
 
 
 
@@ -140,11 +197,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         <table id="example" class="display" cellspacing="0" width="100%">
             <thead>
                 <tr>
+                    <th>Member No</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>NIC</th>
-                    <th>Age</th>
-                    <th>permanent Address</th>
                     <th>Status</th>
                     <th>Created By</th>
                     <th>Approved By</th>
@@ -152,11 +208,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             </thead>
             <tfoot>
                 <tr>
+                    <th>Member No</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>NIC</th>
-                    <th>Age</th>
-                    <th>permanent Address</th>
                     <th>Status</th>
                     <th>Created By</th>
                     <th>Approved By</th>
@@ -171,18 +226,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     <td>2011/04/25</td>
                     <td><button type="button" class="btn btn-warning">Pending Approval</button></td>
                     <td>Created By</td>
-                    <td>Approved By</td>
                 </tr>
-                <tr>
-                    <td>Garrett Winters</td>
-                    <td>Accountant</td>
-                    <td>Tokyo</td>
-                    <td>63</td>
-                    <td>2011/07/25</td>
-                    <td><button type="button" class="btn btn-success">Approved</button></td>
-                    <td>Created By</td>
-                    <td>Approved By</td>
-                </tr>
+
             </tbody>
         </table>
 
