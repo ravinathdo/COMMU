@@ -8,7 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Admin </title>
+        <title>Commu | Template</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -20,8 +20,17 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
         <?php include_once './basecss.php'; ?>
 
+        <link href='css/fullcalendar.min.css' rel='stylesheet' />
+        <link href='css/fullcalendar.print.min.css' rel='stylesheet' media='print' />
+
+
+
     </head>	
     <body>
+
+        <?php
+        include './model/DB.php';
+        ?>
         <!-- banner -->
         <div class="header">
 
@@ -56,9 +65,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
-                    <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu.php'; ?>
-                    </nav>
+                    <?php include './_menu.php'; ?>
 
                 </div>
                 <div class="w3_agile_search">
@@ -71,107 +78,68 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         </div>
 
 
-        <h3>Manage News</h3>
-        <hr>
+
         <div class="row">
-            <div class="col-md-2"></div>
+            <div class="col-md-6">
+                <div id='calendar'></div>
+
+            </div>
             <div class="col-md-6">
 
                 <?php
-                include './model/DB.php';
-                if (isset($_POST['btnSub'])) {
-                    $sql = " INSERT INTO `cms_news`
-            (`news_title`,
-             `description`,
-             `usercreated`)
-VALUES ('" . $_POST['news_title'] . "',
-        '" . $_POST['description'] . "',
-        '" . $_SESSION['ssn_user']['id'] . "'); ";
+                if (isset($_GET['itemID'])) {
+                    $sql = " SELECT cms_inventory.*,cms_item.itemname,cms_member.username FROM cms_inventory
+INNER JOIN cms_item
+ON cms_inventory.itemid = cms_item.id
+INNER JOIN cms_member
+ON cms_member.id = cms_inventory.memberid WHERE cms_inventory.itemid = " . $_GET['itemID'] . " ORDER BY cms_inventory.id DESC ";
+                    ?>
 
-                    setData($sql, TRUE);
-                }
-                ?>
-                <form action="admin_news.php" method="post">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">News Title</label>
-                        <input name="news_title" type="text" class="form-control" id="exampleInputEmail1" >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Description</label>
-                        <textarea name="description" class="form-control" ></textarea>
-                    </div>
-                    <!--   
-                    `id`,
-             `news_title`,
-             `description`,
-             `usercreated`,
-             `datecreated`,
-             `status`
-                    -->
-                    <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
-                </form>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Event</th>
+                                <th>Qty</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Request By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    <?php
+    $result = getData($sql);
+    if ($result != FALSE) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            ?>
+
+                                    <tr>
+                                        <td><?= $row['itemname']; ?></td>
+                                        <td><?= $row['eventname']; ?></td>
+                                        <td><?= $row['qty']; ?></td>
+                                        <td><?= $row['fromdate']; ?></td>
+                                        <td><?= $row['todate']; ?></td>
+                                        <td><?= $row['username']; ?></td>
+                                    </tr>
+            <?php
+        }
+    }
+    ?>
+                        </tbody>
+                    </table>
+
+
+
+<?php } ?>
+
+
 
             </div>
-            <div class="col-md-4">.col-md-4</div>
         </div>
 
 
-        <?php
-        if (isset($_GET['action'])) {
-            $action = $_GET['action'];
-            $nid = $_GET['nid'];
-            $query = " UPDATE cms_news SET STATUS = '$action' WHERE id = $nid  ";
-            setUpdate($query, TRUE);
-        }
-        ?>
-        <table id="example" class="display" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>News ID</th>
-                    <th>News Title</th>
-                    <th>Description</th>
-                    <th>Posted Date</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th>News ID</th>
-                    <th>News Title</th>
-                    <th>Posted By</th>
-                    <th>Posted Date</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-            </tfoot>
-            <tbody>
-                <?php
-                $sqlx = " SELECT * FROM cms_news";
-                $resultx = getData($sqlx);
-                if ($resultx != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultx)) {
-                        ?>
-                        <tr>
-                            <td><?= $row['id']; ?></td>
-                            <td><?= $row['news_title']; ?></td>
-                            <td><?= $row['description']; ?></td>
-                            <td><?= $row['datecreated']; ?></td>
-                            <td><?= $row['status']; ?></td>
-                            <td><?php
-                                if ($row['status'] == 'ACTIVE') {
-                                    ?> <a href="admin_news.php?nid=<?= $row['id']; ?>&action=CLOSE"> Close Now </a> <?php
-                                }
-                                ?></td>
 
-                        </tr>
 
-                        <?php
-                    }
-                }
-                ?>
-            </tbody>
-        </table>
 
 
 
@@ -222,7 +190,7 @@ VALUES ('" . $_POST['news_title'] . "',
 
                 </div>
                 <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Community</a></h2>
+                    <h2><a href="index.html">Funding</a></h2>
                     <div class="agileits-social">
                         <ul>
                             <li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -360,6 +328,10 @@ VALUES ('" . $_POST['news_title'] . "',
             });
         </script>
         <!-- //carousal -->
+
+
+
+
         <!-- flexisel -->
         <script type="text/javascript">
             $(window).load(function () {
@@ -412,6 +384,10 @@ VALUES ('" . $_POST['news_title'] . "',
         </script>
         <!-- //flexSlider -->
 
+
+
+
+
         <!-- start-smooth-scrolling -->
         <script type="text/javascript" src="js/move-top.js"></script>
         <script type="text/javascript" src="js/easing.js"></script>
@@ -424,6 +400,10 @@ VALUES ('" . $_POST['news_title'] . "',
             });
         </script>
         <!-- start-smooth-scrolling -->
+
+
+
+
         <!-- for bootstrap working -->
         <script src="js/bootstrap.js"></script>
         <!-- //for bootstrap working -->
@@ -446,12 +426,65 @@ VALUES ('" . $_POST['news_title'] . "',
         <!-- //here ends scrolling icon -->
 
 
-        <!--data table-->
+
+
+
+
+
         <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
-        <script type="text/javascript">
+
+        <script>
             $(document).ready(function () {
-                $('#example').DataTable();
+
+//                $('#example').DataTable();
             });
         </script>
+
+
+
+
+
+        <script src='lib/moment.min.js'></script>
+        <script src='lib/jquery.min.js'></script>
+        <script src='js/fullcalendar.min.js'></script>
+
+
+        <script>
+
+            $(document).ready(function () {
+                $('#calendar').fullCalendar({
+                    editable: true,
+                    eventLimit: true, // allow "more" link when too many events
+                    events: [
+<?php
+$sql = "SELECT cms_inventory.*,cms_item.itemname FROM cms_inventory
+INNER JOIN cms_item
+ON cms_inventory.itemid = cms_item.id";
+$resultAtt = getData($sql);
+if ($resultAtt != false) {
+    while ($row = mysqli_fetch_array($resultAtt)) {
+        ?>
+                                {
+                                    title: '[ <?= $row['itemname']; ?> ] <?= $row['eventname']; ?>',
+                                    start: '<?= $row['fromdate']; ?>',
+                                    end: '<?= $row['todate']; ?>'
+                                },
+        <?php
+    }
+}
+?>
+                    ]
+                });
+
+            });
+
+        </script>
+
+
+
+
+
+
+
     </body>
 </html>

@@ -1,0 +1,27 @@
+/=======================
+<table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Year Semester</th>
+                                <th>Subject</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            if ($resultx != FALSE) {
+                                while ($row = mysqli_fetch_assoc($resultx)) {
+                                    ?>
+                            
+                            <tr>
+                                <td><?= $row['year_semester'];?></td>
+                                <td><?= $row['subject_name'];?></td>
+                                <td><a href="lecture_subject_event.php?course_id=<?= $cid;?>&course_subject_id=<?= $row['course_subject_id'];?>">Set Event</a></td>
+                            </tr>
+                            <?php 
+                            }
+                            
+                                }
+                            ?>
+                        </tbody>
+                    </table>

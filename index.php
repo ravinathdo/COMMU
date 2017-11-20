@@ -4,7 +4,7 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php session_start();?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -22,17 +22,17 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
     </head>	
     <body>
-             <?php
+        <?php
         include './model/UserModel.php';
         if (isset($_POST['btnLogin'])) {
 
             $flag = doLogin();
-            
+
             if ($flag) {
-               // echo 'User Found';
-               header('Location:home.php');
-            }else{
-                
+                // echo 'User Found';
+                header('Location:home.php');
+            } else {
+
                 echo '<p class="bg-danger">Invalid Username or Password</p>';
             }
         }
@@ -101,56 +101,107 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
             </nav>
         </div>
-        
-        
-        
+
+
+
         <div class="header_mid">
-		<div class="w3layouts_header_mid">
-			<ul>
-				<li>
-					<div class="header_contact_details_agile"><i class="fa fa-envelope-o" aria-hidden="true"></i>
-						<div class="w3l_header_contact_details_agile">
-							 <div class="header-contact-detail-title">Send us a Message</div> 
-							<a href="mailto:info@example.com">info@example.com</a>
-						</div>
-				   </div>
-			    </li>
-				<li>
-					<div class="header_contact_details_agile"><i class="fa fa-phone" aria-hidden="true"></i>
-						<div class="w3l_header_contact_details_agile">
-							 <div class="header-contact-detail-title">Give us a Call</div> 
-							<a class="w3l_header_contact_details_agile-info_inner"> 919-993-1000 </a>
-						</div>
-				   </div>
-			    </li>
-				<li>
-					<div class="header_contact_details_agile"><i class="fa fa-clock-o" aria-hidden="true"></i>
-						<div class="w3l_header_contact_details_agile">
-							 <div class="header-contact-detail-title">Opening Hours</div> 
-							<a class="w3l_header_contact_details_agile-info_inner">Mon - Sat: 7:00 - 18:00</a>
-						</div>
-				   </div>
-			    </li>
-				<li>
-					<div class="header_contact_details_agile"><i class="fa fa-map-marker" aria-hidden="true"></i>
-						<div class="w3l_header_contact_details_agile">
-							 <div class="header-contact-detail-title">3007 Sarah Drive</div> 
-								<a class="w3l_header_contact_details_agile-info_inner">Sri Lanka, LA 70538 </a>
-						</div>
-				   </div>
-			    </li>
-			</ul>
-		</div>
-	</div>
+            <div class="w3layouts_header_mid">
+                <ul>
+                    <li>
+                        <div class="header_contact_details_agile"><i class="fa fa-envelope-o" aria-hidden="true"></i>
+                            <div class="w3l_header_contact_details_agile">
+                                <div class="header-contact-detail-title">Send us a Message</div> 
+                                <a href="mailto:info@example.com">info@example.com</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="header_contact_details_agile"><i class="fa fa-phone" aria-hidden="true"></i>
+                            <div class="w3l_header_contact_details_agile">
+                                <div class="header-contact-detail-title">Give us a Call</div> 
+                                <a class="w3l_header_contact_details_agile-info_inner"> 919-993-1000 </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="header_contact_details_agile"><i class="fa fa-clock-o" aria-hidden="true"></i>
+                            <div class="w3l_header_contact_details_agile">
+                                <div class="header-contact-detail-title">Opening Hours</div> 
+                                <a class="w3l_header_contact_details_agile-info_inner">Mon - Sat: 7:00 - 18:00</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="header_contact_details_agile"><i class="fa fa-map-marker" aria-hidden="true"></i>
+                            <div class="w3l_header_contact_details_agile">
+                                <div class="header-contact-detail-title">3007 Sarah Drive</div> 
+                                <a class="w3l_header_contact_details_agile-info_inner">Sri Lanka, LA 70538 </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
 
-   
+
 
 
 
         <div class="row">
-            <div class="col-md-8">.col-md-8</div>
-            <div class="col-md-4">.col-md-4</div>
+            <div class="col-md-2">2</div>
+            <div class="col-md-6">Post
+                <?php
+                ?>
+                <table class="table table-striped">
+                    <?php
+                    $sqlPost = " SELECT * FROM cms_post WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
+                    $resultAllPost = getData($sqlPost);
+                    if ($resultAllPost != FALSE) {
+                        while ($row = mysqli_fetch_assoc($resultAllPost)) {
+                            ?>
+
+                            <tr >
+                                <td><?= $row['id'] ?></td>
+                                <td style="color: black"><?= $row['description'] ?>
+                                    <p style="font-size: x-small">[ <?= $row['datecreated'] ?> ]</p></td>
+                                <td>
+                                    <a href="index.php?pid=<?= $row['id'] ?>&action=LIKE"> <i class="fa fa-thumbs-up"></i> <?= $row['plike']; ?></a>
+                                    <a href="index.php?pid=<?= $row['id'] ?>&action=DISLIKE"> <i class="fa fa-thumbs-down"></i> <?= $row['dislike']; ?></a>
+                                </td>
+                            </tr>
+                            <td></td>
+                            <td></td>
+
+                            <?php
+                        }
+                    }
+                    ?>
+
+                </table>
+
+
+
+
+            </div>
+            <div class="col-md-4">
+
+                <?php
+                $sqlNews = " SELECT * FROM cms_news WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
+                $resultNews = getData($sqlNews);
+                if ($resultNews != FALSE) {
+                    while ($row = mysqli_fetch_assoc($resultNews)) {
+                        ?>
+                <div class="bg-info" style="margin-bottom: 10px"> <b><?= $row['news_title']?></b>
+                 <p > <?= $row['description']?> </p>
+                 <p style="font-size: small"> <?= $row['datecreated']?> </p>
+                </div>
+                        <?php
+                    }
+                }
+                ?>
+
+            </div>
         </div>
 
 

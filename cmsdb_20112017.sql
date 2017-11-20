@@ -1,6 +1,6 @@
 /*
 SQLyog Ultimate v8.55 
-MySQL - 5.5.5-10.1.21-MariaDB : Database - cmsdb
+MySQL - 5.5.5-10.2.7-MariaDB : Database - cmsdb
 *********************************************************************
 */
 
@@ -27,15 +27,15 @@ CREATE TABLE `cms_election` (
   `enddatetime` varchar(50) DEFAULT NULL,
   `status` varchar(10) DEFAULT NULL,
   `usercreated` int(5) DEFAULT NULL,
-  `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `datecreated` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `FK_cms_election_user` (`usercreated`),
   CONSTRAINT `FK_cms_election_user` FOREIGN KEY (`usercreated`) REFERENCES `cms_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `cms_election` */
 
-insert  into `cms_election`(`id`,`electiontitle`,`startdatetime`,`enddatetime`,`status`,`usercreated`,`datecreated`) values (1,'new precident 2017',NULL,NULL,NULL,NULL,'2017-11-05 14:26:53');
+insert  into `cms_election`(`id`,`electiontitle`,`startdatetime`,`enddatetime`,`status`,`usercreated`,`datecreated`) values (1,'new precident 2017',NULL,NULL,NULL,NULL,'2017-11-05 14:26:53'),(2,'sdsadsad','2017','2017','OPEN',1,'2017-11-20 21:02:03');
 
 /*Table structure for table `cms_election_vote` */
 
@@ -83,15 +83,19 @@ CREATE TABLE `cms_inventory` (
   `fromdate` varchar(25) DEFAULT NULL,
   `todate` varchar(25) DEFAULT NULL,
   `createduser` int(5) DEFAULT NULL,
-  `createdtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdtime` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(10) DEFAULT NULL,
+  `qty` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_cms_inventory_item` (`itemid`),
   KEY `FK_cms_inventory_member` (`memberid`),
   CONSTRAINT `FK_cms_inventory_item` FOREIGN KEY (`itemid`) REFERENCES `cms_item` (`id`),
   CONSTRAINT `FK_cms_inventory_member` FOREIGN KEY (`memberid`) REFERENCES `cms_member` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `cms_inventory` */
+
+insert  into `cms_inventory`(`id`,`itemid`,`memberid`,`eventname`,`fromdate`,`todate`,`createduser`,`createdtime`,`status`,`qty`) values (1,2,3,'Smaple Event','2017-11-15','2017-11-20',3,'2017-11-20 18:25:52','OPEN',3),(2,2,6,'sdsadasd','2017-11-30','2017-11-30',6,'2017-11-20 19:53:00','OPEN',3);
 
 /*Table structure for table `cms_item` */
 
@@ -102,11 +106,11 @@ CREATE TABLE `cms_item` (
   `itemname` varchar(250) DEFAULT NULL,
   `qyt` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `cms_item` */
 
-insert  into `cms_item`(`id`,`itemname`,`qyt`) values (1,'hut',10);
+insert  into `cms_item`(`id`,`itemname`,`qyt`) values (1,'hut',10),(2,'sadsadsa',3);
 
 /*Table structure for table `cms_member` */
 
@@ -123,14 +127,16 @@ CREATE TABLE `cms_member` (
   `experticeid` int(5) DEFAULT NULL,
   `permanentaddress` varchar(250) DEFAULT NULL,
   `authstatus` varchar(10) DEFAULT NULL COMMENT 'PND|AUTH|DACT',
-  `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `datecreated` timestamp NOT NULL DEFAULT current_timestamp(),
   `autorizeby` int(5) DEFAULT NULL COMMENT 'cms_user',
+  `role` varchar(50) DEFAULT NULL,
+  `usercreated` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 /*Data for the table `cms_member` */
 
-insert  into `cms_member`(`id`,`firstname`,`lastname`,`nic`,`username`,`email`,`currentaddress`,`experticeid`,`permanentaddress`,`authstatus`,`datecreated`,`autorizeby`) values (1,'Thisara','Perera','8877887788V','admin','thisara@gmai',NULL,0,'Kadawatha','Authorized','2017-10-28 21:53:00',1),(2,'Gayan','Fernando','8788778878V','mem','gaya@gmail.com','cusrret,colombo',1,'gampaha','Authorized','2017-10-29 08:04:58',1),(3,'Kamala','Mathu','8877665566V','manager','manager@gmail','manager,gampaha',1,'colombo','Authorized','2017-10-29 08:07:45',1);
+insert  into `cms_member`(`id`,`firstname`,`lastname`,`nic`,`username`,`email`,`currentaddress`,`experticeid`,`permanentaddress`,`authstatus`,`datecreated`,`autorizeby`,`role`,`usercreated`) values (1,'Thisara','Perera','8877887788V','admin','thisara@gmai',NULL,0,'Kadawatha','Authorized','2017-10-28 21:53:00',1,'ADMIN',NULL),(2,'Gayan','Fernando','8788778878V','MEM2','gaya@gmail.com','cusrret,colombo',1,'gampaha','Authorized','2017-10-29 08:04:58',1,'MEMBER',NULL),(3,'Kamala','Mathu','8877665566V','MEM3','manager@gmail','manager,gampaha',1,'colombo','Authorized','2017-10-29 08:07:45',1,'MANAGER',NULL),(4,'','','','MEM4','','',0,'','AUTHORIZED','2017-11-18 23:01:35',NULL,'',1),(5,'sss','sss','333','MEM5','a@gmail.com',' dddd',0,' ggg','AUTHORIZED','2017-11-18 23:04:26',3,'MEMBER',1),(6,'ssss','ddddd','wwwww','MEM6','we@dd.com','dfdfdf ',0,' sfdf','Authorized','2017-11-18 23:10:08',NULL,'MEMBER',1),(7,'sadsad','sadsad','3213','MEM7','sadsad',' sfdsdfsd',1,' fdsfsdfsdf','PENDING','2017-11-20 16:30:39',NULL,'MEMBER',6),(8,'ssadasd','sadsadsa','24234234','MEM8','ewrwerwe@sfd.fdg',' dsfsdf',1,' sdfsdf','PENDING','2017-11-20 16:43:32',NULL,'MEMBER',6),(9,'sadasdsad','sadsad','24334234','MEM9','asdsad',' sadsad',1,' asdsad','Authorized','2017-11-20 17:03:31',3,'MEMBER',3),(10,'sadsad','sadsad','sadsad','MEM10','sadsad',' sadsad',1,' sadsad','Authorized','2017-11-20 17:04:12',3,'MEMBER',3);
 
 /*Table structure for table `cms_news` */
 
@@ -140,16 +146,17 @@ CREATE TABLE `cms_news` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `news_title` varchar(50) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
-  `photopath` varchar(250) DEFAULT NULL,
   `usercreated` int(5) DEFAULT NULL COMMENT 'cms_user',
-  `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` varchar(5) DEFAULT NULL COMMENT 'ACT|DACT',
+  `datecreated` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(10) DEFAULT 'ACTIVE' COMMENT 'ACT|DACT',
   PRIMARY KEY (`id`),
   KEY `FK_cms_news_user` (`usercreated`),
   CONSTRAINT `FK_cms_news_user` FOREIGN KEY (`usercreated`) REFERENCES `cms_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `cms_news` */
+
+insert  into `cms_news`(`id`,`news_title`,`description`,`usercreated`,`datecreated`,`status`) values (1,'sample news','gallery provide reset commands so that you can always restore the look of your document to the original contained in your current template.',1,'2017-11-20 14:00:00','CLOSE'),(2,'sample news 2','gallery provide reset commands so that you can always restore the look of your document to the original contained in your current template.',1,'2017-11-20 14:05:09','ACTIVE');
 
 /*Table structure for table `cms_post` */
 
@@ -159,17 +166,19 @@ CREATE TABLE `cms_post` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `posttitle` varchar(250) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
-  `like` int(5) DEFAULT NULL,
-  `dislike` int(5) DEFAULT NULL,
+  `plike` int(5) DEFAULT 0,
+  `dislike` int(5) DEFAULT 0,
   `usercreated` int(5) DEFAULT NULL COMMENT 'cms_member',
-  `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` varchar(10) DEFAULT NULL COMMENT 'ACT|DACT',
+  `datecreated` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(10) DEFAULT 'PENDING' COMMENT 'PENDING|ACTIVE|CLOSE',
   PRIMARY KEY (`id`),
   KEY `FK_cms_post_member` (`usercreated`),
   CONSTRAINT `FK_cms_post_member` FOREIGN KEY (`usercreated`) REFERENCES `cms_member` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 /*Data for the table `cms_post` */
+
+insert  into `cms_post`(`id`,`posttitle`,`description`,`plike`,`dislike`,`usercreated`,`datecreated`,`status`) values (1,'asdasd','asdasdsa',0,0,6,'2017-11-19 20:45:45','CLOSE'),(2,'Sample Post 1','On the Insert tab, the galleries include items that are designed to coordinate with the overall look of your document. You can use these galleries to insert tables, headers, footers, lists, cover pages, and other document building blocks',1,0,6,'2017-11-20 11:11:24','ACTIVE'),(3,'xxx','x',0,1,6,'2017-11-20 11:11:38','ACTIVE'),(4,'Sample Post 2','You can easily change the formatting of selected text in the document text by choosing a look for the selected text from the Quick Styles gallery on the Home tab. You can also format text directly by using the other controls on the Home tab. ',1,1,6,'2017-11-20 11:13:43','ACTIVE'),(5,'Sample Post 3','Most controls offer a choice of using the look from the current theme or using a format that you specify directly.',0,0,6,'2017-11-20 13:32:04','PENDING'),(6,'Sample Post 3','Most controls offer a choice of using the look from the current theme or using a format that you specify directly.',0,0,6,'2017-11-20 13:32:22','PENDING');
 
 /*Table structure for table `cms_post_vote` */
 
@@ -179,7 +188,7 @@ CREATE TABLE `cms_post_vote` (
   `postid` int(5) NOT NULL,
   `memberid` int(5) NOT NULL,
   `type` varchar(30) DEFAULT NULL,
-  `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `datecreated` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`postid`,`memberid`),
   KEY `FK_cms_post_vote_member` (`memberid`),
   CONSTRAINT `FK_cms_post_vote_member` FOREIGN KEY (`memberid`) REFERENCES `cms_member` (`id`),
@@ -188,6 +197,8 @@ CREATE TABLE `cms_post_vote` (
 
 /*Data for the table `cms_post_vote` */
 
+insert  into `cms_post_vote`(`postid`,`memberid`,`type`,`datecreated`) values (2,6,'LIKE','2017-11-20 13:27:35'),(3,6,'DISLIKE','2017-11-20 12:20:07'),(4,6,'DISLIKE','2017-11-20 13:36:17');
+
 /*Table structure for table `cms_user` */
 
 DROP TABLE IF EXISTS `cms_user`;
@@ -195,17 +206,17 @@ DROP TABLE IF EXISTS `cms_user`;
 CREATE TABLE `cms_user` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `username` varchar(100) DEFAULT NULL,
-  `password` text,
+  `password` text DEFAULT NULL,
   `role` varchar(25) DEFAULT NULL COMMENT 'ADMIN|TREASURY ',
-  `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `datecreated` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` varchar(10) DEFAULT 'ACT' COMMENT 'ACT|DACT',
   `member_id` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 /*Data for the table `cms_user` */
 
-insert  into `cms_user`(`id`,`username`,`password`,`role`,`datecreated`,`status`,`member_id`) values (1,'admin','*667F407DE7C6AD07358FA38DAED7828A72014B4E','ADMIN','2017-10-28 22:03:51','ACT',1),(2,'mem','*667F407DE7C6AD07358FA38DAED7828A72014B4E','MEMBER','2017-10-29 08:05:25','ACT',2),(3,'manager','*667F407DE7C6AD07358FA38DAED7828A72014B4E','MANAGER','2017-10-29 08:06:10','ACT',3);
+insert  into `cms_user`(`id`,`username`,`password`,`role`,`datecreated`,`status`,`member_id`) values (1,'admin','*667F407DE7C6AD07358FA38DAED7828A72014B4E','ADMIN','2017-10-28 22:03:51','ACT',1),(2,'mem','*667F407DE7C6AD07358FA38DAED7828A72014B4E','MEMBER','2017-10-29 08:05:25','ACT',2),(3,'manager','*667F407DE7C6AD07358FA38DAED7828A72014B4E','MANAGER','2017-10-29 08:06:10','ACT',3),(4,'MEM6','*09904C85991002D20EFCC43E9A02743A702C68C0','MEMBER','2017-11-18 23:10:08','ACT',6),(5,'MEM4','*0223C22D5A3A36F6ABC6BB8F664D0A74B526F239','MEMBER','2017-11-20 18:13:00','ACT',4),(6,'MEM5','*CF0BB34980D4A895952C3B7D066B67A91575FA42','MEMBER','2017-11-20 18:14:54','ACT',5);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

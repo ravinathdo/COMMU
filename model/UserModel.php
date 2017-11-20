@@ -19,7 +19,7 @@ INNER JOIN cms_member
 ON cms_member.id = cms_user.member_id 
 WHERE cms_user.username = '" . $_POST['username'] . "' AND cms_user.password = PASSWORD('" . $_POST['password'] . "')";
 
-    //echo $sql;
+    echo $sql;
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
         // output data of each row

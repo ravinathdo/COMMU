@@ -4,7 +4,7 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php session_start();?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -20,8 +20,17 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
         <?php include_once './basecss.php'; ?>
 
+        <link href='css/fullcalendar.min.css' rel='stylesheet' />
+        <link href='css/fullcalendar.print.min.css' rel='stylesheet' media='print' />
+
+
+
     </head>	
     <body>
+
+        <?php
+        include './model/DB.php';
+        ?>
         <!-- banner -->
         <div class="header">
 
@@ -36,7 +45,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
             </div>
             <div class="w3layouts_header_left">
-              <?php include './_top.php'; ?>
+                <?php include './_top.php'; ?>
             </div>
             <div class="clearfix"> </div>
         </div>
@@ -56,9 +65,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
-                    <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu.php';?>
-                    </nav>
+                    <?php include './_menu.php'; ?>
 
                 </div>
                 <div class="w3_agile_search">
@@ -72,13 +79,138 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 
 
+
+
         <div class="row">
-            <div class="col-md-8">.col-md-8</div>
-            <div class="col-md-4">.col-md-4</div>
+            <div class="col-md-6">
+
+                <div id='calendar'></div>
+            </div>
+
+            <form action="member_items_request.php" method="post">
+                <div class="col-md-3">
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Event Title</label>
+                        <input type="text" name="eventname" class="form-control" id="exampleInputEmail1" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Item </label>
+                        <select name="itemid" class="form-control" >
+                            <option>--select--</option>
+                            <?php
+                            $sqlItems = " SELECT * FROM cms_item  ";
+                            $resultXXX = getData($sqlItems);
+                            if ($resultXXX != FALSE) {
+                                while ($row = mysqli_fetch_assoc($resultXXX)) {
+                                    ?>  <option value="<?= $row['id'] ?>"><?= $row['itemname'] ?></option> <?php
+                                }
+                            }
+                            ?>
+                        </select> 
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">QTY</label>
+                        <input name="qty" type="text"class="form-control" />
+                    </div>
+
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">From Date</label>
+                        <input type="date"  name="fromdate" class="form-control" id="exampleInputEmail1" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">To Date</label>
+                        <input type="date"  name="todate" class="form-control" id="exampleInputEmail1" >
+                    </div>
+                    <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+
+            <?php
+            if (isset($_POST['btnSub'])) {
+                $sql = " INSERT INTO `cmsdb`.`cms_inventory`
+            (`itemid`,
+             `memberid`,
+             `eventname`,
+             `fromdate`,
+             `todate`,
+             `createduser`,
+             `status`,
+             `qty`)
+VALUES ('" . $_POST['itemid'] . "',
+        '" . $_SESSION['ssn_user']['id'] . "',
+        '" . $_POST['eventname'] . "',
+        '" . $_POST['fromdate'] . "',
+        '" . $_POST['todate'] . "',
+        '" . $_SESSION['ssn_user']['id'] . "',
+        'OPEN',
+        '" . $_POST['qty'] . "'); ";
+
+
+                setData($sql, TRUE);
+            }
+            ?>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+
+
+            </div>
+            <div class="col-md-6">
+
+               
+
+
+
+            </div>
         </div>
 
 
 
+
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table" style="color: black">
+                    <thead>
+                        <tr>
+                            <th>Req ID</th>
+                            <th>ItemName</th>
+                            <th>Event Name</th>
+                            <th>Qty</th>
+                            <th>From</th>
+                            <th>To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $sql = "SELECT cms_inventory.*,cms_item.itemname FROM cms_inventory
+INNER JOIN cms_item
+ON cms_inventory.itemid = cms_item.id WHERE cms_inventory.createduser = " . $_SESSION['ssn_user']['id'];
+                        //echo $sql;
+                        $resultx = getData($sql);
+                        if ($resultx != FALSE) {
+                            while ($row = mysqli_fetch_assoc($resultx)) {
+                                ?>
+
+                                <tr>
+                                    <td><?= $row['id']; ?></td>
+                                    <td><?= $row['itemname']; ?></td>
+                                    <td><?= $row['eventname']; ?></td>
+                                    <td><?= $row['qty']; ?></td>
+                                    <td><?= $row['fromdate']; ?></td>
+                                    <td><?= $row['todate']; ?></td>
+                                </tr>
+                                <?php
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
 
 
@@ -268,6 +400,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             });
         </script>
         <!-- //carousal -->
+
+
+
+
         <!-- flexisel -->
         <script type="text/javascript">
             $(window).load(function () {
@@ -320,6 +456,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         </script>
         <!-- //flexSlider -->
 
+
+
+
+
         <!-- start-smooth-scrolling -->
         <script type="text/javascript" src="js/move-top.js"></script>
         <script type="text/javascript" src="js/easing.js"></script>
@@ -332,6 +472,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             });
         </script>
         <!-- start-smooth-scrolling -->
+
+
+
+
         <!-- for bootstrap working -->
         <script src="js/bootstrap.js"></script>
         <!-- //for bootstrap working -->
@@ -352,5 +496,67 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             });
         </script>
         <!-- //here ends scrolling icon -->
+
+
+
+
+
+
+
+        <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
+
+        <script>
+            $(document).ready(function () {
+
+//                $('#example').DataTable();
+            });
+        </script>
+
+
+
+
+
+        <script src='lib/moment.min.js'></script>
+        <script src='lib/jquery.min.js'></script>
+        <script src='js/fullcalendar.min.js'></script>
+
+
+        <script>
+
+            $(document).ready(function () {
+                $('#calendar').fullCalendar({
+                    editable: true,
+                    eventLimit: true, // allow "more" link when too many events
+                    events: [
+<?php
+$sql = "SELECT cms_inventory.*,cms_item.itemname FROM cms_inventory
+INNER JOIN cms_item
+ON cms_inventory.itemid = cms_item.id WHERE cms_inventory.createduser = " . $_SESSION['ssn_user']['id'];
+$resultAtt = getData($sql);
+if ($resultAtt != false) {
+    while ($row = mysqli_fetch_array($resultAtt)) {
+        ?>
+                                {
+                                    title: '[ <?= $row['itemname']; ?> ] <?= $row['eventname']; ?>',
+                                    start: '<?= $row['fromdate']; ?>',
+                                    end: '<?= $row['todate']; ?>'
+                                },
+        <?php
+    }
+}
+?>
+                    ]
+                });
+
+            });
+
+        </script>
+
+
+
+
+
+
+
     </body>
 </html>

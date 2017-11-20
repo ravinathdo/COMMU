@@ -8,7 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Admin </title>
+        <title>Commu | Template</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -71,107 +71,208 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         </div>
 
 
-        <h3>Manage News</h3>
-        <hr>
+
         <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-6">
+            <form action="manager_member_recommonds.php" method="post">
+                <div class="col-md-4">
+
+
+                    <div class="form-group">
+                        <label for="exampleInputName2">First Name</label>
+                        <input type="text" name="firstname" class="form-control" id="exampleInputName2" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">Last Name</label>
+                        <input type="text" name="lastname" class="form-control" id="exampleInputEmail2" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">NIC</label>
+                        <input type="text" name="nic" class="form-control" id="exampleInputEmail2" placeholder="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">Email</label>
+                        <input type="text" name="email" class="form-control" id="exampleInputEmail2" placeholder="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">Current Address</label>
+                        <textarea  name="currentaddress" class="form-control"> </textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">Permanet Address</label>
+                        <textarea  name="permanentaddress" class="form-control"> </textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputName2">Expert In</label>
+                        <select name="experticeid" class="form-control"> 
+                            <option>--select--</option>
+                            <?php
+                            include './model/DB.php';
+                            $sql = " SELECT * FROM cms_expertise  ";
+                            $resultx = getData($sql);
+                            if ($resultx != FALSE) {
+                                while ($row = mysqli_fetch_assoc($resultx)) {
+                                    ?>  <option value="<?= $row['id'] ?>"><?= $row['expertise'] ?></option> <?php
+                                }
+                            }
+                            ?>
+
+                        </select>
+                    </div>
+
+
+
+                    <button type="submit" name="btnReg" class="btn btn-primary">Register</button>
+                </div>
+            </form>
+
+
+
+            <div class="col-md-8">
+
+
+
 
                 <?php
-                include './model/DB.php';
-                if (isset($_POST['btnSub'])) {
-                    $sql = " INSERT INTO `cms_news`
-            (`news_title`,
-             `description`,
+                if (isset($_POST['btnReg'])) {
+
+                    $sql = " INSERT INTO `cmsdb`.`cms_member`
+            (`firstname`,
+             `lastname`,
+             `nic`,
+             `email`,
+             `currentaddress`,
+             `experticeid`,
+             `permanentaddress`,
+             `autorizeby`,
+             `authstatus`,
+             `role`,
              `usercreated`)
-VALUES ('" . $_POST['news_title'] . "',
-        '" . $_POST['description'] . "',
+VALUES ('" . $_POST['firstname'] . "',
+        '" . $_POST['lastname'] . "',
+        '" . $_POST['nic'] . "',
+        '" . $_POST['email'] . "',
+        '" . $_POST['currentaddress'] . "',
+        '" . $_POST['experticeid'] . "',
+        '" . $_POST['permanentaddress'] . "',
+        ' '" . $_SESSION['ssn_user']['id'] . "'',
+        'Authorized',
+        'MEMBER',
         '" . $_SESSION['ssn_user']['id'] . "'); ";
 
-                    setData($sql, TRUE);
+
+                    $regNo = setData($sql, TRUE);
+                    $username = 'MEM' . $regNo;
+                    $sqlUpdate = "UPDATE cms_member SET username = '$username' WHERE id = " . $regNo;
+                    setUpdate($sqlUpdate, FALSE);
+
+
+
+
+
+//new user creted
+                    /*
+                      $sqlUsr = " INSERT INTO `cmsdb`.`cms_user`
+                      (`username`,
+                      `password`,
+                      `role`,
+                      `status`,
+                      `member_id`)
+                      VALUES ( '$username',
+                      PASSWORD('$username'),
+                      '" . $_POST['role'] . "',
+                      'ACT',
+                      '$regNo'); ";
+                      setData($sqlUsr, FALSE); */
                 }
                 ?>
-                <form action="admin_news.php" method="post">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">News Title</label>
-                        <input name="news_title" type="text" class="form-control" id="exampleInputEmail1" >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Description</label>
-                        <textarea name="description" class="form-control" ></textarea>
-                    </div>
-                    <!--   
-                    `id`,
-             `news_title`,
-             `description`,
-             `usercreated`,
-             `datecreated`,
-             `status`
-                    -->
-                    <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
-                </form>
+
+
+
+
+
+
+
+
+                <table id="example" class="display" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Member No</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>NIC</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Created By</th>
+                            <!--<th>Approved By</th>-->
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Member No</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>NIC</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Created By</th>
+                            <!--<th>Approved By</th>-->
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        <?php
+                        $sqlMy = " SELECT * FROM cms_member WHERE autorizeby = ". $_SESSION['ssn_user']['id'];
+                        $resultxx = getData($sqlMy);
+                        if ($resultxx != FALSE) {
+                            while ($row = mysqli_fetch_assoc($resultxx)) {
+                                /*
+                                  `id`,
+                                  `firstname`,
+                                  `lastname`,
+                                  `nic`,
+                                  `username`,
+                                  `email`,
+                                  `currentaddress`,
+                                  `experticeid`,
+                                  `permanentaddress`,
+                                  `authstatus`,
+                                  `datecreated`,
+                                  `autorizeby`,
+                                  `role`,
+                                  `usercreated`
+                                 *                                  */
+                                ?>
+                                <tr>
+                                    <td><?= $row['id']; ?></td>
+                                    <td><?= $row['firstname']; ?></td>
+                                    <td><?= $row['lastname']; ?></td>
+                                    <td><?= $row['nic']; ?></td>
+                                    <td><?= $row['email']; ?></td>
+                                    <td>
+                                    <?php  
+                                    if($row['authstatus'] == 'PENDING'){
+                                        ?><a href="manager_recommond_member.php?mid=<?=  $row['id']; ?>"> <?= $row['authstatus']; ?></a><?php
+                                    }
+                                    ?>
+                                    </td>
+                                    <td>MEM<?= $row['usercreated']; ?></td>
+                                    <!--<td><?= $row['autorizeby']; ?></td>-->
+                                </tr>
+                                <?php
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
+
 
             </div>
-            <div class="col-md-4">.col-md-4</div>
         </div>
 
 
-        <?php
-        if (isset($_GET['action'])) {
-            $action = $_GET['action'];
-            $nid = $_GET['nid'];
-            $query = " UPDATE cms_news SET STATUS = '$action' WHERE id = $nid  ";
-            setUpdate($query, TRUE);
-        }
-        ?>
-        <table id="example" class="display" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>News ID</th>
-                    <th>News Title</th>
-                    <th>Description</th>
-                    <th>Posted Date</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th>News ID</th>
-                    <th>News Title</th>
-                    <th>Posted By</th>
-                    <th>Posted Date</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-            </tfoot>
-            <tbody>
-                <?php
-                $sqlx = " SELECT * FROM cms_news";
-                $resultx = getData($sqlx);
-                if ($resultx != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultx)) {
-                        ?>
-                        <tr>
-                            <td><?= $row['id']; ?></td>
-                            <td><?= $row['news_title']; ?></td>
-                            <td><?= $row['description']; ?></td>
-                            <td><?= $row['datecreated']; ?></td>
-                            <td><?= $row['status']; ?></td>
-                            <td><?php
-                                if ($row['status'] == 'ACTIVE') {
-                                    ?> <a href="admin_news.php?nid=<?= $row['id']; ?>&action=CLOSE"> Close Now </a> <?php
-                                }
-                                ?></td>
 
-                        </tr>
 
-                        <?php
-                    }
-                }
-                ?>
-            </tbody>
-        </table>
 
 
 
@@ -222,7 +323,7 @@ VALUES ('" . $_POST['news_title'] . "',
 
                 </div>
                 <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Community</a></h2>
+                    <h2><a href="index.html">Funding</a></h2>
                     <div class="agileits-social">
                         <ul>
                             <li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -446,9 +547,9 @@ VALUES ('" . $_POST['news_title'] . "',
         <!-- //here ends scrolling icon -->
 
 
-        <!--data table-->
         <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
-        <script type="text/javascript">
+
+        <script>
             $(document).ready(function () {
                 $('#example').DataTable();
             });

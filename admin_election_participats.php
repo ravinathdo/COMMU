@@ -8,7 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Admin </title>
+        <title>Commu | Template</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -56,9 +56,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
-                    <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu.php'; ?>
-                    </nav>
+                    <?php include './_menu.php'; ?>
 
                 </div>
                 <div class="w3_agile_search">
@@ -71,107 +69,65 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         </div>
 
 
-        <h3>Manage News</h3>
-        <hr>
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-6">
 
+        <div class="row">
+            <div class="col-md-6">
+                Election Details
                 <?php
                 include './model/DB.php';
-                if (isset($_POST['btnSub'])) {
-                    $sql = " INSERT INTO `cms_news`
-            (`news_title`,
-             `description`,
-             `usercreated`)
-VALUES ('" . $_POST['news_title'] . "',
-        '" . $_POST['description'] . "',
-        '" . $_SESSION['ssn_user']['id'] . "'); ";
-
-                    setData($sql, TRUE);
-                }
+                $electionTitle = $_GET['election'];
+                $eid = $_GET['eid'];
+                echo '<h1> ' . $electionTitle . '</h1>';
                 ?>
-                <form action="admin_news.php" method="post">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">News Title</label>
-                        <input name="news_title" type="text" class="form-control" id="exampleInputEmail1" >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Description</label>
-                        <textarea name="description" class="form-control" ></textarea>
-                    </div>
-                    <!--   
-                    `id`,
-             `news_title`,
-             `description`,
-             `usercreated`,
-             `datecreated`,
-             `status`
-                    -->
-                    <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
-                </form>
 
             </div>
-            <div class="col-md-4">.col-md-4</div>
+            <div class="col-md-6">
+                <form action="admin_election_participats.php?eid=<?= $eid ?>&election=<?= $electionTitle ?>" method="post">
+                    <input type="hidden" name="eid" value="<?= $eid ?>" />
+                    <input type="hidden" name="election" value="<?= $electionTitle ?>" />
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Add Members</label>
+                        <select name="memberid " class="form-control" >
+                            <option>--select--</option>
+                            <?php
+                            $sql = " SELECT * FROM cms_member WHERE id NOT IN (SELECT memberid FROM cms_election_vote WHERE electionid = $eid )";
+                            $resultx = getData($sql);
+                            if ($resultx != FALSE) {
+                                while ($row = mysqli_fetch_assoc($resultx)) {
+                                    ?>      <option value="<?= $row['id'] ?>">[ <?= $row['username'] ?> ] <?= $row['firstname'] ?>  <?= $row['lastname'] ?></option> <?php
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1"></label>
+                        <button type="submit" name="btnAdd" class="btn btn-primary">Add</button>
+
+                    </div>
+
+                </form>
+
+
+                <?php
+                if (isset($_POST['btnAdd'])) {
+                   
+                    $sql = " INSERT INTO `cms_election_vote`
+            (`electionid`,
+             `memberid`)
+VALUES ('".$_POST['eid']."',
+        '".$_POST['memberid']."'); ";
+                    
+                    setData($sql, TRUE) ;
+                    
+                }
+                ?>
+            </div>
         </div>
 
 
-        <?php
-        if (isset($_GET['action'])) {
-            $action = $_GET['action'];
-            $nid = $_GET['nid'];
-            $query = " UPDATE cms_news SET STATUS = '$action' WHERE id = $nid  ";
-            setUpdate($query, TRUE);
-        }
-        ?>
-        <table id="example" class="display" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>News ID</th>
-                    <th>News Title</th>
-                    <th>Description</th>
-                    <th>Posted Date</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th>News ID</th>
-                    <th>News Title</th>
-                    <th>Posted By</th>
-                    <th>Posted Date</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-            </tfoot>
-            <tbody>
-                <?php
-                $sqlx = " SELECT * FROM cms_news";
-                $resultx = getData($sqlx);
-                if ($resultx != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultx)) {
-                        ?>
-                        <tr>
-                            <td><?= $row['id']; ?></td>
-                            <td><?= $row['news_title']; ?></td>
-                            <td><?= $row['description']; ?></td>
-                            <td><?= $row['datecreated']; ?></td>
-                            <td><?= $row['status']; ?></td>
-                            <td><?php
-                                if ($row['status'] == 'ACTIVE') {
-                                    ?> <a href="admin_news.php?nid=<?= $row['id']; ?>&action=CLOSE"> Close Now </a> <?php
-                                }
-                                ?></td>
 
-                        </tr>
 
-                        <?php
-                    }
-                }
-                ?>
-            </tbody>
-        </table>
 
 
 
@@ -222,7 +178,7 @@ VALUES ('" . $_POST['news_title'] . "',
 
                 </div>
                 <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Community</a></h2>
+                    <h2><a href="index.html">Funding</a></h2>
                     <div class="agileits-social">
                         <ul>
                             <li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -445,12 +401,11 @@ VALUES ('" . $_POST['news_title'] . "',
         </script>
         <!-- //here ends scrolling icon -->
 
-
-        <!--data table-->
         <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
-        <script type="text/javascript">
+
+        <script>
             $(document).ready(function () {
-                $('#example').DataTable();
+//                $('#example').DataTable();
             });
         </script>
     </body>

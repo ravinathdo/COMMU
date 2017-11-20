@@ -125,12 +125,14 @@ CREATE TABLE `cms_member` (
   `authstatus` varchar(10) DEFAULT NULL COMMENT 'PND|AUTH|DACT',
   `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `autorizeby` int(5) DEFAULT NULL COMMENT 'cms_user',
+  `role` varchar(50) DEFAULT NULL,
+  `usercreated` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 /*Data for the table `cms_member` */
 
-insert  into `cms_member`(`id`,`firstname`,`lastname`,`nic`,`username`,`email`,`currentaddress`,`experticeid`,`permanentaddress`,`authstatus`,`datecreated`,`autorizeby`) values (1,'Thisara','Perera','8877887788V','admin','thisara@gmai',NULL,0,'Kadawatha','Authorized','2017-10-28 21:53:00',1),(2,'Gayan','Fernando','8788778878V','mem','gaya@gmail.com','cusrret,colombo',1,'gampaha','Authorized','2017-10-29 08:04:58',1),(3,'Kamala','Mathu','8877665566V','manager','manager@gmail','manager,gampaha',1,'colombo','Authorized','2017-10-29 08:07:45',1);
+insert  into `cms_member`(`id`,`firstname`,`lastname`,`nic`,`username`,`email`,`currentaddress`,`experticeid`,`permanentaddress`,`authstatus`,`datecreated`,`autorizeby`,`role`,`usercreated`) values (1,'Thisara','Perera','8877887788V','admin','thisara@gmai',NULL,0,'Kadawatha','Authorized','2017-10-28 21:53:00',1,'ADMIN',NULL),(2,'Gayan','Fernando','8788778878V','MEM2','gaya@gmail.com','cusrret,colombo',1,'gampaha','Authorized','2017-10-29 08:04:58',1,'MEMBER',NULL),(3,'Kamala','Mathu','8877665566V','manager','manager@gmail','manager,gampaha',1,'colombo','Authorized','2017-10-29 08:07:45',1,'MANAGER',NULL),(4,'','','','MEM4','','',0,'','pending','2017-11-18 23:01:35',NULL,'',1),(5,'sss','sss','333','MEM5','a@gmail.com',' dddd',0,' ggg','pending','2017-11-18 23:04:26',NULL,'MEMBER',1),(6,'ssss','ddddd','wwwww','MEM6','we@dd.com','dfdfdf ',0,' sfdf','Authorized','2017-11-18 23:10:08',NULL,'MEMBER',1);
 
 /*Table structure for table `cms_news` */
 
@@ -140,7 +142,6 @@ CREATE TABLE `cms_news` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `news_title` varchar(50) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
-  `photopath` varchar(250) DEFAULT NULL,
   `usercreated` int(5) DEFAULT NULL COMMENT 'cms_user',
   `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` varchar(5) DEFAULT NULL COMMENT 'ACT|DACT',
@@ -163,13 +164,15 @@ CREATE TABLE `cms_post` (
   `dislike` int(5) DEFAULT NULL,
   `usercreated` int(5) DEFAULT NULL COMMENT 'cms_member',
   `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` varchar(10) DEFAULT NULL COMMENT 'ACT|DACT',
+  `status` varchar(10) DEFAULT 'ACT' COMMENT 'ACT|DACT',
   PRIMARY KEY (`id`),
   KEY `FK_cms_post_member` (`usercreated`),
   CONSTRAINT `FK_cms_post_member` FOREIGN KEY (`usercreated`) REFERENCES `cms_member` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Data for the table `cms_post` */
+
+insert  into `cms_post`(`id`,`posttitle`,`description`,`like`,`dislike`,`usercreated`,`datecreated`,`status`) values (1,'asdasd','asdasdsa',NULL,NULL,6,'2017-11-19 20:45:45','ACT');
 
 /*Table structure for table `cms_post_vote` */
 
@@ -201,11 +204,11 @@ CREATE TABLE `cms_user` (
   `status` varchar(10) DEFAULT 'ACT' COMMENT 'ACT|DACT',
   `member_id` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 /*Data for the table `cms_user` */
 
-insert  into `cms_user`(`id`,`username`,`password`,`role`,`datecreated`,`status`,`member_id`) values (1,'admin','*667F407DE7C6AD07358FA38DAED7828A72014B4E','ADMIN','2017-10-28 22:03:51','ACT',1),(2,'mem','*667F407DE7C6AD07358FA38DAED7828A72014B4E','MEMBER','2017-10-29 08:05:25','ACT',2),(3,'manager','*667F407DE7C6AD07358FA38DAED7828A72014B4E','MANAGER','2017-10-29 08:06:10','ACT',3);
+insert  into `cms_user`(`id`,`username`,`password`,`role`,`datecreated`,`status`,`member_id`) values (1,'admin','*667F407DE7C6AD07358FA38DAED7828A72014B4E','ADMIN','2017-10-28 22:03:51','ACT',1),(2,'mem','*667F407DE7C6AD07358FA38DAED7828A72014B4E','MEMBER','2017-10-29 08:05:25','ACT',2),(3,'manager','*667F407DE7C6AD07358FA38DAED7828A72014B4E','MANAGER','2017-10-29 08:06:10','ACT',3),(4,'MEM6','*09904C85991002D20EFCC43E9A02743A702C68C0','MEMBER','2017-11-18 23:10:08','ACT',6);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -10,10 +10,11 @@
         </ul>
     </li>
     <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span data-hover="Short Codes">Recommond</span> <b class="caret"></b></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span data-hover="Recommond">Recommond</span> <b class="caret"></b></a>
         <ul class="dropdown-menu agile_short_dropdown">
-            <li><a href="manager_recommond_member.php">Recommond Member</a></li>
-            <li><a href="typography.html">Typography</a></li>
+            <li><a href="manager_authorization_member.php">Member Authorization</a></li>
+            <li><a href="manager_member_recommonds.php">My Recommond Members</a></li>
+            <!--<li><a href="typography.html">Typography</a></li>-->
         </ul>
     </li>
     

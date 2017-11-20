@@ -4,7 +4,7 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php session_start();?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -77,18 +77,18 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             <div class="col-md-2"></div>
             <div class="col-md-6">
 
-                <form>
+                <form action="admin_setup_election.php" method="post">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Title</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" >
+                        <label for="exampleInputEmail1">Election Title</label>
+                        <input name="electiontitle" type="text"  class="form-control" id="exampleInputEmail1" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">Start Date Time</label>
-                        <input type="date" />
+                        <input type="date" name="startdatetime" />
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">End Date Time</label>
-                        <input type="date" />
+                        <input type="date"  name="enddatetime" />
                     </div>
                     <!--                    <div class="form-group">
                                             <label for="exampleInputFile">Photo</label>
@@ -96,23 +96,33 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                             <p class="help-block">Related photo upload here.</p>
                                         </div>-->
 
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit"  name="btnSub" class="btn btn-primary">Submit</button>
                 </form>
+
+
+                <?php
+                include './model/DB.php';
+                if (isset($_POST['btnSub'])) {
+                    $sql = " INSERT INTO `cms_election`
+            (`electiontitle`,
+             `startdatetime`,
+             `enddatetime`,
+             `status`,
+             `usercreated`)
+VALUES ('" . $_POST['electiontitle'] . "',
+        '" . $_POST['startdatetime'] . "',
+        '" . $_POST['enddatetime'] . "',
+        'OPEN',
+        '" . $_SESSION['ssn_user']['id'] . "'); ";
+
+                    setData($sql, TRUE);
+                }
+                ?>
 
             </div>
             <div class="col-md-4">
 
-                <div class="form-group">
-                    <label for="exampleInputPassword1">Add Members</label>
-                    <select  class="form-control" id="exampleInputEmail1" >
-                        <option>--select--</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1"></label>
-                    <button type="submit" class="btn btn-primary">Add</button>
 
-                </div>
             </div>
         </div>
 
@@ -127,6 +137,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Status</th>
+                    <th></th>
                 </tr>
             </thead>
             <tfoot>
@@ -137,37 +148,40 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Status</th>
+                    <th></th>
+
                 </tr>
             </tfoot>
             <tbody>
-                <tr>
-                    <td>post 11</td>
-                    <td> Tresury Election 2017</td>
-                    <td>
-                        <i class="fa fa-user"></i>Gayan 
-                        <i class="fa fa-user"></i>chamil 
-                        <i class="fa fa-user"></i>Ashen
-                    </td>
-                    <td>2017-10-28</td>
-                    <td>2017-10-17</td>
-                    <td>active</td>
-
-                </tr>
-                <tr>
-                   <td>post 11</td>
-                    <td> Tresury Election 2017</td>
-                    <td>
-                        <i class="fa fa-user"></i>Gayan 
-                        <i class="fa fa-user"></i>chamil 
-                        <i class="fa fa-user"></i>Ashen
-                    </td>
-                    <td>2017-10-28</td>
-                    <td>2017-10-17</td>
-                    <td>active</td>
-
-                </tr>
-               
+                <?php
+                $sqlx = " SELECT * FROM `cms_election` ORDER BY id DESC ";
+                $resultx = getData($sqlx);
+                if ($resultx != FALSE) {
+                    while ($row = mysqli_fetch_assoc($resultx)) {
+                        ?>
+                        <tr>
+                            <td><?= $row['id']; ?></td>
+                            <td> <?= $row['electiontitle']; ?></td>
+                            <td>
+                                <i class="fa fa-user"></i>Gayan 
+                                <i class="fa fa-user"></i>chamil 
+                                <i class="fa fa-user"></i>Ashen
+                            </td>
+                            <td><?= $row['startdatetime']; ?></td>
+                            <td><?= $row['enddatetime']; ?></td>
+                            <td><?= $row['status']; ?></td>
+                            <td> <?php
+                                if ($row['status'] == 'OPEN') {
+                                    ?> <a href="admin_election_participats.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']?>"> Set Participants </a>  <?php
+                                }
+                                ?></td>
+                        </tr>
+                        <?php
+                    }
+                }
+                ?>
             </tbody>
+
         </table>
 
 

@@ -24,7 +24,7 @@ session_start();
 
     </head>	
     <body>
-        
+
         <!-- banner -->
         <div class="header">
 
@@ -64,7 +64,7 @@ session_start();
                     </nav>
 
                 </div>
-                
+
             </nav>
         </div>
 
@@ -74,9 +74,169 @@ session_start();
 
 
         <div class="row">
-            <div class="col-md-3">.col-md-8</div>
-            <div class="col-md-5">Post</div>
-            <div class="col-md-4">News</div>
+            <div class="col-md-2">.col-md-8</div>
+            <div class="col-md-6">
+
+                <?php
+                include './model/DB.php';
+
+                if (isset($_GET['pid'])) {
+                    $pid = $_GET['pid'];
+                    $action = $_GET['action'];
+                    $totalLike = $_GET['totalLike'];
+                    $totalDisLike = $_GET['totalDisLike'];
+
+
+                    echo 'Vote Posting';
+
+                    //user LIKE
+                    $sql_1 = " SELECT * FROM cms_post_vote WHERE postid = $pid AND memberid = " . $_SESSION['ssn_user']['id'];
+                    $result_1 = getData($sql_1);
+
+
+
+                    if ($result_1 != FALSE) {
+                        while ($row = mysqli_fetch_assoc($result_1)) {
+                            echo $row['type'];
+
+                            if ($action != $row['type']) {
+                                echo '<br>Invase :'.$action;
+                                //update the status
+                                switch ($action) {
+                                    case "LIKE":
+                                         echo '<br>CASE:LIKE';
+                                        $totalLike = $totalLike + 1;
+                                        $q = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
+                                        setUpdate($q,FALSE);
+
+                                        if ($totalDisLike != 0) {
+                                            $totalDisLike = $totalDisLike - 1;
+                                            $q2 = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
+                                            setUpdate($q2,FALSE);
+                                        } else {
+                                            $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
+                                            setData($sqlSetUserPost,TRUE);
+                                        }
+
+                                        $sqlSetUserPost = setUserUpdateVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
+                                        setUpdate($sqlSetUserPost,FALSE);
+                                        break;
+                                    case "DISLIKE":
+
+                                        echo '<br>CASE:DISLIKE';
+                                        $totalDisLike = $totalDisLike + 1;
+                                        $q = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
+                                        setUpdate($q,FALSE);
+
+                                        if ($totalLike != 0) {
+                                            $totalLike = $totalLike - 1;
+                                            $q2 = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
+                                            setUpdate($q2,FALSE);
+                                        } else {
+                                            $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
+                                            echo '<br>1:'.$sqlSetUserPost;
+                                            setData($sqlSetUserPost,TRUE);
+                                        }
+
+                                        $sqlSetUserPost = setUserUpdateVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
+                                        echo '<br>2:'.$sqlSetUserPost;
+                                        setUpdate($sqlSetUserPost,FALSE);
+                                        break;
+                                }
+                                //update the user_vote
+                            }
+                        }
+                    } else {
+                        //no vote found
+                       // echo '<br>Vote Not Found';
+//                          $totalLike = $_GET['totalLike'];
+//                    $totalDisLike = $_GET['totalDisLike'];
+                        switch ($action) {
+                            case "LIKE":
+                                echo 'LIKE';
+                                $totalLike = $totalLike + 1;
+                                $q = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
+                                setUpdate($q,FALSE);
+                                
+                                $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
+                                setData($sqlSetUserPost,FALSE);
+                                break;
+                            case "DISLIKE":
+                                echo 'DISLIKE';
+                                    $totalDisLike = $totalDisLike + 1;
+                                    $q = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
+                                    setUpdate($q,FALSE);
+                             
+                                $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
+                                setData($sqlSetUserPost,FALSE);
+                                break;
+                        }
+                    }
+                }
+
+                function setUserPostVote($postid, $memberid, $type) {
+
+                    $sql = " INSERT INTO `cms_post_vote`
+            (`postid`,
+             `memberid`,
+             `type`)
+VALUES ('$postid',
+        '$memberid',
+        '$type'); ";
+                    return $sql;
+                }
+
+                function setUserUpdateVote($postid, $memberid, $type) {
+
+                    $sql = " UPDATE cms_post_vote SET TYPE = '$type' WHERE postid = $postid AND memberid = $memberid ";
+                    return $sql;
+                }
+                ?>
+                <table class="table table-striped">
+                    <?php
+                    $sqlPost = " SELECT * FROM cms_post WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
+                    $resultAllPost = getData($sqlPost);
+                    if ($resultAllPost != FALSE) {
+                        while ($row = mysqli_fetch_assoc($resultAllPost)) {
+                            ?>
+
+                            <tr>
+                                <td><?= $row['id'] ?></td>
+                                <td style="color: black">
+                                    <p style="font-weight: bold"><?= $row['posttitle'] ?></p>
+                                    <?= $row['description'] ?>
+                                    <p style="font-size: x-small">[ <?= $row['datecreated'] ?> ]</p></td>
+                                <td>
+                                    <a href="home.php?pid=<?= $row['id'] ?>&totalDisLike=<?= $row['dislike'] ?>&totalLike=<?= $row['plike'] ?>&action=LIKE&usr=<?= $row['usercreated'] ?>"> <i class="fa fa-thumbs-up"></i> <?= $row['plike']; ?></a>
+                                    <a href="home.php?pid=<?= $row['id'] ?>&totalDisLike=<?= $row['dislike'] ?>&totalLike=<?= $row['plike'] ?>&action=DISLIKE&usr=<?= $row['usercreated'] ?>"> <i class="fa fa-thumbs-down"></i> <?= $row['dislike']; ?></a>
+                                </td>
+                            </tr>
+                            <td></td>
+                            <td></td>
+
+                            <?php
+                        }
+                    }
+                    ?>
+
+                </table> 
+            </div>
+            <div class="col-md-4">News
+         <?php
+                $sqlNews = " SELECT * FROM cms_news WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
+                $resultNews = getData($sqlNews);
+                if ($resultNews != FALSE) {
+                    while ($row = mysqli_fetch_assoc($resultNews)) {
+                        ?>
+                <div class="bg-info" style="margin-bottom: 10px"> <b><?= $row['news_title']?></b>
+                 <p > <?= $row['description']?> </p>
+                 <p style="font-size: small"> <?= $row['datecreated']?> </p>
+                </div>
+                        <?php
+                    }
+                }
+                ?>
+            </div>
         </div>
 
 

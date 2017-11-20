@@ -4,7 +4,7 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php session_start();?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -77,64 +77,97 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             <div class="col-md-2"></div>
             <div class="col-md-4">
 
-                <form>
+                <form action="admin_manage_item.php" method="post">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Item Name</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" >
+                        <input type="text" name="itemname" class="form-control" id="exampleInputEmail1" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Qty</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" >
+                        <input type="text"  name="qty"  class="form-control" id="exampleInputEmail1" >
                     </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Description</label>
-                        <textarea class="form-control" ></textarea>
-                    </div>
-<!--                    <div class="form-group">
-                        <label for="exampleInputFile">Photo</label>
-                        <input type="file" id="exampleInputFile">
-                        <p class="help-block">Related photo upload here.</p>
-                    </div>-->
-                  
-                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                    <!--                    <div class="form-group">
+                                            <label for="exampleInputFile">Photo</label>
+                                            <input type="file" id="exampleInputFile">
+                                            <p class="help-block">Related photo upload here.</p>
+                                        </div>-->
+
+                    <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
                 </form>
-                
+
+                <?php
+                include './model/DB.php';
+                if (isset($_POST['btnSub'])) {
+                    $sql = " INSERT INTO `cmsdb`.`cms_item`
+            (`itemname`,
+             `qyt`)
+VALUES ('" . $_POST['itemname'] . "',
+        '" . $_POST['qty'] . "'); ";
+                    setData($sql, TRUE);
+                }
+                ?>
+
             </div>
             <div class="col-md-6">
+
+
                 
-                
+
+
                 <table id="example" class="display" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Qty</th>
-                    <th>Request</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                   <th>Item</th>
-                    <th>Qty</th>
-                    <th>Request</th>
-                    <th></th>
-                </tr>
-            </tfoot>
-            <tbody>
-                <tr>
-                    <td>Hut</td>
-                    <td>50 </td>
-                    <td>5 <a href="">View</a></td>
-                    <td><a href="">Update</a></td>
-                  
-                </tr>
-                
-            </tbody>
-        </table>
-                
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Qty</th>
+                            <th>Reuest</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Qty</th>
+                            <th>Reuest</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        <?php
+                        $sql = " SELECT * FROM cms_item ";
+                        $resultx = getData($sql);
+                        if ($resultx != FALSE) {
+                            while ($row = mysqli_fetch_assoc($resultx)) {
+                                ?>
+
+                                <tr>
+                                    <td><?= $row['itemname']; ?></td>
+                                    <td><?= $row['qyt']; ?>  </td>
+                                    <td> [ <?php echo getItemCount($row['id']);?> ] <a href="admin_items_request.php?itemID=<?= $row['id']?>">View</a></td>
+                                </tr>
+                                <?php
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
+
             </div>
         </div>
 
+
+        <?php
+
+        function getItemCount($id) {
+            $sql = " SELECT COUNT(*) AS cnt FROM cms_inventory WHERE itemid = $id ";
+            $resultx = getData($sql);
+            $count = 0;
+            if ($resultx != FALSE) {
+                while ($row = mysqli_fetch_assoc($resultx)) {
+                    $count = $row['cnt'];
+                }
+            }
+            return $count;  
+        }
+        ?>
 
 
 
@@ -410,11 +443,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             });
         </script>
         <!-- //here ends scrolling icon -->
-        
-        
+
+
         <!--data table-->
         <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
-          <script type="text/javascript">
+        <script type="text/javascript">
             $(document).ready(function () {
                 $('#example').DataTable();
             });

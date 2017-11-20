@@ -10,10 +10,9 @@
         <!-- //gallery -->
         <!-- font-awesome-icons -->
         <link href="css/font-awesome.css" rel="stylesheet"> 
-        <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,600,600i,700,900" rel="stylesheet">
+        <!--<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,600,600i,700,900" rel="stylesheet">-->
 
           <!-- datatable -->
           <link href="css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
           
-          <!--full calander-->
-          <link href="css/fullcalendar.css" rel="stylesheet" type="text/css"/>
+     

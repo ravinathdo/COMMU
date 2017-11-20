@@ -4,7 +4,7 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php session_start();?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -76,355 +76,452 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-6">
-
-                <form>
+                <form action="member_post.php" method="post">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Post Title</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" >
+                        <input name="posttitle" type="text" class="form-control" id="exampleInputEmail1" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">Description</label>
-                        <textarea class="form-control" ></textarea>
+                        <textarea name="description" class="form-control" ></textarea>
                     </div>
-<!--                    <div class="form-group">
-                        <label for="exampleInputFile">Photo</label>
-                        <input type="file" id="exampleInputFile">
-                        <p class="help-block">Related photo upload here.</p>
-                    </div>-->
-                  
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <!--                    <div class="form-group">
+                                            <label for="exampleInputFile">Photo</label>
+                                            <input type="file" id="exampleInputFile">
+                                            <p class="help-block">Related photo upload here.</p>
+                                        </div>-->
+
+                    <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
                 </form>
-                
+
+
+                <?php
+                include './model/DB.php';
+                if (isset($_POST['btnSub'])) {
+                    $sql = " INSERT INTO `cmsdb`.`cms_post`
+            (`posttitle`,
+             `description`,
+             `usercreated`)
+VALUES ('" . $_POST['posttitle'] . "',
+        '" . $_POST['description'] . "',
+        '" . $_SESSION['ssn_user']['id'] . "'); ";
+
+                    setData($sql,TRUE);
+                }
+                ?>
+
             </div>
-            <div class="col-md-4">.col-md-4</div>
+            <div class="col-md-4"></div>
         </div>
 
 
 
-<table id="example" class="display" cellspacing="0" width="100%">
+        <?php
+        if (isset($_GET['pid'])) {
+            $pid = $_GET['pid'];
+            $action = $_GET['action'];
+            $sql = " UPDATE cms_post SET STATUS = '$action' WHERE id = $pid ";
+            setUpdate($sql,TRUE);
+        }
+        ?>
+
+        <table id="example" class="display" cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th>Post Title</th>
+                    <th>POST ID</th>
+                    <th>Title</th>
+                    <th>Post Date</th>
                     <th>Likes</th>
-                    <th>Posted Date</th>
-                    <th>Posted Date</th>
+                    <th>Dislike</th>
                     <th>Status</th>
+                    <th></th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
-                   <th>News Title</th>
+                    <th>POST ID</th>
+                    <th>Title</th>
+                    <th>Post Date</th>
                     <th>Likes</th>
-                    <th>Posted Date</th>
-                    <th>Posted Date</th>
+                    <th>Dislike</th>
                     <th>Status</th>
+                    <th></th>
                 </tr>
             </tfoot>
             <tbody>
-                <tr>
-                    <td>post 11</td>
-                    <td><i class="fa fa-thumbs-down"></i> 11  <i class="fa fa-thumbs-up"></i> 3</td>
-                    <td>Created By</td>
-                    <td>Approved By</td>
-                    <td><button type="button" class="btn btn-warning">Deactive</button></td>
-                  
-                </tr>
-                <tr>
-                   <td>Post 11</td>
-                   <td><i class="fa fa-thumbs-down"></i> 11  <i class="fa fa-thumbs-up"></i> 3</td>
-                    <td>Created By</td>
-                    <td>Approved By</td>
-                    <td><button type="button" class="btn btn-success">Active</button></td>
-                </tr>
-                <tr>
-                   <td>post 11</td>
-                   <td><i class="fa fa-thumbs-down"></i> 11  <i class="fa fa-thumbs-up"></i> 3</td>
-                    <td>Created By</td>
-                    <td>Approved By</td>
-                    <td><button type="button" class="btn btn-danger">Closed</button></td>
-                </tr>
+                <?php
+                //get all post on member
+                $sqlAllPost = " SELECT * FROM cms_post";
+                $resultPost = getData($sqlAllPost);
+                if ($resultPost != FALSE) {
+                    while ($row = mysqli_fetch_assoc($resultPost)) {
+                        /*
+                          `id`,
+                          `posttitle`,
+                          `description`,
+                          `like`,
+                          `dislike`,
+                          `usercreated`,
+                          `datecreated`,
+                          `status`
+                         *                          */
+                        ?>
+                        <tr>
+                            <td><?= $row['id']; ?></td>
+                            <td><?= $row['posttitle']; ?></td>
+                            <td><?= $row['description']; ?> <span class="btn btn-default btn-xs">[<?= $row['datecreated']; ?>] </span></td>
+                            <td><i class="fa fa-thumbs-up"></i> <?= $row['plike']; ?></td>
+                            <td><i class="fa fa-thumbs-down"></i> <?= $row['dislike']; ?> </td>
+                            <td><?= $row['status']; ?>    
+                              <?php if ($row['status'] == 'PENDING') {
+                                  ?> <a href="admin_post.php?pid=<?= $row['id']; ?>&action=ACTIVE" >Activate Now</a> <?php
+                                } 
+                               ?>
+                            
+                            </td>
+                            <td><?php
+                if ($row['status'] != 'CLOSE') {
+                            ?> <a href="admin_post.php?pid=<?= $row['id']; ?>&action=CLOSE" >Close Now</a> <?php
+                                }
+                                ?></td>
+                        </tr>
+                        <?php
+                    }
+                }
+                ?>
             </tbody>
         </table>
 
+    </div>
+    <div class="col-md-4">.col-md-4</div>
+</div>
+
+
+
+<table id="example" class="display" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>Post Title</th>
+            <th>Likes</th>
+            <th>Posted Date</th>
+            <th>Posted Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>News Title</th>
+            <th>Likes</th>
+            <th>Posted Date</th>
+            <th>Posted Date</th>
+            <th>Status</th>
+        </tr>
+    </tfoot>
+    <tbody>
+        <tr>
+            <td>post 11</td>
+            <td><i class="fa fa-thumbs-down"></i> 11  <i class="fa fa-thumbs-up"></i> 3</td>
+            <td>Created By</td>
+            <td>Approved By</td>
+            <td><button type="button" class="btn btn-warning">Deactive</button></td>
+
+        </tr>
+        <tr>
+            <td>Post 11</td>
+            <td><i class="fa fa-thumbs-down"></i> 11  <i class="fa fa-thumbs-up"></i> 3</td>
+            <td>Created By</td>
+            <td>Approved By</td>
+            <td><button type="button" class="btn btn-success">Active</button></td>
+        </tr>
+        <tr>
+            <td>post 11</td>
+            <td><i class="fa fa-thumbs-down"></i> 11  <i class="fa fa-thumbs-up"></i> 3</td>
+            <td>Created By</td>
+            <td>Approved By</td>
+            <td><button type="button" class="btn btn-danger">Closed</button></td>
+        </tr>
+    </tbody>
+</table>
 
 
 
 
-        <!-- footer -->
-        <div class="footer_agile_w3ls">
-            <div class="container">
-                <div class="agileits_w3layouts_footer_grids">
-                    <div class="col-md-3 footer-w3-agileits">
-                        <h3>Training Grounds</h3>
-                        <ul>
-                            <li>Etiam quis placerat</li>
-                            <li>the printing</li>
-                            <li>unknown printer</li>
-                            <li>Lorem Ipsum</li>
-                        </ul>
+
+<!-- footer -->
+<div class="footer_agile_w3ls">
+    <div class="container">
+        <div class="agileits_w3layouts_footer_grids">
+            <div class="col-md-3 footer-w3-agileits">
+                <h3>Training Grounds</h3>
+                <ul>
+                    <li>Etiam quis placerat</li>
+                    <li>the printing</li>
+                    <li>unknown printer</li>
+                    <li>Lorem Ipsum</li>
+                </ul>
+            </div>
+            <div class="col-md-3 footer-agileits">
+                <h3>Specialized</h3>
+                <ul>
+                    <li>the printing</li>
+                    <li>Etiam quis placerat</li>
+                    <li>Lorem Ipsum</li>
+                    <li>unknown printer</li>
+                </ul>
+            </div>
+            <div class="col-md-3 footer-wthree">
+                <h3>Partners</h3>
+                <ul>
+                    <li>unknown printer</li>
+                    <li>Lorem Ipsum</li>
+                    <li>the printing</li>
+                    <li>Etiam quis placerat</li>
+                </ul>
+            </div>
+
+            <div class="col-md-3 footer-agileits-w3layouts">
+                <h3>Our Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="events.html">Events</a></li>
+                    <li><a href="mail.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+
+        </div>
+        <div class="agileits_w3layouts_logo logo2">
+            <h2><a href="index.html">Community</a></h2>
+            <div class="agileits-social">
+                <ul>
+                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="fa fa-rss"></i></a></li>
+                    <li><a href="#"><i class="fa fa-vk"></i></a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="wthree_copy_right">
+    <div class="container">
+        <p>© 2017 All rights reserved | Design by COMMU</p>
+    </div>
+</div>
+<!-- //footer -->
+
+
+
+
+<!-- Modal1 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                <div class="signin-form profile">
+                    <h3 class="agileinfo_sign">Sign In</h3>	
+                    <div class="login-form">
+                        <form action="#" method="post">
+                            <input type="email" name="email" placeholder="E-mail" required="">
+                            <input type="password" name="password" placeholder="Password" required="">
+                            <div class="tp">
+                                <input type="submit" value="Sign In">
+                            </div>
+                        </form>
                     </div>
-                    <div class="col-md-3 footer-agileits">
-                        <h3>Specialized</h3>
-                        <ul>
-                            <li>the printing</li>
-                            <li>Etiam quis placerat</li>
-                            <li>Lorem Ipsum</li>
-                            <li>unknown printer</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3 footer-wthree">
-                        <h3>Partners</h3>
-                        <ul>
-                            <li>unknown printer</li>
-                            <li>Lorem Ipsum</li>
-                            <li>the printing</li>
-                            <li>Etiam quis placerat</li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-3 footer-agileits-w3layouts">
-                        <h3>Our Links</h3>
-                        <ul>
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="events.html">Events</a></li>
-                            <li><a href="mail.html">Contact</a></li>
-                        </ul>
-                    </div>
-                    <div class="clearfix"></div>
-
-                </div>
-                <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Community</a></h2>
-                    <div class="agileits-social">
+                    <div class="login-social-grids">
                         <ul>
                             <li><a href="#"><i class="fa fa-facebook"></i></a></li>
                             <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                             <li><a href="#"><i class="fa fa-rss"></i></a></li>
-                            <li><a href="#"><i class="fa fa-vk"></i></a></li>
                         </ul>
                     </div>
-
+                    <p><a href="#" data-toggle="modal" data-target="#myModal3" > Don't have an account?</a></p>
                 </div>
             </div>
         </div>
-        <div class="wthree_copy_right">
-            <div class="container">
-                <p>© 2017 All rights reserved | Design by COMMU</p>
-            </div>
-        </div>
-        <!-- //footer -->
+    </div>
+</div>
+<!-- //Modal1 -->	
+<!-- Modal2 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
 
-
-
-
-        <!-- Modal1 -->
-        <div class="modal fade" id="myModal2" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-
-                        <div class="signin-form profile">
-                            <h3 class="agileinfo_sign">Sign In</h3>	
-                            <div class="login-form">
-                                <form action="#" method="post">
-                                    <input type="email" name="email" placeholder="E-mail" required="">
-                                    <input type="password" name="password" placeholder="Password" required="">
-                                    <div class="tp">
-                                        <input type="submit" value="Sign In">
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="login-social-grids">
-                                <ul>
-                                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-rss"></i></a></li>
-                                </ul>
-                            </div>
-                            <p><a href="#" data-toggle="modal" data-target="#myModal3" > Don't have an account?</a></p>
-                        </div>
+                <div class="signin-form profile">
+                    <h3 class="agileinfo_sign">Sign Up</h3>	
+                    <div class="login-form">
+                        <form action="#" method="post">
+                            <input type="text" name="name" placeholder="Username" required="">
+                            <input type="email" name="email" placeholder="Email" required="">
+                            <input type="password" name="password" placeholder="Password" required="">
+                            <input type="password" name="password" placeholder="Confirm Password" required="">
+                            <input type="submit" value="Sign Up">
+                        </form>
                     </div>
+                    <p><a href="#"> By clicking register, I agree to your terms</a></p>
                 </div>
             </div>
         </div>
-        <!-- //Modal1 -->	
-        <!-- Modal2 -->
-        <div class="modal fade" id="myModal3" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+</div>
+<!-- //Modal2 -->	
 
-                        <div class="signin-form profile">
-                            <h3 class="agileinfo_sign">Sign Up</h3>	
-                            <div class="login-form">
-                                <form action="#" method="post">
-                                    <input type="text" name="name" placeholder="Username" required="">
-                                    <input type="email" name="email" placeholder="Email" required="">
-                                    <input type="password" name="password" placeholder="Password" required="">
-                                    <input type="password" name="password" placeholder="Confirm Password" required="">
-                                    <input type="submit" value="Sign Up">
-                                </form>
-                            </div>
-                            <p><a href="#"> By clicking register, I agree to your terms</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- //Modal2 -->	
+<!-- //bootstrap-pop-up -->
 
-        <!-- //bootstrap-pop-up -->
-
-        <!-- js -->
-        <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
-        <!-- //js -->
-        <!-- Counter required files -->
-        <script type="text/javascript" src="js/dscountdown.min.js"></script>
-        <script src="js/demo-1.js"></script>
-        <script>
-            jQuery(document).ready(function ($) {
-                $('.demo2').dsCountDown({
-                    endDate: new Date("December 24, 2020 23:59:00"),
-                    theme: 'black'
-                });
-            });
-        </script>
-        <!-- //Counter required files -->
+<!-- js -->
+<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+<!-- //js -->
+<!-- Counter required files -->
+<script type="text/javascript" src="js/dscountdown.min.js"></script>
+<script src="js/demo-1.js"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        $('.demo2').dsCountDown({
+            endDate: new Date("December 24, 2020 23:59:00"),
+            theme: 'black'
+        });
+    });
+</script>
+<!-- //Counter required files -->
 
 
 
-        <script src="js/mainScript.js"></script>
-        <script src="js/rgbSlide.min.js"></script>
-        <!-- carousal -->
-        <script src="js/slick.js" type="text/javascript" charset="utf-8"></script>
-        <script type="text/javascript">
-            $(document).on('ready', function () {
-                $(".center").slick({
-                    dots: true,
-                    infinite: true,
-                    centerMode: true,
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                    responsive: [
-                        {
-                            breakpoint: 768,
-                            settings: {
-                                arrows: true,
-                                centerMode: false,
-                                slidesToShow: 2
-                            }
-                        },
-                        {
-                            breakpoint: 480,
-                            settings: {
-                                arrows: true,
-                                centerMode: false,
-                                centerPadding: '40px',
-                                slidesToShow: 1
-                            }
-                        }
-                    ]
-                });
-            });
-        </script>
-        <!-- //carousal -->
-        <!-- flexisel -->
-        <script type="text/javascript">
-            $(window).load(function () {
-                $("#flexiselDemo1").flexisel({
-                    visibleItems: 4,
-                    animationSpeed: 1000,
-                    autoPlay: true,
-                    autoPlaySpeed: 3000,
-                    pauseOnHover: true,
-                    enableResponsiveBreakpoints: true,
-                    responsiveBreakpoints: {
-                        portrait: {
-                            changePoint: 480,
-                            visibleItems: 1
-                        },
-                        landscape: {
-                            changePoint: 640,
-                            visibleItems: 2
-                        },
-                        tablet: {
-                            changePoint: 768,
-                            visibleItems: 2
-                        }
+<script src="js/mainScript.js"></script>
+<script src="js/rgbSlide.min.js"></script>
+<!-- carousal -->
+<script src="js/slick.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    $(document).on('ready', function () {
+        $(".center").slick({
+            dots: true,
+            infinite: true,
+            centerMode: true,
+            slidesToShow: 2,
+            slidesToScroll: 2,
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        arrows: true,
+                        centerMode: false,
+                        slidesToShow: 2
                     }
-                });
-
-            });
-        </script>
-        <script type="text/javascript" src="js/jquery.flexisel.js"></script>
-        <!-- //flexisel -->
-        <!-- gallery-pop-up -->
-        <script src="js/lsb.min.js"></script>
-        <script>
-            $(window).load(function () {
-                $.fn.lightspeedBox();
-            });
-        </script>
-        <!-- //gallery-pop-up -->
-        <!-- flexSlider -->
-        <script defer src="js/jquery.flexslider.js"></script>
-        <script type="text/javascript">
-            $(window).load(function () {
-                $('.flexslider').flexslider({
-                    animation: "slide",
-                    start: function (slider) {
-                        $('body').removeClass('loading');
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        arrows: true,
+                        centerMode: false,
+                        centerPadding: '40px',
+                        slidesToShow: 1
                     }
-                });
-            });
-        </script>
-        <!-- //flexSlider -->
+                }
+            ]
+        });
+    });
+</script>
+<!-- //carousal -->
+<!-- flexisel -->
+<script type="text/javascript">
+    $(window).load(function () {
+        $("#flexiselDemo1").flexisel({
+            visibleItems: 4,
+            animationSpeed: 1000,
+            autoPlay: true,
+            autoPlaySpeed: 3000,
+            pauseOnHover: true,
+            enableResponsiveBreakpoints: true,
+            responsiveBreakpoints: {
+                portrait: {
+                    changePoint: 480,
+                    visibleItems: 1
+                },
+                landscape: {
+                    changePoint: 640,
+                    visibleItems: 2
+                },
+                tablet: {
+                    changePoint: 768,
+                    visibleItems: 2
+                }
+            }
+        });
 
-        <!-- start-smooth-scrolling -->
-        <script type="text/javascript" src="js/move-top.js"></script>
-        <script type="text/javascript" src="js/easing.js"></script>
-        <script type="text/javascript">
-            jQuery(document).ready(function ($) {
-                $(".scroll").click(function (event) {
-                    event.preventDefault();
-                    $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1000);
-                });
-            });
-        </script>
-        <!-- start-smooth-scrolling -->
-        <!-- for bootstrap working -->
-        <script src="js/bootstrap.js"></script>
-        <!-- //for bootstrap working -->
-        <!-- here stars scrolling icon -->
-        <script type="text/javascript">
-            $(document).ready(function () {
-                /*
-                 var defaults = {
-                 containerID: 'toTop', // fading element id
-                 containerHoverID: 'toTopHover', // fading element hover id
-                 scrollSpeed: 1200,
-                 easingType: 'linear' 
-                 };
-                 */
+    });
+</script>
+<script type="text/javascript" src="js/jquery.flexisel.js"></script>
+<!-- //flexisel -->
+<!-- gallery-pop-up -->
+<script src="js/lsb.min.js"></script>
+<script>
+    $(window).load(function () {
+        $.fn.lightspeedBox();
+    });
+</script>
+<!-- //gallery-pop-up -->
+<!-- flexSlider -->
+<script defer src="js/jquery.flexslider.js"></script>
+<script type="text/javascript">
+    $(window).load(function () {
+        $('.flexslider').flexslider({
+            animation: "slide",
+            start: function (slider) {
+                $('body').removeClass('loading');
+            }
+        });
+    });
+</script>
+<!-- //flexSlider -->
 
-                $().UItoTop({easingType: 'easeOutQuart'});
+<!-- start-smooth-scrolling -->
+<script type="text/javascript" src="js/move-top.js"></script>
+<script type="text/javascript" src="js/easing.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $(".scroll").click(function (event) {
+            event.preventDefault();
+            $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1000);
+        });
+    });
+</script>
+<!-- start-smooth-scrolling -->
+<!-- for bootstrap working -->
+<script src="js/bootstrap.js"></script>
+<!-- //for bootstrap working -->
+<!-- here stars scrolling icon -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        /*
+         var defaults = {
+         containerID: 'toTop', // fading element id
+         containerHoverID: 'toTopHover', // fading element hover id
+         scrollSpeed: 1200,
+         easingType: 'linear' 
+         };
+         */
 
-            });
-        </script>
-        <!-- //here ends scrolling icon -->
-        
-        
-        <!--data table-->
-        <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
-          <script type="text/javascript">
-            $(document).ready(function () {
-                $('#example').DataTable();
-            });
-        </script>
-    </body>
+        $().UItoTop({easingType: 'easeOutQuart'});
+
+    });
+</script>
+<!-- //here ends scrolling icon -->
+
+
+<!--data table-->
+<script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+</script>
+</body>
 </html>
