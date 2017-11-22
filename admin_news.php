@@ -52,7 +52,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <h1><a class="navbar-brand" href="index.html"><span>C</span>OMMU</a></h1>
+                    <h1><a class="navbar-brand" href="home.php"><span>C</span>OMMU</a></h1>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
@@ -62,10 +62,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 </div>
                 <div class="w3_agile_search">
-                    <form action="#" method="post">
-                        <input type="search" name="Search" placeholder="Search Keywords..." required="" />
-                        <input type="submit" value="Search">
-                    </form>
+                   <?php include './_search.php';?>
                 </div>
             </nav>
         </div>
@@ -79,6 +76,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 <?php
                 include './model/DB.php';
+                include './model/MESSAGE_LIST.php';
                 if (isset($_POST['btnSub'])) {
                     $sql = " INSERT INTO `cms_news`
             (`news_title`,
@@ -89,16 +87,19 @@ VALUES ('" . $_POST['news_title'] . "',
         '" . $_SESSION['ssn_user']['id'] . "'); ";
 
                     setData($sql, TRUE);
+                    //sms
+                    $sms = $_NEWS_CREATION_SMS.$_POST['news_title'];
+                    sendSMStoAll($sms);
                 }
                 ?>
                 <form action="admin_news.php" method="post">
                     <div class="form-group">
                         <label for="exampleInputEmail1">News Title</label>
-                        <input name="news_title" type="text" class="form-control" id="exampleInputEmail1" >
+                        <input name="news_title" required="" type="text" class="form-control" id="exampleInputEmail1" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">Description</label>
-                        <textarea name="description" class="form-control" ></textarea>
+                        <textarea name="description" required="" class="form-control" ></textarea>
                     </div>
                     <!--   
                     `id`,
@@ -112,7 +113,7 @@ VALUES ('" . $_POST['news_title'] . "',
                 </form>
 
             </div>
-            <div class="col-md-4">.col-md-4</div>
+            <div class="col-md-4"></div>
         </div>
 
 
@@ -178,68 +179,7 @@ VALUES ('" . $_POST['news_title'] . "',
 
 
         <!-- footer -->
-        <div class="footer_agile_w3ls">
-            <div class="container">
-                <div class="agileits_w3layouts_footer_grids">
-                    <div class="col-md-3 footer-w3-agileits">
-                        <h3>Training Grounds</h3>
-                        <ul>
-                            <li>Etiam quis placerat</li>
-                            <li>the printing</li>
-                            <li>unknown printer</li>
-                            <li>Lorem Ipsum</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3 footer-agileits">
-                        <h3>Specialized</h3>
-                        <ul>
-                            <li>the printing</li>
-                            <li>Etiam quis placerat</li>
-                            <li>Lorem Ipsum</li>
-                            <li>unknown printer</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3 footer-wthree">
-                        <h3>Partners</h3>
-                        <ul>
-                            <li>unknown printer</li>
-                            <li>Lorem Ipsum</li>
-                            <li>the printing</li>
-                            <li>Etiam quis placerat</li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-3 footer-agileits-w3layouts">
-                        <h3>Our Links</h3>
-                        <ul>
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="events.html">Events</a></li>
-                            <li><a href="mail.html">Contact</a></li>
-                        </ul>
-                    </div>
-                    <div class="clearfix"></div>
-
-                </div>
-                <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Community</a></h2>
-                    <div class="agileits-social">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa fa-rss"></i></a></li>
-                            <li><a href="#"><i class="fa fa-vk"></i></a></li>
-                        </ul>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <div class="wthree_copy_right">
-            <div class="container">
-                <p>© 2017 All rights reserved | Design by COMMU</p>
-            </div>
-        </div>
+        <?php include './_footer.php';?>
         <!-- //footer -->
 
 

@@ -62,10 +62,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 </div>
                 <div class="w3_agile_search">
-                    <form action="#" method="post">
-                        <input type="search" name="Search" placeholder="Search Keywords..." required="" />
-                        <input type="submit" value="Search">
-                    </form>
+                   <?php include './_search.php';?>
                 </div>
             </nav>
         </div>
@@ -80,15 +77,19 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 <form action="admin_setup_election.php" method="post">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Election Title</label>
-                        <input name="electiontitle" type="text"  class="form-control" id="exampleInputEmail1" >
+                        <input name="electiontitle" required="" type="text"  class="form-control" id="exampleInputEmail1" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Post Title</label>
+                        <input name="post_title" required="" type="text"  class="form-control" id="exampleInputEmail1" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">Start Date Time</label>
-                        <input type="date" name="startdatetime" />
+                        <input type="date" required="" name="startdatetime" />
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">End Date Time</label>
-                        <input type="date"  name="enddatetime" />
+                        <input type="date" required="" name="enddatetime" />
                     </div>
                     <!--                    <div class="form-group">
                                             <label for="exampleInputFile">Photo</label>
@@ -102,20 +103,27 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 <?php
                 include './model/DB.php';
+                include './model/MESSAGE_LIST.php';
                 if (isset($_POST['btnSub'])) {
                     $sql = " INSERT INTO `cms_election`
             (`electiontitle`,
              `startdatetime`,
              `enddatetime`,
              `status`,
+             `post_title`,
              `usercreated`)
 VALUES ('" . $_POST['electiontitle'] . "',
         '" . $_POST['startdatetime'] . "',
         '" . $_POST['enddatetime'] . "',
         'OPEN',
+        '" . $_POST['post_title'] . "',
         '" . $_SESSION['ssn_user']['id'] . "'); ";
 
                     setData($sql, TRUE);
+                    
+                    $sms = $_ELECTION_CREATION_SMS.$_POST['electiontitle'];
+                    sendSMStoAll($msg);
+                    
                 }
                 ?>
 
@@ -163,16 +171,36 @@ VALUES ('" . $_POST['electiontitle'] . "',
                             <td><?= $row['id']; ?></td>
                             <td> <?= $row['electiontitle']; ?></td>
                             <td>
-                                <i class="fa fa-user"></i>Gayan 
-                                <i class="fa fa-user"></i>chamil 
-                                <i class="fa fa-user"></i>Ashen
-                            </td>
+
+                                        <ul>
+                                            <?php
+                                            //get member list with votes
+                                            $sqlV = " 
+SELECT cms_member.*,cms_election_vote.vote FROM cms_election_vote
+INNER JOIN cms_member
+ON cms_election_vote.memberid = cms_member.id 
+WHERE cms_election_vote.electionid = '" . $row['id'] . "'
+ORDER BY cms_election_vote.vote DESC  ";
+                                            
+      
+
+                                            $resulty = getData($sqlV);
+                                            if ($resulty != FALSE) {
+                                                while ($rowy = mysqli_fetch_assoc($resulty)) {
+                                                    ?>
+                                                    <li <?php if ($rowy['username'] == $row['winner']) { ?>   style="color: red"   <?php } ?>> <i class="fa fa-user"></i> [ <?= $rowy['vote'] ?> ] <?= $rowy['username'] ?> -  <?= $rowy['firstname'] ?>  <?= $rowy['lastname'] ?></li>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
+                                        </ul>
+                                    </td>
                             <td><?= $row['startdatetime']; ?></td>
                             <td><?= $row['enddatetime']; ?></td>
                             <td><?= $row['status']; ?></td>
                             <td> <?php
                                 if ($row['status'] == 'OPEN') {
-                                    ?> <a href="admin_election_participats.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']?>"> Set Participants </a>  <?php
+                                    ?> <a href="admin_election_participats.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']?>&post_title=<?= $row['post_title']?>"> Set Participants </a>  <?php
                                 }
                                 ?></td>
                         </tr>
@@ -189,68 +217,7 @@ VALUES ('" . $_POST['electiontitle'] . "',
 
 
         <!-- footer -->
-        <div class="footer_agile_w3ls">
-            <div class="container">
-                <div class="agileits_w3layouts_footer_grids">
-                    <div class="col-md-3 footer-w3-agileits">
-                        <h3>Training Grounds</h3>
-                        <ul>
-                            <li>Etiam quis placerat</li>
-                            <li>the printing</li>
-                            <li>unknown printer</li>
-                            <li>Lorem Ipsum</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3 footer-agileits">
-                        <h3>Specialized</h3>
-                        <ul>
-                            <li>the printing</li>
-                            <li>Etiam quis placerat</li>
-                            <li>Lorem Ipsum</li>
-                            <li>unknown printer</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3 footer-wthree">
-                        <h3>Partners</h3>
-                        <ul>
-                            <li>unknown printer</li>
-                            <li>Lorem Ipsum</li>
-                            <li>the printing</li>
-                            <li>Etiam quis placerat</li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-3 footer-agileits-w3layouts">
-                        <h3>Our Links</h3>
-                        <ul>
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="events.html">Events</a></li>
-                            <li><a href="mail.html">Contact</a></li>
-                        </ul>
-                    </div>
-                    <div class="clearfix"></div>
-
-                </div>
-                <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Community</a></h2>
-                    <div class="agileits-social">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa fa-rss"></i></a></li>
-                            <li><a href="#"><i class="fa fa-vk"></i></a></li>
-                        </ul>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <div class="wthree_copy_right">
-            <div class="container">
-                <p>© 2017 All rights reserved | Design by COMMU</p>
-            </div>
-        </div>
+        <?php include './_footer.php';?>
         <!-- //footer -->
 
 

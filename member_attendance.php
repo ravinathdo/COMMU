@@ -4,13 +4,11 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php
-session_start();
-?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu</title>
+        <title>Commu | Template</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -24,7 +22,6 @@ session_start();
 
     </head>	
     <body>
-
         <!-- banner -->
         <div class="header">
 
@@ -59,228 +56,50 @@ session_start();
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
-                    <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu.php'; ?>
-                    </nav>
+                    <?php include './_menu.php'; ?>
 
                 </div>
-
+                <div class="w3_agile_search">
+                    <form action="#" method="post">
+                        <input type="search" name="Search" placeholder="Search Keywords..." required="" />
+                        <input type="submit" value="Search">
+                    </form>
+                </div>
             </nav>
         </div>
 
 
 
-
-
-
         <div class="row">
-           <div class="col-md-2">
-               <p style="font-weight: bold;color: #09347a">Open Elections</p>
-                <?php
-                  include './model/DB.php';
-                $sqlElection = " SELECT * FROM cms_election WHERE STATUS = 'OPEN' ";
-                $resultEle = getData($sqlElection);
-                if ($resultEle != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultEle)) {
-//date field check
-                        $date = new DateTime($row['enddatetime']);
-                        $now = new DateTime();
-                        $nowDate = date('Y-m-d');
-                        if ($nowDate != $row['enddatetime']) {
-                            
-                        } else {
+            <div class="col-md-5"></div>
+            <div class="col-md-4">
 
-                            if ($date < $now) {
+                <?php
+                include './model/DB.php';
+                $sql = "  SELECT * FROM cms_member_attend WHERE memberid = '" . $_SESSION['ssn_user']['id'] . "' ";
+                ?>
+                <table id="example" class="display" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Attend Date Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $resultx = getData($sql);
+                        if ($resultx != FALSE) {
+                            while ($row = mysqli_fetch_assoc($resultx)) {
                                 ?>
 
-
-                                <div>
-                                    <p style="font-weight: bold"><?= $row['electiontitle']; ?></p>
-                                    <p><?= $row['post_title']; ?></p>
-                                    <p>
-                                        <?php
-                                        if (isset($_SESSION['ssn_user'])) {
-                                            ?>
-                                            <a href="mamber_voting.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']; ?>&post_title=<?= $row['post_title']; ?>" class="btn btn-primary btn-xs">Vote Now</a></p>
-                                        <?php
-                                    }
-                                    ?> 
-                                    <p><span class="btn btn-default btn-xs"> <?= $row['startdatetime']; ?> to <?= $row['enddatetime']; ?> </span></p>
-                                </div>
-               <hr>
-
-
-
+                                <tr>
+                                    <td><?= $row['attend_date']; ?></td>
+                                </tr>
                                 <?php
                             }
                         }
-                    }
-                }
-                ?>
-
-            </div>
-            <div class="col-md-6">
-
-                <?php
-              
-
-                if (isset($_GET['pid'])) {
-                    $pid = $_GET['pid'];
-                    $action = $_GET['action'];
-                    $totalLike = $_GET['totalLike'];
-                    $totalDisLike = $_GET['totalDisLike'];
-
-
-                    echo 'Vote Posting';
-
-                    //user LIKE
-                    $sql_1 = " SELECT * FROM cms_post_vote WHERE postid = $pid AND memberid = " . $_SESSION['ssn_user']['id'];
-                    $result_1 = getData($sql_1);
-
-
-
-                    if ($result_1 != FALSE) {
-                        while ($row = mysqli_fetch_assoc($result_1)) {
-                            echo $row['type'];
-
-                            if ($action != $row['type']) {
-                                echo '<br>Invase :'.$action;
-                                //update the status
-                                switch ($action) {
-                                    case "LIKE":
-                                         echo '<br>CASE:LIKE';
-                                        $totalLike = $totalLike + 1;
-                                        $q = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
-                                        setUpdate($q,FALSE);
-
-                                        if ($totalDisLike != 0) {
-                                            $totalDisLike = $totalDisLike - 1;
-                                            $q2 = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
-                                            setUpdate($q2,FALSE);
-                                        } else {
-                                            $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
-                                            setData($sqlSetUserPost,TRUE);
-                                        }
-
-                                        $sqlSetUserPost = setUserUpdateVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
-                                        setUpdate($sqlSetUserPost,FALSE);
-                                        break;
-                                    case "DISLIKE":
-
-                                        echo '<br>CASE:DISLIKE';
-                                        $totalDisLike = $totalDisLike + 1;
-                                        $q = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
-                                        setUpdate($q,FALSE);
-
-                                        if ($totalLike != 0) {
-                                            $totalLike = $totalLike - 1;
-                                            $q2 = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
-                                            setUpdate($q2,FALSE);
-                                        } else {
-                                            $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
-                                            echo '<br>1:'.$sqlSetUserPost;
-                                            setData($sqlSetUserPost,TRUE);
-                                        }
-
-                                        $sqlSetUserPost = setUserUpdateVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
-                                        echo '<br>2:'.$sqlSetUserPost;
-                                        setUpdate($sqlSetUserPost,FALSE);
-                                        break;
-                                }
-                                //update the user_vote
-                            }
-                        }
-                    } else {
-                        //no vote found
-                       // echo '<br>Vote Not Found';
-//                          $totalLike = $_GET['totalLike'];
-//                    $totalDisLike = $_GET['totalDisLike'];
-                        switch ($action) {
-                            case "LIKE":
-                                echo 'LIKE';
-                                $totalLike = $totalLike + 1;
-                                $q = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
-                                setUpdate($q,FALSE);
-                                
-                                $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
-                                setData($sqlSetUserPost,FALSE);
-                                break;
-                            case "DISLIKE":
-                                echo 'DISLIKE';
-                                    $totalDisLike = $totalDisLike + 1;
-                                    $q = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
-                                    setUpdate($q,FALSE);
-                             
-                                $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
-                                setData($sqlSetUserPost,FALSE);
-                                break;
-                        }
-                    }
-                }
-
-                function setUserPostVote($postid, $memberid, $type) {
-
-                    $sql = " INSERT INTO `cms_post_vote`
-            (`postid`,
-             `memberid`,
-             `type`)
-VALUES ('$postid',
-        '$memberid',
-        '$type'); ";
-                    return $sql;
-                }
-
-                function setUserUpdateVote($postid, $memberid, $type) {
-
-                    $sql = " UPDATE cms_post_vote SET TYPE = '$type' WHERE postid = $postid AND memberid = $memberid ";
-                    return $sql;
-                }
-                ?>
-                <table class="table table-striped">
-                    <?php
-                    $sqlPost = " SELECT * FROM cms_post WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
-                    $resultAllPost = getData($sqlPost);
-                    if ($resultAllPost != FALSE) {
-                        while ($row = mysqli_fetch_assoc($resultAllPost)) {
-                            ?>
-
-                            <tr>
-                                <td><?= $row['id'] ?></td>
-                                <td style="color: black">
-                                    <p style="font-weight: bold"><?= $row['posttitle'] ?></p>
-                                    <?= $row['description'] ?>
-                                    <p style="font-size: x-small">[ <?= $row['datecreated'] ?> ]</p></td>
-                                <td>
-                                    <a href="home.php?pid=<?= $row['id'] ?>&totalDisLike=<?= $row['dislike'] ?>&totalLike=<?= $row['plike'] ?>&action=LIKE&usr=<?= $row['usercreated'] ?>"> <i class="fa fa-thumbs-up"></i> <?= $row['plike']; ?></a>
-                                    <a href="home.php?pid=<?= $row['id'] ?>&totalDisLike=<?= $row['dislike'] ?>&totalLike=<?= $row['plike'] ?>&action=DISLIKE&usr=<?= $row['usercreated'] ?>"> <i class="fa fa-thumbs-down"></i> <?= $row['dislike']; ?></a>
-                                </td>
-                            </tr>
-                            <td></td>
-                            <td></td>
-
-                            <?php
-                        }
-                    }
-                    ?>
-
-                </table> 
-            </div>
-            <div class="col-md-4">
-                       <p style="font-weight: bold;color: #09347a">News</p>
-         <?php
-                $sqlNews = " SELECT * FROM cms_news WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
-                $resultNews = getData($sqlNews);
-                if ($resultNews != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultNews)) {
                         ?>
-                <div class="bg-info" style="margin-bottom: 10px"> <b><?= $row['news_title']?></b>
-                 <p > <?= $row['description']?> </p>
-                 <p style="font-size: small" class="btn btn-default btn-xs" > <?= $row['datecreated']?> </p>
-                </div>
-                        <?php
-                    }
-                }
-                ?>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -292,7 +111,70 @@ VALUES ('$postid',
 
 
 
-       <?php include './_footer.php';?>
+        <!-- footer -->
+        <div class="footer_agile_w3ls">
+            <div class="container">
+                <div class="agileits_w3layouts_footer_grids">
+                    <div class="col-md-3 footer-w3-agileits">
+                        <h3>Training Grounds</h3>
+                        <ul>
+                            <li>Etiam quis placerat</li>
+                            <li>the printing</li>
+                            <li>unknown printer</li>
+                            <li>Lorem Ipsum</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 footer-agileits">
+                        <h3>Specialized</h3>
+                        <ul>
+                            <li>the printing</li>
+                            <li>Etiam quis placerat</li>
+                            <li>Lorem Ipsum</li>
+                            <li>unknown printer</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 footer-wthree">
+                        <h3>Partners</h3>
+                        <ul>
+                            <li>unknown printer</li>
+                            <li>Lorem Ipsum</li>
+                            <li>the printing</li>
+                            <li>Etiam quis placerat</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-3 footer-agileits-w3layouts">
+                        <h3>Our Links</h3>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="events.html">Events</a></li>
+                            <li><a href="mail.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+
+                </div>
+                <div class="agileits_w3layouts_logo logo2">
+                    <h2><a href="index.html">Funding</a></h2>
+                    <div class="agileits-social">
+                        <ul>
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-rss"></i></a></li>
+                            <li><a href="#"><i class="fa fa-vk"></i></a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="wthree_copy_right">
+            <div class="container">
+                <p>© 2017 All rights reserved | Design by COMMU</p>
+            </div>
+        </div>
+        <!-- //footer -->
 
 
 
@@ -308,11 +190,11 @@ VALUES ('$postid',
                         <div class="signin-form profile">
                             <h3 class="agileinfo_sign">Sign In</h3>	
                             <div class="login-form">
-                                <form action="index.php" method="post">
-                                    <input type="text" name="username" placeholder="Username" required="">
+                                <form action="#" method="post">
+                                    <input type="email" name="email" placeholder="E-mail" required="">
                                     <input type="password" name="password" placeholder="Password" required="">
                                     <div class="tp">
-                                        <input type="submit" name="btnLogin" value="Sign In">
+                                        <input type="submit" value="Sign In">
                                     </div>
                                 </form>
                             </div>
@@ -496,5 +378,13 @@ VALUES ('$postid',
             });
         </script>
         <!-- //here ends scrolling icon -->
+
+        <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
+
+        <script>
+            $(document).ready(function () {
+//                $('#example').DataTable();
+            });
+        </script>
     </body>
 </html>

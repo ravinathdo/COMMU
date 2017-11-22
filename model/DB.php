@@ -78,4 +78,28 @@ function setUpdate($sql, $MSG) {
     mysqli_close($conn);
 }
 
+function sendSMS($toMobile, $msg) {
+
+    $sql = " INSERT INTO `ozekimessageout`
+            (`sender`,
+             `receiver`,
+             `msg`,
+             `status`)
+VALUES ('0716483414',
+        '$toMobile',
+        '$msg',
+        'send'); ";
+    setData($sql, FALSE);
+}
+
+function sendSMStoAll($msg) {
+    $sql = " SELECT * FROM cms_member";
+    $resultx = getData($sql);
+    if ($resultx != FALSE) {
+        while ($row = mysqli_fetch_assoc($resultx)) {
+            sendSMS($row['mobileno'], $msg);
+        }
+    }
+}
+
 ?>

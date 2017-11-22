@@ -1,5 +1,5 @@
 <ul>
-    <li><a href="#" data-toggle="modal" data-target="#myModal2">Community Management System</a></li>
+    <li><a href="#" >Community Management System</a></li>
     <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i> 
             <?php echo $_SESSION['ssn_user']['firstname'] ?> 
             [ <?php echo $_SESSION['ssn_user']['role'] ?> ]

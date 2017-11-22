@@ -62,10 +62,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 </div>
                 <div class="w3_agile_search">
-                    <form action="#" method="post">
-                        <input type="search" name="Search" placeholder="Search Keywords..." required="" />
-                        <input type="submit" value="Search">
-                    </form>
+                                      <?php include './_search.php';?>
+
                 </div>
             </nav>
         </div>
@@ -76,14 +74,14 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-6">
-                <form action="member_post.php" method="post">
+                <form action="admin_post.php" method="post">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Post Title</label>
-                        <input name="posttitle" type="text" class="form-control" id="exampleInputEmail1" >
+                        <input required="" name="posttitle" type="text" class="form-control" id="exampleInputEmail1" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">Description</label>
-                        <textarea name="description" class="form-control" ></textarea>
+                        <textarea required="" name="description" class="form-control" ></textarea>
                     </div>
                     <!--                    <div class="form-group">
                                             <label for="exampleInputFile">Photo</label>
@@ -97,6 +95,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 <?php
                 include './model/DB.php';
+                include './model/MESSAGE_LIST.php';
+                
                 if (isset($_POST['btnSub'])) {
                     $sql = " INSERT INTO `cmsdb`.`cms_post`
             (`posttitle`,
@@ -107,6 +107,8 @@ VALUES ('" . $_POST['posttitle'] . "',
         '" . $_SESSION['ssn_user']['id'] . "'); ";
 
                     setData($sql,TRUE);
+                     $sms = $_POST_CREATION_SMS.$_POST['posttitle'];
+                    sendSMStoAll($sms);
                 }
                 ?>
 
@@ -172,7 +174,7 @@ VALUES ('" . $_POST['posttitle'] . "',
                             <td><?= $row['description']; ?> <span class="btn btn-default btn-xs">[<?= $row['datecreated']; ?>] </span></td>
                             <td><i class="fa fa-thumbs-up"></i> <?= $row['plike']; ?></td>
                             <td><i class="fa fa-thumbs-down"></i> <?= $row['dislike']; ?> </td>
-                            <td><?= $row['status']; ?>    
+                            <td> <?= $row['status']; ?>    
                               <?php if ($row['status'] == 'PENDING') {
                                   ?> <a href="admin_post.php?pid=<?= $row['id']; ?>&action=ACTIVE" >Activate Now</a> <?php
                                 } 
@@ -198,118 +200,11 @@ VALUES ('" . $_POST['posttitle'] . "',
 
 
 
-<table id="example" class="display" cellspacing="0" width="100%">
-    <thead>
-        <tr>
-            <th>Post Title</th>
-            <th>Likes</th>
-            <th>Posted Date</th>
-            <th>Posted Date</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>News Title</th>
-            <th>Likes</th>
-            <th>Posted Date</th>
-            <th>Posted Date</th>
-            <th>Status</th>
-        </tr>
-    </tfoot>
-    <tbody>
-        <tr>
-            <td>post 11</td>
-            <td><i class="fa fa-thumbs-down"></i> 11  <i class="fa fa-thumbs-up"></i> 3</td>
-            <td>Created By</td>
-            <td>Approved By</td>
-            <td><button type="button" class="btn btn-warning">Deactive</button></td>
-
-        </tr>
-        <tr>
-            <td>Post 11</td>
-            <td><i class="fa fa-thumbs-down"></i> 11  <i class="fa fa-thumbs-up"></i> 3</td>
-            <td>Created By</td>
-            <td>Approved By</td>
-            <td><button type="button" class="btn btn-success">Active</button></td>
-        </tr>
-        <tr>
-            <td>post 11</td>
-            <td><i class="fa fa-thumbs-down"></i> 11  <i class="fa fa-thumbs-up"></i> 3</td>
-            <td>Created By</td>
-            <td>Approved By</td>
-            <td><button type="button" class="btn btn-danger">Closed</button></td>
-        </tr>
-    </tbody>
-</table>
-
-
 
 
 
 <!-- footer -->
-<div class="footer_agile_w3ls">
-    <div class="container">
-        <div class="agileits_w3layouts_footer_grids">
-            <div class="col-md-3 footer-w3-agileits">
-                <h3>Training Grounds</h3>
-                <ul>
-                    <li>Etiam quis placerat</li>
-                    <li>the printing</li>
-                    <li>unknown printer</li>
-                    <li>Lorem Ipsum</li>
-                </ul>
-            </div>
-            <div class="col-md-3 footer-agileits">
-                <h3>Specialized</h3>
-                <ul>
-                    <li>the printing</li>
-                    <li>Etiam quis placerat</li>
-                    <li>Lorem Ipsum</li>
-                    <li>unknown printer</li>
-                </ul>
-            </div>
-            <div class="col-md-3 footer-wthree">
-                <h3>Partners</h3>
-                <ul>
-                    <li>unknown printer</li>
-                    <li>Lorem Ipsum</li>
-                    <li>the printing</li>
-                    <li>Etiam quis placerat</li>
-                </ul>
-            </div>
-
-            <div class="col-md-3 footer-agileits-w3layouts">
-                <h3>Our Links</h3>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="events.html">Events</a></li>
-                    <li><a href="mail.html">Contact</a></li>
-                </ul>
-            </div>
-            <div class="clearfix"></div>
-
-        </div>
-        <div class="agileits_w3layouts_logo logo2">
-            <h2><a href="index.html">Community</a></h2>
-            <div class="agileits-social">
-                <ul>
-                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                    <li><a href="#"><i class="fa fa-rss"></i></a></li>
-                    <li><a href="#"><i class="fa fa-vk"></i></a></li>
-                </ul>
-            </div>
-
-        </div>
-    </div>
-</div>
-<div class="wthree_copy_right">
-    <div class="container">
-        <p>© 2017 All rights reserved | Design by COMMU</p>
-    </div>
-</div>
+    <?php include './_footer.php';?>
 <!-- //footer -->
 
 

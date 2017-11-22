@@ -7,29 +7,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
-
-
-    <?php
-    $lang_EN = array("OPEN_ELECTIONS"=>"","OPENING_HOURS"=>"Opening Hours","SEND_US_A_MESSAGE" => "Send us a Message", "GIVE_US_A_CALL" => "Give us a Call");
-    $lang_SI = array("OPEN_ELECTIONS"=>"විවෘත මැතිවරණ","OPENING_HOURS"=>"විවෘත වේලාවන්","SEND_US_A_MESSAGE" => "අපට පණිවිඩයක් එවන්න", "GIVE_US_A_CALL" => "අපිට කෝල් එකක් දෙන්න");    
-    $lang_TM = array("OPEN_ELECTIONS"=>"திறந்த தேர்தல்  ","OPENING_HOURS"=>"தொடக்க நேரம் ","SEND_US_A_MESSAGE" => "எங்களுக்கு ஒரு செய்தியை அனுப்புங்கள் ", "GIVE_US_A_CALL" => "எங்களுக்கு ஒரு அழைப்பு கொடுங்கள்");
-
-    if (isset($_GET['lang'])) {
-
-        if ($_GET['lang'] == 'SI') {
-            $lang = $lang_SI;
-        } else if ($_GET['lang'] == 'TM') {
-            $lang = $lang_TM;
-        } else if ($_GET['lang'] == 'EN') {
-            $lang = $lang_EN;
-        }
-    } else {
-
-        $lang = $lang_EN;
-    }
-    ?>
-
-
     <head>
         <title>Commu</title>
         <!-- custom-theme -->
@@ -129,7 +106,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     <li>
                         <div class = "header_contact_details_agile"><i class = "fa fa-envelope-o" aria-hidden = "true"></i>
                             <div class = "w3l_header_contact_details_agile">
-                                <div class = "header-contact-detail-title"><?= $lang['SEND_US_A_MESSAGE'] ?></div>
+                                <div class = "header-contact-detail-title">Send us a Message</div>
                                 <a href = "mailto:info@commu.com">info@commu.com</a>
                             </div>
                         </div>
@@ -137,7 +114,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     <li>
                         <div class = "header_contact_details_agile"><i class = "fa fa-phone" aria-hidden = "true"></i>
                             <div class = "w3l_header_contact_details_agile">
-                                <div class = "header-contact-detail-title"><?= $lang['GIVE_US_A_CALL']?></div>
+                                <div class = "header-contact-detail-title">Give us a Call</div>
                                 <a class = "w3l_header_contact_details_agile-info_inner"> 071-468-3414 </a>
                             </div>
                         </div>
@@ -145,7 +122,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     <li>
                         <div class = "header_contact_details_agile"><i class = "fa fa-clock-o" aria-hidden = "true"></i>
                             <div class = "w3l_header_contact_details_agile">
-                                <div class = "header-contact-detail-title"><?= $lang['OPENING_HOURS'];?></div>
+                                <div class = "header-contact-detail-title">Opening Hours</div>
                                 <a class = "w3l_header_contact_details_agile-info_inner">Mon - Sat: 7:00 - 18:00</a>
                             </div>
                         </div>
@@ -167,105 +144,189 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 
 
-        <div class = "row">
-            <div class = "col-md-2">
-                <p style="font-weight: bold;color: #09347a">Open Elections</p>
-                <?php
-                $sqlElection = " SELECT * FROM cms_election WHERE STATUS = 'OPEN' ";
-                $resultEle = getData($sqlElection);
-                if ($resultEle != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultEle)) {
-//date field check
-                        $date = new DateTime($row['enddatetime']);
-                        $now = new DateTime();
-                        $nowDate = date('Y-m-d');
-                        if ($nowDate != $row['enddatetime']) {
-                            
-                        } else {
-
-                            if ($date < $now) {
-                                ?>
-
-
-                                <div>
-                                    <p><?= $row['electiontitle']; ?></p>
-                                    <p><?= $row['post_title']; ?></p>
-                                    <p>
-                                        <?php
-                                        if (isset($_SESSION['ssn_user'])) {
-                                            ?>
-                                            <a href="mamber_voting.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']; ?>&post_title=<?= $row['post_title']; ?>" class="btn btn-primary btn-xs">Vote Now</a></p>
-                                        <?php
-                                    }
-                                    ?> 
-                                    <p><span class="btn btn-default btn-xs"> <?= $row['startdatetime']; ?> to <?= $row['enddatetime']; ?> </span></p>
-                                </div>
-
-
-
-                                <?php
-                            }
-                        }
-                    }
-                }
-                ?>
-
-            </div>
-            <div class="col-md-6">
-                <br>
-                <?php ?>
-                <table class="table table-striped">
-                    <?php
-                    $sqlPost = " SELECT * FROM cms_post WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
-                    $resultAllPost = getData($sqlPost);
-                    if ($resultAllPost != FALSE) {
-                        while ($row = mysqli_fetch_assoc($resultAllPost)) {
-                            ?>
-
-                            <tr >
-                                <td><?= $row['id'] ?></td>
-                                <td style="color: black">
-                                    <p style="font-weight: bold"><?= $row['posttitle'] ?></p>
-                                    <?= $row['description'] ?>
-                                    <p style="font-size: x-small">[ <?= $row['datecreated'] ?> ]</p></td>
-                                <td>
-                                    <a href="index.php?pid=<?= $row['id'] ?>&action=LIKE"> <i class="fa fa-thumbs-up"></i> <?= $row['plike']; ?></a>
-                                    <a href="index.php?pid=<?= $row['id'] ?>&action=DISLIKE"> <i class="fa fa-thumbs-down"></i> <?= $row['dislike']; ?></a>
-                                </td>
-                            </tr>
-                            <td></td>
-                            <td></td>
-
-                            <?php
-                        }
-                    }
-                    ?>
-
-                </table>
-
-
-
-
-            </div>
-            <div class="col-md-4">
-                <p style="font-weight: bold;color: #09347a">News</p>
-                <?php
-                $sqlNews = " SELECT * FROM cms_news WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
-                $resultNews = getData($sqlNews);
-                if ($resultNews != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultNews)) {
-                        ?>
-                        <div class="bg-info" style="margin-bottom: 10px"> <b><?= $row['news_title'] ?></b>
-                            <p > <?= $row['description'] ?> </p>
-                            <p style="font-size: small"> <?= $row['datecreated'] ?> </p>
-                        </div>
-                        <?php
-                    }
-                }
-                ?>
-
-            </div>
-        </div>
+       <!-- courses -->
+	<div class="team">
+		<div class="container"> 
+			<div class="w3_agile_team_grid">
+				<div class="w3_agile_team_grid_left">
+					<h3 class="w3l_header w3_agileits_header">Our <span>Events</span></h3>
+		            <p class="sub_para_agile">Ipsum dolor sit amet consectetur adipisicing elit</p>
+				</div>
+			</div>
+			<div class="agile_team_grids_top">
+				<div class="col-md-4 w3_agile_services_grid">
+					<div class="agile_services_grid1 wthree_services_grid1">
+						<h3>Funding</h3>
+						<div class="agile_services_grid1_sub">
+							<p>05 January 2017</p>
+						</div>
+						<h4><span>Fund</span>ing</h4>
+					</div>
+					<div class="agileits_w3layouts_services_grid1">
+						<div class="w3_agileits_services_grid1">
+							<div class="w3_agileits_services_grid1l">
+								<img src="images/6.png" alt=" " class="img-responsive">
+							</div>
+							<div class="w3_agileits_services_grid1r">
+								<ul>
+									<li><i class="fa fa-star" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-half-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+								</ul>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						<h4><a href="#" data-toggle="modal" data-target="#myModal">Sed dictum augue quis varius</a></h4>
+						<p>Etiam quis placerat dui, sit amet tristique nisl. Donec eget finibus eros.</p>
+					</div>
+				</div>
+				<div class="col-md-4 w3_agile_services_grid">
+					<div class="agile_services_grid1 wthree_services_grid2">
+						<h3>Funding</h3>
+						<div class="agile_services_grid1_sub">
+							<p>14 January 2017</p>
+						</div>
+						<h4><span>Fund</span>ing</h4>
+					</div>
+					<div class="agileits_w3layouts_services_grid1">
+						<div class="w3_agileits_services_grid1">
+							<div class="w3_agileits_services_grid1l">
+								<img src="images/2.png" alt=" " class="img-responsive">
+							</div>
+							<div class="w3_agileits_services_grid1r">
+								<ul>
+									<li><i class="fa fa-star" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-half-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+								</ul>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						<h4><a href="#" data-toggle="modal" data-target="#myModal">lobortis sem dictum placerat</a></h4>
+						<p>Etiam quis placerat dui, sit amet tristique nisl. Donec eget finibus eros.</p>
+					</div>
+				</div>
+				<div class="col-md-4 w3_agile_services_grid">
+					<div class="agile_services_grid1 wthree_services_grid3">
+						<h3>Funding</h3>
+						<div class="agile_services_grid1_sub">
+							<p>20 January 2017</p>
+						</div>
+						<h4><span>Fund</span>ing</h4>
+					</div>
+					<div class="agileits_w3layouts_services_grid1">
+						<div class="w3_agileits_services_grid1">
+							<div class="w3_agileits_services_grid1l">
+								<img src="images/3.png" alt=" " class="img-responsive">
+							</div>
+							<div class="w3_agileits_services_grid1r">
+								<ul>
+									<li><i class="fa fa-star" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-half-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+								</ul>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						<h4><a href="#" data-toggle="modal" data-target="#myModal">Praesent amet tempor risus</a></h4>
+						<p>Etiam quis placerat dui, sit amet tristique nisl. Donec eget finibus eros.</p>
+					</div>
+				</div>
+				<div class="col-md-4 w3_agile_services_grid two">
+					<div class="agile_services_grid1 wthree_services_grid4">
+						<h3>Funding</h3>
+						<div class="agile_services_grid1_sub">
+							<p>05 January 2017</p>
+						</div>
+						<h4><span>Fund</span>ing</h4>
+					</div>
+					<div class="agileits_w3layouts_services_grid1">
+						<div class="w3_agileits_services_grid1">
+							<div class="w3_agileits_services_grid1l">
+								<img src="images/2.png" alt=" " class="img-responsive">
+							</div>
+							<div class="w3_agileits_services_grid1r">
+								<ul>
+									<li><i class="fa fa-star" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-half-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+								</ul>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						<h4><a href="#" data-toggle="modal" data-target="#myModal">Sed dictum augue quis varius</a></h4>
+						<p>Etiam quis placerat dui, sit amet tristique nisl. Donec eget finibus eros.</p>
+					</div>
+				</div>
+				<div class="col-md-4 w3_agile_services_grid two">
+					<div class="agile_services_grid1 wthree_services_grid5">
+						<h3>Funding</h3>
+						<div class="agile_services_grid1_sub">
+							<p>14 January 2017</p>
+						</div>
+						<h4><span>Fund</span>ing</h4>
+					</div>
+					<div class="agileits_w3layouts_services_grid1">
+						<div class="w3_agileits_services_grid1">
+							<div class="w3_agileits_services_grid1l">
+								<img src="images/5.png" alt=" " class="img-responsive">
+							</div>
+							<div class="w3_agileits_services_grid1r">
+								<ul>
+									<li><i class="fa fa-star" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-half-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+								</ul>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						<h4><a href="#" data-toggle="modal" data-target="#myModal">lobortis sem dictum placerat</a></h4>
+						<p>Etiam quis placerat dui, sit amet tristique nisl. Donec eget finibus eros.</p>
+					</div>
+				</div>
+				<div class="col-md-4 w3_agile_services_grid two">
+					<div class="agile_services_grid1 wthree_services_grid6">
+						<h3>Funding</h3>
+						<div class="agile_services_grid1_sub">
+							<p>20 January 2017</p>
+						</div>
+						<h4><span>Fund</span>ing</h4>
+					</div>
+					<div class="agileits_w3layouts_services_grid1">
+						<div class="w3_agileits_services_grid1">
+							<div class="w3_agileits_services_grid1l">
+								<img src="images/6.png" alt=" " class="img-responsive">
+							</div>
+							<div class="w3_agileits_services_grid1r">
+								<ul>
+									<li><i class="fa fa-star" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-half-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+								</ul>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						<h4><a href="#" data-toggle="modal" data-target="#myModal">Praesent amet tempor risus</a></h4>
+						<p>Etiam quis placerat dui, sit amet tristique nisl. Donec eget finibus eros.</p>
+					</div>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>
+<!-- //courses -->
 
 
 

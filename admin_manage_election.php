@@ -4,7 +4,7 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php session_start();?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -62,28 +62,32 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 </div>
                 <div class="w3_agile_search">
-                    <form action="#" method="post">
-                        <input type="search" name="Search" placeholder="Search Keywords..." required="" />
-                        <input type="submit" value="Search">
-                    </form>
+                                   <?php include './_search.php';?>
+
                 </div>
             </nav>
         </div>
 
 
-        <h3>Manage Election</h3>
+        <h3>View Election</h3>
         <hr>
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-12">
 
-                <table id="example" class="display" cellspacing="0" width="100%">
+                <?php
+                include './model/DB.php';
+                ?>
+
+
+                <!--<table id="example" class="display" cellspacing="0" width="100%">-->
+                <table class="table-responsive table-bordered" width="100%">
                     <thead>
                         <tr>
                             <th>Elec ID</th>
                             <th>Election Title</th>
+                            <th>Post</th>
                             <th>Members</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
+                            <th>Time</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -91,63 +95,65 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <tr>
                             <th>Elec ID</th>
                             <th>Election Title</th>
+                            <th>Post</th>
                             <th>Members</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
+                            <th>Time</th>
                             <th>Status</th>
                         </tr>
                     </tfoot>
                     <tbody>
-                        <tr>
-                            <td>post 11</td>
-                            <td> Tresury Election 2017</td>
-                            <td>
-                                <i class="fa fa-user"></i>Gayan 
-                                <i class="fa fa-user"></i>chamil 
-                                <i class="fa fa-user"></i>Ashen
-                            </td>
-                            <td>2017-10-28</td>
-                            <td>2017-10-17</td>
-                            <td><a href="">active</a></td>
 
-                        </tr>
-                        <tr>
-                            <td>post 11</td>
-                            <td> Tresury Election 2017</td>
-                            <td>
-                                <i class="fa fa-user"></i>Gayan 
-                                <i class="fa fa-user"></i>chamil 
-                                <i class="fa fa-user"></i>Ashen
-                            </td>
-                            <td>2017-10-28</td>
-                            <td>2017-10-17</td>
-                            <td><a href="">close</a></td>
+                        <?php
+                        $sql = " SELECT * FROM cms_election WHERE STATUS = 'CLOSE' ";
+                        $resultx = getData($sql);
+                        if ($resultx != FALSE) {
+                            while ($row = mysqli_fetch_assoc($resultx)) {
+                                ?>
+                                <tr>
+                                    <td><?= $row['id']; ?></td>
+                                    <td><?= $row['electiontitle']; ?></td>
+                                    <td><?= $row['post_title']; ?></td>
+                                    <td>
 
-                        </tr>
+                                        <ul>
+                                            <?php
+                                            //get member list with votes
+                                            $sqlV = " 
+SELECT cms_member.*,cms_election_vote.vote FROM cms_election_vote
+INNER JOIN cms_member
+ON cms_election_vote.memberid = cms_member.id 
+WHERE cms_election_vote.electionid = '" . $row['id'] . "'
+ORDER BY cms_election_vote.vote DESC  ";
+                                            
+      
 
+                                            $resulty = getData($sqlV);
+                                            if ($resulty != FALSE) {
+                                                while ($rowy = mysqli_fetch_assoc($resulty)) {
+                                                    ?>
+                                                    <li <?php if ($rowy['username'] == $row['winner']) { ?>   style="color: red"   <?php } ?>> <i class="fa fa-user"></i> [ <?= $rowy['vote'] ?> ] <?= $rowy['username'] ?> -  <?= $rowy['firstname'] ?>  <?= $rowy['lastname'] ?></li>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
+                                        </ul>
+                                    </td>
+                                    <td><?= $row['startdatetime']; ?> <?= $row['enddatetime']; ?></td>
+                                    <td>
+                                        <a href=""><?= $row['status']; ?></a></td>
 
+                                </tr>
+                                <?php
+                            }
+                        }
+                        ?>
                     </tbody>
                 </table>
 
             </div>
 
 
-            <div class="col-md-5">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Email</label>
-                        <div class="col-sm-10">
-                            <p class="form-control-static">email@example.com</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputPassword" class="col-sm-2 control-label">Password</label>
-                        <div class="col-sm-10">
-                            <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-                        </div>
-                    </div>
-                </form>
-            </div>
+
         </div>
 
 

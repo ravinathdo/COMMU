@@ -8,7 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Template</title>
+        <title>Commu | Member</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -62,10 +62,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 </div>
                 <div class="w3_agile_search">
-                    <form action="#" method="post">
-                        <input type="search" name="Search" placeholder="Search Keywords..." required="" />
-                        <input type="submit" value="Search">
-                    </form>
+                   <?php include './_search.php';?>
                 </div>
             </nav>
         </div>
@@ -73,31 +70,36 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 
         <div class="row">
+            <div class="col-md-1"></div>
             <form action="manager_member_recommonds.php" method="post">
-                <div class="col-md-4">
+                <div class="col-md-3">
 
 
                     <div class="form-group">
                         <label for="exampleInputName2">First Name</label>
-                        <input type="text" name="firstname" class="form-control" id="exampleInputName2" >
+                        <input required="" type="text" name="firstname" class="form-control" id="exampleInputName2" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail2">Last Name</label>
-                        <input type="text" name="lastname" class="form-control" id="exampleInputEmail2" placeholder="">
+                        <input required="" type="text" name="lastname" class="form-control" id="exampleInputEmail2" placeholder="">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail2">NIC</label>
-                        <input type="text" name="nic" class="form-control" id="exampleInputEmail2" placeholder="">
+                        <input required="" type="text" name="nic" class="form-control" id="exampleInputEmail2" placeholder="">
                     </div>
 
                     <div class="form-group">
                         <label for="exampleInputEmail2">Email</label>
-                        <input type="text" name="email" class="form-control" id="exampleInputEmail2" placeholder="">
+                        <input required="" type="email" name="email" class="form-control" id="exampleInputEmail2" placeholder="">
                     </div>
 
+                     <div class="form-group">
+                        <label for="exampleInputEmail2">Mobile No</label>
+                        <input  required="" type="number" name="mobileno" class="form-control" id="exampleInputEmail2" placeholder="">
+                    </div>
                     <div class="form-group">
                         <label for="exampleInputEmail2">Current Address</label>
-                        <textarea  name="currentaddress" class="form-control"> </textarea>
+                        <textarea  required="" name="currentaddress" class="form-control"> </textarea>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail2">Permanet Address</label>
@@ -105,7 +107,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     </div>
                     <div class="form-group">
                         <label for="exampleInputName2">Expert In</label>
-                        <select name="experticeid" class="form-control"> 
+                        <select required="" name="experticeid" class="form-control"> 
                             <option>--select--</option>
                             <?php
                             include './model/DB.php';
@@ -148,6 +150,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
              `autorizeby`,
              `authstatus`,
              `role`,
+             `mobileno`,
              `usercreated`)
 VALUES ('" . $_POST['firstname'] . "',
         '" . $_POST['lastname'] . "',
@@ -156,8 +159,9 @@ VALUES ('" . $_POST['firstname'] . "',
         '" . $_POST['currentaddress'] . "',
         '" . $_POST['experticeid'] . "',
         '" . $_POST['permanentaddress'] . "',
-        ' '" . $_SESSION['ssn_user']['id'] . "'',
+        '" . $_SESSION['ssn_user']['id'] . ",
         'Authorized',
+        '" . $_POST['mobileno'] . "',
         'MEMBER',
         '" . $_SESSION['ssn_user']['id'] . "'); ";
 

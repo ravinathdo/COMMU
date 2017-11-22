@@ -4,9 +4,7 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php
-session_start();
-?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -24,7 +22,21 @@ session_start();
 
     </head>	
     <body>
+        <?php
+        include './model/UserModel.php';
+        if (isset($_POST['btnLogin'])) {
 
+            $flag = doLogin();
+
+            if ($flag) {
+                // echo 'User Found';
+                header('Location:home.php');
+            } else {
+
+                echo '<p class="bg-danger">Invalid Username or Password</p>';
+            }
+        }
+        ?>
         <!-- banner -->
         <div class="header">
 
@@ -39,7 +51,11 @@ session_start();
                 </div>
             </div>
             <div class="w3layouts_header_left">
-                <?php include './_top.php'; ?>
+                <ul>
+                    <li><a href="#" data-toggle="modal" data-target="#myModal2">Community Management System</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#myModal2"><i class="fa fa-user" aria-hidden="true"></i> Sign in</a></li>
+                    <!--<li><a href="#" data-toggle="modal" data-target="#myModal3"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Sign Up </a></li>-->
+                </ul>
             </div>
             <div class="clearfix"> </div>
         </div>
@@ -60,227 +76,104 @@ session_start();
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
                     <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu.php'; ?>
+                        <ul class="nav navbar-nav">
+                              <?php include './_menu_common.php'; ?>
+                            <!--                            <li class="dropdown">
+                                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span data-hover="Short Codes">Short Codes</span> <b class="caret"></b></a>
+                                                            <ul class="dropdown-menu agile_short_dropdown">
+                                                                <li><a href="icons.html">Web Icons</a></li>
+                                                                <li><a href="typography.html">Typography</a></li>
+                                                            </ul>
+                                                        </li>-->
+                            <!--<li><a href="#"><span data-hover="Mail Us">Mail Us</span></a></li>-->
+                        </ul>
                     </nav>
 
                 </div>
-
+                <div class="w3_agile_search">
+                    <?php
+                    include '_search.php';
+                    ?>
+                </div>
             </nav>
         </div>
 
 
 
+        <div class = "header_mid">
+            <div class = "w3layouts_header_mid">
+                <ul>
+                    <li>
+                        <div class = "header_contact_details_agile"><i class = "fa fa-envelope-o" aria-hidden = "true"></i>
+                            <div class = "w3l_header_contact_details_agile">
+                                <div class = "header-contact-detail-title">Send us a Message</div>
+                                <a href = "mailto:info@commu.com">info@commu.com</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class = "header_contact_details_agile"><i class = "fa fa-phone" aria-hidden = "true"></i>
+                            <div class = "w3l_header_contact_details_agile">
+                                <div class = "header-contact-detail-title">Give us a Call</div>
+                                <a class = "w3l_header_contact_details_agile-info_inner"> 071-468-3414 </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class = "header_contact_details_agile"><i class = "fa fa-clock-o" aria-hidden = "true"></i>
+                            <div class = "w3l_header_contact_details_agile">
+                                <div class = "header-contact-detail-title">Opening Hours</div>
+                                <a class = "w3l_header_contact_details_agile-info_inner">Mon - Sat: 7:00 - 18:00</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class = "header_contact_details_agile"><i class = "fa fa-map-marker" aria-hidden = "true"></i>
+                            <div class = "w3l_header_contact_details_agile">
+                                <div class = "header-contact-detail-title">POBOX 3007 Union Place</div>
+                                <a class = "w3l_header_contact_details_agile-info_inner">Sri Lanka, Colombo 03 </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
 
 
-        <div class="row">
-           <div class="col-md-2">
-               <p style="font-weight: bold;color: #09347a">Open Elections</p>
-                <?php
-                  include './model/DB.php';
-                $sqlElection = " SELECT * FROM cms_election WHERE STATUS = 'OPEN' ";
-                $resultEle = getData($sqlElection);
-                if ($resultEle != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultEle)) {
-//date field check
-                        $date = new DateTime($row['enddatetime']);
-                        $now = new DateTime();
-                        $nowDate = date('Y-m-d');
-                        if ($nowDate != $row['enddatetime']) {
-                            
-                        } else {
-
-                            if ($date < $now) {
-                                ?>
-
-
-                                <div>
-                                    <p style="font-weight: bold"><?= $row['electiontitle']; ?></p>
-                                    <p><?= $row['post_title']; ?></p>
-                                    <p>
-                                        <?php
-                                        if (isset($_SESSION['ssn_user'])) {
-                                            ?>
-                                            <a href="mamber_voting.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']; ?>&post_title=<?= $row['post_title']; ?>" class="btn btn-primary btn-xs">Vote Now</a></p>
-                                        <?php
-                                    }
-                                    ?> 
-                                    <p><span class="btn btn-default btn-xs"> <?= $row['startdatetime']; ?> to <?= $row['enddatetime']; ?> </span></p>
-                                </div>
-               <hr>
 
 
 
-                                <?php
-                            }
-                        }
-                    }
-                }
-                ?>
+        <div class = "row">
+            <div class = "col-md-2">
+             
 
             </div>
             <div class="col-md-6">
+               
 
+<p style="font-weight: bold;color: #09347a">News</p>
                 <?php
-              
-
-                if (isset($_GET['pid'])) {
-                    $pid = $_GET['pid'];
-                    $action = $_GET['action'];
-                    $totalLike = $_GET['totalLike'];
-                    $totalDisLike = $_GET['totalDisLike'];
-
-
-                    echo 'Vote Posting';
-
-                    //user LIKE
-                    $sql_1 = " SELECT * FROM cms_post_vote WHERE postid = $pid AND memberid = " . $_SESSION['ssn_user']['id'];
-                    $result_1 = getData($sql_1);
-
-
-
-                    if ($result_1 != FALSE) {
-                        while ($row = mysqli_fetch_assoc($result_1)) {
-                            echo $row['type'];
-
-                            if ($action != $row['type']) {
-                                echo '<br>Invase :'.$action;
-                                //update the status
-                                switch ($action) {
-                                    case "LIKE":
-                                         echo '<br>CASE:LIKE';
-                                        $totalLike = $totalLike + 1;
-                                        $q = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
-                                        setUpdate($q,FALSE);
-
-                                        if ($totalDisLike != 0) {
-                                            $totalDisLike = $totalDisLike - 1;
-                                            $q2 = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
-                                            setUpdate($q2,FALSE);
-                                        } else {
-                                            $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
-                                            setData($sqlSetUserPost,TRUE);
-                                        }
-
-                                        $sqlSetUserPost = setUserUpdateVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
-                                        setUpdate($sqlSetUserPost,FALSE);
-                                        break;
-                                    case "DISLIKE":
-
-                                        echo '<br>CASE:DISLIKE';
-                                        $totalDisLike = $totalDisLike + 1;
-                                        $q = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
-                                        setUpdate($q,FALSE);
-
-                                        if ($totalLike != 0) {
-                                            $totalLike = $totalLike - 1;
-                                            $q2 = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
-                                            setUpdate($q2,FALSE);
-                                        } else {
-                                            $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
-                                            echo '<br>1:'.$sqlSetUserPost;
-                                            setData($sqlSetUserPost,TRUE);
-                                        }
-
-                                        $sqlSetUserPost = setUserUpdateVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
-                                        echo '<br>2:'.$sqlSetUserPost;
-                                        setUpdate($sqlSetUserPost,FALSE);
-                                        break;
-                                }
-                                //update the user_vote
-                            }
-                        }
-                    } else {
-                        //no vote found
-                       // echo '<br>Vote Not Found';
-//                          $totalLike = $_GET['totalLike'];
-//                    $totalDisLike = $_GET['totalDisLike'];
-                        switch ($action) {
-                            case "LIKE":
-                                echo 'LIKE';
-                                $totalLike = $totalLike + 1;
-                                $q = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
-                                setUpdate($q,FALSE);
-                                
-                                $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
-                                setData($sqlSetUserPost,FALSE);
-                                break;
-                            case "DISLIKE":
-                                echo 'DISLIKE';
-                                    $totalDisLike = $totalDisLike + 1;
-                                    $q = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
-                                    setUpdate($q,FALSE);
-                             
-                                $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
-                                setData($sqlSetUserPost,FALSE);
-                                break;
-                        }
-                    }
-                }
-
-                function setUserPostVote($postid, $memberid, $type) {
-
-                    $sql = " INSERT INTO `cms_post_vote`
-            (`postid`,
-             `memberid`,
-             `type`)
-VALUES ('$postid',
-        '$memberid',
-        '$type'); ";
-                    return $sql;
-                }
-
-                function setUserUpdateVote($postid, $memberid, $type) {
-
-                    $sql = " UPDATE cms_post_vote SET TYPE = '$type' WHERE postid = $postid AND memberid = $memberid ";
-                    return $sql;
-                }
-                ?>
-                <table class="table table-striped">
-                    <?php
-                    $sqlPost = " SELECT * FROM cms_post WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
-                    $resultAllPost = getData($sqlPost);
-                    if ($resultAllPost != FALSE) {
-                        while ($row = mysqli_fetch_assoc($resultAllPost)) {
-                            ?>
-
-                            <tr>
-                                <td><?= $row['id'] ?></td>
-                                <td style="color: black">
-                                    <p style="font-weight: bold"><?= $row['posttitle'] ?></p>
-                                    <?= $row['description'] ?>
-                                    <p style="font-size: x-small">[ <?= $row['datecreated'] ?> ]</p></td>
-                                <td>
-                                    <a href="home.php?pid=<?= $row['id'] ?>&totalDisLike=<?= $row['dislike'] ?>&totalLike=<?= $row['plike'] ?>&action=LIKE&usr=<?= $row['usercreated'] ?>"> <i class="fa fa-thumbs-up"></i> <?= $row['plike']; ?></a>
-                                    <a href="home.php?pid=<?= $row['id'] ?>&totalDisLike=<?= $row['dislike'] ?>&totalLike=<?= $row['plike'] ?>&action=DISLIKE&usr=<?= $row['usercreated'] ?>"> <i class="fa fa-thumbs-down"></i> <?= $row['dislike']; ?></a>
-                                </td>
-                            </tr>
-                            <td></td>
-                            <td></td>
-
-                            <?php
-                        }
-                    }
-                    ?>
-
-                </table> 
-            </div>
-            <div class="col-md-4">
-                       <p style="font-weight: bold;color: #09347a">News</p>
-         <?php
                 $sqlNews = " SELECT * FROM cms_news WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
                 $resultNews = getData($sqlNews);
                 if ($resultNews != FALSE) {
                     while ($row = mysqli_fetch_assoc($resultNews)) {
                         ?>
-                <div class="bg-info" style="margin-bottom: 10px"> <b><?= $row['news_title']?></b>
-                 <p > <?= $row['description']?> </p>
-                 <p style="font-size: small" class="btn btn-default btn-xs" > <?= $row['datecreated']?> </p>
-                </div>
+                        <div class="bg-info" style="margin-bottom: 10px"> <b><?= $row['news_title'] ?></b>
+                            <p > <?= $row['description'] ?> </p>
+                            <p style="font-size: small"> <?= $row['datecreated'] ?> </p>
+                        </div>
                         <?php
                     }
                 }
                 ?>
+
+
+
+            </div>
+            <div class="col-md-4">
+
+
             </div>
         </div>
 
@@ -292,7 +185,9 @@ VALUES ('$postid',
 
 
 
-       <?php include './_footer.php';?>
+        <!-- footer -->
+        <?php include './_footer.php'; ?>
+        <!-- //footer -->
 
 
 
@@ -323,7 +218,7 @@ VALUES ('$postid',
                                     <li><a href="#"><i class="fa fa-rss"></i></a></li>
                                 </ul>
                             </div>
-                            <p><a href="#" data-toggle="modal" data-target="#myModal3" > Don't have an account?</a></p>
+                            <!--<p><a href="#" data-toggle="modal" data-target="#myModal3" > Don't have an account?</a></p>-->
                         </div>
                     </div>
                 </div>

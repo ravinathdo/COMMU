@@ -62,10 +62,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 </div>
                 <div class="w3_agile_search">
-                    <form action="#" method="post">
-                        <input type="search" name="Search" placeholder="Search Keywords..." required="" />
-                        <input type="submit" value="Search">
-                    </form>
+                    <?php include './_search.php'; ?>
                 </div>
             </nav>
         </div>
@@ -86,28 +83,28 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                     <div class="form-group">
                         <label for="exampleInputName2">First Name</label>
-                        <input type="text" name="firstname" class="form-control" id="exampleInputName2" >
+                        <input type="text" required="" name="firstname" class="form-control" id="exampleInputName2" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail2">Last Name</label>
-                        <input type="text" name="lastname" class="form-control" id="exampleInputEmail2" placeholder="">
+                        <input type="text" required="" name="lastname" class="form-control" id="exampleInputEmail2" placeholder="">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail2">NIC</label>
-                        <input type="text" name="nic" class="form-control" id="exampleInputEmail2" placeholder="">
+                        <input type="text" required="" name="nic" class="form-control" id="exampleInputEmail2" placeholder="">
                     </div>
 
                     <div class="form-group">
                         <label for="exampleInputEmail2">Email</label>
-                        <input type="text" name="email" class="form-control" id="exampleInputEmail2" placeholder="">
+                        <input type="email"  required="" name="email" class="form-control" id="exampleInputEmail2" placeholder="">
                     </div>
 
                     <div class="form-group">
                         <label for="exampleInputEmail2">Current Address</label>
-                        <textarea  name="currentaddress" class="form-control"> </textarea>
+                        <textarea  name="currentaddress" required="" class="form-control"> </textarea>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail2">Current Address</label>
+                        <label for="exampleInputEmail2">Permanent Address</label>
                         <textarea  name="permanentaddress" class="form-control"> </textarea>
                     </div>
 
@@ -119,7 +116,18 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <label for="exampleInputName2">Expert In</label>
                         <select name="experticeid" class="form-control"> 
                             <option>--select--</option>
-                            <option>Software Engineer</option>
+                            <?php
+                            include './model/DB.php';
+
+                            $sql = " SELECT * FROM cms_expertise  ";
+                            $resultxc = getData($sql);
+                            if ($resultxc != FALSE) {
+                                while ($row = mysqli_fetch_assoc($resultxc)) {
+                                    ?>  <option value="<?= $row['id'] ?>"><?= $row['expertise'] ?></option> <?php
+                                }
+                            }
+                            ?>
+
                         </select>
                     </div>
                     <div class="form-group">
@@ -132,14 +140,22 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         </select>
                     </div>
 
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">Mobile No</label>
+                        <input type="number"  required="" name="mobileno" class="form-control" id="exampleInputEmail2" placeholder="">
+                    </div>
+
+
 
                     <button type="submit" name="btnReg" class="btn btn-primary">Register</button>
 
                 </div>
             </form>
 
-            <?php
-            include './model/DB.php';
+           
+        </div>
+
+ <?php
 
             if (isset($_POST['btnReg'])) {
 
@@ -153,6 +169,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
              `permanentaddress`,
              `authstatus`,
              `role`,
+             `mobileno`,
              `usercreated`)
 VALUES ('" . $_POST['firstname'] . "',
         '" . $_POST['lastname'] . "',
@@ -163,13 +180,14 @@ VALUES ('" . $_POST['firstname'] . "',
         '" . $_POST['permanentaddress'] . "',
         'Authorized',
         '" . $_POST['role'] . "',
+        '" . $_POST['mobileno'] . "',
         '" . $_SESSION['ssn_user']['id'] . "'); ";
 
 
-                $regNo = setData($sql,TRUE);
+                $regNo = setData($sql, TRUE);
                 $username = 'MEM' . $regNo;
                 $sqlUpdate = "UPDATE cms_member SET username = '$username' WHERE id = " . $regNo;
-                setUpdate($sqlUpdate,TRUE);
+                setUpdate($sqlUpdate, FALSE);
 
                 //new user creted
 
@@ -184,49 +202,71 @@ VALUES ( '$username',
         '" . $_POST['role'] . "',
         'ACT',
         '$regNo'); ";
+
+                setData($sqlUsr, FALSE);
                 
-                setData($sqlUsr,FALSE);
+                //message sending
+                include './model/MESSAGE_LIST.php';
+                $sms_1 = $_MEMBER_CREATION.$username;
+                sendSMS($_POST['mobileno'], $sms_1);
+                
             }
             ?>
-        </div>
-
-
 
         <hr>
 
         <table id="example" class="display" cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th>Member No</th>
+                    <th>Member ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>NIC</th>
                     <th>Status</th>
-                    <th>Created By</th>
                     <th>Approved By</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
-                    <th>Member No</th>
+                    <th>Member ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>NIC</th>
                     <th>Status</th>
-                    <th>Created By</th>
                     <th>Approved By</th>
                 </tr>
             </tfoot>
             <tbody>
-                <tr>
-                    <td>Tiger Nixon</td>
-                    <td>System Architect</td>
-                    <td>Edinburgh</td>
-                    <td>61</td>
-                    <td>2011/04/25</td>
-                    <td><button type="button" class="btn btn-warning">Pending Approval</button></td>
-                    <td>Created By</td>
-                </tr>
+
+                <?php
+                $sqlXX = "SELECT * FROM cms_member";
+                $resultx = getData($sqlXX);
+                if ($resultx != FALSE) {
+                    while ($row = mysqli_fetch_assoc($resultx)) {
+                        ?>
+
+
+                        <tr>
+                            <td><?= $row['username'] ?></td>
+                            <td><?= $row['firstname'] ?></td>
+                            <td><?= $row['lastname'] ?></td>
+                            <td><?= $row['nic'] ?></td>
+                            <td><?php if ($row['authstatus'] == 'PENDING') {
+                            ?> 
+                                    manager_authorization_member.php?mid=7&action=AUTHORIZED&username=MEM7
+                                    <a href="admin_authorization_member.php?mid=<?= $row['id'] ?>&action=AUTHORIZED&username=<?= $row['username'] ?>" class="btn btn-warning"> Pending Approval </a>
+                                    <?php } else {
+                                    ?>
+                                    <span class="btn btn-success">AUTHORIZED</span>
+                                    <?php
+                                }
+                                ?></td>
+                            <td>Created By</td>
+                        </tr>
+                        <?php
+                    }
+                }
+                ?>
 
             </tbody>
         </table>

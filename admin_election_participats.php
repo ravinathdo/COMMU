@@ -8,7 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Template</title>
+        <title>Commu | Admin</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -60,10 +60,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 </div>
                 <div class="w3_agile_search">
-                    <form action="#" method="post">
-                        <input type="search" name="Search" placeholder="Search Keywords..." required="" />
-                        <input type="submit" value="Search">
-                    </form>
+                    <!--                    <form action="#" method="post">
+                                            <input type="search" name="Search" placeholder="Search Keywords..." required="" />
+                                            <input type="submit" value="Search">
+                                        </form>-->
+                    <?php include './_search.php'; ?>
                 </div>
             </nav>
         </div>
@@ -71,23 +72,81 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 
         <div class="row">
-            <div class="col-md-6">
-                Election Details
-                <?php
-                include './model/DB.php';
-                $electionTitle = $_GET['election'];
-                $eid = $_GET['eid'];
-                echo '<h1> ' . $electionTitle . '</h1>';
-                ?>
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+                <center>
+                    Election Details
+                    <hr>
+
+                    <?php
+                    include './model/DB.php';
+                    $electionTitle = $_GET['election'];
+                    $eid = $_GET['eid'];
+                    $post_title = $_GET['post_title'];
+                    echo '<h1> ' . $electionTitle . '</h1>';
+                    echo '<h2> ' . $post_title . '</h2>';
+                    ?>
+
+
+
+
+                    <?php
+                    if (isset($_POST['btnAdd'])) {
+
+                        $sql = " INSERT INTO `cms_election_vote`
+            (`electionid`,
+             `memberid`)
+VALUES ('" . $_POST['eid'] . "',
+        '" . $_POST['memberid'] . "'); ";
+
+                        setData($sql, TRUE);
+                    }
+                    ?>
+                </center>
+
+                <table id="example" class="display" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Member ID</th>
+                            <th>Name</th>
+                            <th>Votes</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+//get member list
+                        $sqlM = " SELECT cms_election_vote.*,cms_member.username,cms_member.firstname,cms_member.lastname FROM cms_election_vote
+INNER JOIN cms_member
+ON cms_election_vote.memberid = cms_member.id
+WHERE electionid =  " . $eid;
+
+                        $resultx = getData($sqlM);
+                        if ($resultx != FALSE) {
+                            while ($row = mysqli_fetch_assoc($resultx)) {
+                                ?>
+
+                                <tr>
+                                    <td><?= $row['username']; ?></td>
+                                    <td><?= $row['firstname']; ?> <?= $row['lastname']; ?></td>
+                                    <td><?= $row['vote']; ?></td>
+                                    <td><a href="admin_close_election.php?eid=<?= $eid ?>&username=<?= $row['username']; ?>&post_title=<?= $row['post_title'] ?>">Set Vinner</a></td>
+                                </tr>
+                                <?php
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
 
             </div>
-            <div class="col-md-6">
-                <form action="admin_election_participats.php?eid=<?= $eid ?>&election=<?= $electionTitle ?>" method="post">
+            <div class="col-md-5">
+                <form action="admin_election_participats.php?eid=<?= $eid ?>&election=<?= $electionTitle ?>&post_title=<?= $post_title ?>" method="post">
                     <input type="hidden" name="eid" value="<?= $eid ?>" />
                     <input type="hidden" name="election" value="<?= $electionTitle ?>" />
                     <div class="form-group">
                         <label for="exampleInputPassword1">Add Members</label>
-                        <select name="memberid " class="form-control" >
+                        <select name="memberid" class="form-control" >
                             <option>--select--</option>
                             <?php
                             $sql = " SELECT * FROM cms_member WHERE id NOT IN (SELECT memberid FROM cms_election_vote WHERE electionid = $eid )";
@@ -109,20 +168,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </form>
 
 
-                <?php
-                if (isset($_POST['btnAdd'])) {
-                   
-                    $sql = " INSERT INTO `cms_election_vote`
-            (`electionid`,
-             `memberid`)
-VALUES ('".$_POST['eid']."',
-        '".$_POST['memberid']."'); ";
-                    
-                    setData($sql, TRUE) ;
-                    
-                }
-                ?>
+
             </div>
+            <div class="col-md-1"></div>
         </div>
 
 
@@ -134,68 +182,7 @@ VALUES ('".$_POST['eid']."',
 
 
         <!-- footer -->
-        <div class="footer_agile_w3ls">
-            <div class="container">
-                <div class="agileits_w3layouts_footer_grids">
-                    <div class="col-md-3 footer-w3-agileits">
-                        <h3>Training Grounds</h3>
-                        <ul>
-                            <li>Etiam quis placerat</li>
-                            <li>the printing</li>
-                            <li>unknown printer</li>
-                            <li>Lorem Ipsum</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3 footer-agileits">
-                        <h3>Specialized</h3>
-                        <ul>
-                            <li>the printing</li>
-                            <li>Etiam quis placerat</li>
-                            <li>Lorem Ipsum</li>
-                            <li>unknown printer</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3 footer-wthree">
-                        <h3>Partners</h3>
-                        <ul>
-                            <li>unknown printer</li>
-                            <li>Lorem Ipsum</li>
-                            <li>the printing</li>
-                            <li>Etiam quis placerat</li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-3 footer-agileits-w3layouts">
-                        <h3>Our Links</h3>
-                        <ul>
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="events.html">Events</a></li>
-                            <li><a href="mail.html">Contact</a></li>
-                        </ul>
-                    </div>
-                    <div class="clearfix"></div>
-
-                </div>
-                <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Funding</a></h2>
-                    <div class="agileits-social">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa fa-rss"></i></a></li>
-                            <li><a href="#"><i class="fa fa-vk"></i></a></li>
-                        </ul>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <div class="wthree_copy_right">
-            <div class="container">
-                <p>© 2017 All rights reserved | Design by COMMU</p>
-            </div>
-        </div>
+      <?php include './_footer.php';?>
         <!-- //footer -->
 
 
@@ -405,7 +392,7 @@ VALUES ('".$_POST['eid']."',
 
         <script>
             $(document).ready(function () {
-//                $('#example').DataTable();
+                $('#example').DataTable();
             });
         </script>
     </body>
