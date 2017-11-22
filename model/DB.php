@@ -63,6 +63,7 @@ function getData($sql) {
 }
 
 function setUpdate($sql, $MSG) {
+    $flag = TRUE;
     $conn = getDBConnection();
     if (!$conn) {
         die("Connection failed: " . mysqli_connect_error());
@@ -73,9 +74,11 @@ function setUpdate($sql, $MSG) {
     } else {
         if ($MSG)
             echo "Error: " . $sql . "<br>" . $conn->error;
+        $flag = FALSE;
     }
 
     mysqli_close($conn);
+    return $flag;
 }
 
 function sendSMS($toMobile, $msg) {
