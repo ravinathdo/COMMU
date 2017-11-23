@@ -5,3 +5,12 @@
 <a href="?lang=SI"><img src="images/si.gif" ></a>
 <a href="?lang=TM"><img src="images/ta.gif" ></a>
 <a href="?lang=EN">ENGLISH</a>
+
+<a href="#" onclick="openChatWin()"><i class="fa fa-commenting" aria-hidden="true"></i>CHAT NOW</a>
+
+
+<script>
+    function openChatWin() {
+    myWindow = window.open("chatbox/index.php", "chat", "top=50,left=500,width=500,height=600");   // Opens a new window
+}
+    </script>
