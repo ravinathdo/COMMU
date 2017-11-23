@@ -64,7 +64,7 @@ session_start();
                     </nav>
 
                 </div>
-                
+
                 <div class="w3_agile_search">
                     <?php
                     include '_search.php';
@@ -80,10 +80,10 @@ session_start();
 
 
         <div class="row">
-           <div class="col-md-2">
-               <p style="font-weight: bold;color: #09347a">Open Elections</p>
+            <div class="col-md-2">
+                <p style="font-weight: bold;color: #09347a">Open Elections</p>
                 <?php
-                  include './model/DB.php';
+                include './model/DB.php';
                 $sqlElection = " SELECT * FROM cms_election WHERE STATUS = 'OPEN' ";
                 $resultEle = getData($sqlElection);
                 if ($resultEle != FALSE) {
@@ -92,34 +92,52 @@ session_start();
                         $date = new DateTime($row['enddatetime']);
                         $now = new DateTime();
                         $nowDate = date('Y-m-d');
-                        if ($nowDate != $row['enddatetime']) {
-                            
+
+
+                        //================
+                        if ($nowDate . "" == $row['enddatetime']) {
+                            ?>
+                            <div>
+                                <p style="font-weight: bold"><?= $row['electiontitle']; ?></p>
+                                <p><?= $row['post_title']; ?></p>
+                                <p>
+                                    <?php
+                                    if (isset($_SESSION['ssn_user'])) {
+                                        ?>
+                                        <a href="mamber_voting.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']; ?>&post_title=<?= $row['post_title']; ?>" class="btn btn-primary btn-xs">Vote Now</a></p>
+                                    <?php
+                                }
+                                ?> 
+                                <p><span class="btn btn-default btn-xs"> <?= $row['startdatetime']; ?> to <?= $row['enddatetime']; ?> </span></p>
+                            </div>
+                            <hr>
+                            <?php
                         } else {
-
-                            if ($date < $now) {
+                            if ($date > $now) {
                                 ?>
-
-
-                                <div>
-                                    <p style="font-weight: bold"><?= $row['electiontitle']; ?></p>
-                                    <p><?= $row['post_title']; ?></p>
-                                    <p>
-                                        <?php
-                                        if (isset($_SESSION['ssn_user'])) {
-                                            ?>
-                                            <a href="mamber_voting.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']; ?>&post_title=<?= $row['post_title']; ?>" class="btn btn-primary btn-xs">Vote Now</a></p>
-                                        <?php
-                                    }
-                                    ?> 
-                                    <p><span class="btn btn-default btn-xs"> <?= $row['startdatetime']; ?> to <?= $row['enddatetime']; ?> </span></p>
-                                </div>
-               <hr>
-
-
-
-                                <?php
+                            <div>
+                                <p style="font-weight: bold"><?= $row['electiontitle']; ?></p>
+                                <p><?= $row['post_title']; ?></p>
+                                <p>
+                                    <?php
+                                    if (isset($_SESSION['ssn_user'])) {
+                                        ?>
+                                        <a href="mamber_voting.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']; ?>&post_title=<?= $row['post_title']; ?>" class="btn btn-primary btn-xs">Vote Now</a></p>
+                                    <?php
+                                }
+                                ?> 
+                                <p><span class="btn btn-default btn-xs"> <?= $row['startdatetime']; ?> to <?= $row['enddatetime']; ?> </span></p>
+                            </div>
+                            <hr>
+                            <?php
                             }
                         }
+                        //================
+
+
+
+
+                       
                     }
                 }
                 ?>
@@ -128,8 +146,6 @@ session_start();
             <div class="col-md-6">
 
                 <?php
-              
-
                 if (isset($_GET['pid'])) {
                     $pid = $_GET['pid'];
                     $action = $_GET['action'];
@@ -150,47 +166,47 @@ session_start();
                             echo $row['type'];
 
                             if ($action != $row['type']) {
-                                echo '<br>Invase :'.$action;
+                                echo '<br>Invase :' . $action;
                                 //update the status
                                 switch ($action) {
                                     case "LIKE":
-                                         echo '<br>CASE:LIKE';
+                                        echo '<br>CASE:LIKE';
                                         $totalLike = $totalLike + 1;
                                         $q = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
-                                        setUpdate($q,FALSE);
+                                        setUpdate($q, FALSE);
 
                                         if ($totalDisLike != 0) {
                                             $totalDisLike = $totalDisLike - 1;
                                             $q2 = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
-                                            setUpdate($q2,FALSE);
+                                            setUpdate($q2, FALSE);
                                         } else {
                                             $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
-                                            setData($sqlSetUserPost,TRUE);
+                                            setData($sqlSetUserPost, TRUE);
                                         }
 
                                         $sqlSetUserPost = setUserUpdateVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
-                                        setUpdate($sqlSetUserPost,FALSE);
+                                        setUpdate($sqlSetUserPost, FALSE);
                                         break;
                                     case "DISLIKE":
 
                                         echo '<br>CASE:DISLIKE';
                                         $totalDisLike = $totalDisLike + 1;
                                         $q = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
-                                        setUpdate($q,FALSE);
+                                        setUpdate($q, FALSE);
 
                                         if ($totalLike != 0) {
                                             $totalLike = $totalLike - 1;
                                             $q2 = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
-                                            setUpdate($q2,FALSE);
+                                            setUpdate($q2, FALSE);
                                         } else {
                                             $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
-                                            echo '<br>1:'.$sqlSetUserPost;
-                                            setData($sqlSetUserPost,TRUE);
+                                            echo '<br>1:' . $sqlSetUserPost;
+                                            setData($sqlSetUserPost, TRUE);
                                         }
 
                                         $sqlSetUserPost = setUserUpdateVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
-                                        echo '<br>2:'.$sqlSetUserPost;
-                                        setUpdate($sqlSetUserPost,FALSE);
+                                        echo '<br>2:' . $sqlSetUserPost;
+                                        setUpdate($sqlSetUserPost, FALSE);
                                         break;
                                 }
                                 //update the user_vote
@@ -198,7 +214,7 @@ session_start();
                         }
                     } else {
                         //no vote found
-                       // echo '<br>Vote Not Found';
+                        // echo '<br>Vote Not Found';
 //                          $totalLike = $_GET['totalLike'];
 //                    $totalDisLike = $_GET['totalDisLike'];
                         switch ($action) {
@@ -206,19 +222,19 @@ session_start();
                                 echo 'LIKE';
                                 $totalLike = $totalLike + 1;
                                 $q = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
-                                setUpdate($q,FALSE);
-                                
+                                setUpdate($q, FALSE);
+
                                 $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
-                                setData($sqlSetUserPost,FALSE);
+                                setData($sqlSetUserPost, FALSE);
                                 break;
                             case "DISLIKE":
                                 echo 'DISLIKE';
-                                    $totalDisLike = $totalDisLike + 1;
-                                    $q = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
-                                    setUpdate($q,FALSE);
-                             
+                                $totalDisLike = $totalDisLike + 1;
+                                $q = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
+                                setUpdate($q, FALSE);
+
                                 $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
-                                setData($sqlSetUserPost,FALSE);
+                                setData($sqlSetUserPost, FALSE);
                                 break;
                         }
                     }
@@ -272,17 +288,17 @@ VALUES ('$postid',
                 </table> 
             </div>
             <div class="col-md-4">
-                       <p style="font-weight: bold;color: #09347a">News</p>
-         <?php
+                <p style="font-weight: bold;color: #09347a">News</p>
+                <?php
                 $sqlNews = " SELECT * FROM cms_news WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
                 $resultNews = getData($sqlNews);
                 if ($resultNews != FALSE) {
                     while ($row = mysqli_fetch_assoc($resultNews)) {
                         ?>
-                <div class="bg-info" style="margin-bottom: 10px"> <b><?= $row['news_title']?></b>
-                 <p > <?= $row['description']?> </p>
-                 <p style="font-size: small" class="btn btn-default btn-xs" > <?= $row['datecreated']?> </p>
-                </div>
+                        <div class="bg-info" style="margin-bottom: 10px"> <b><?= $row['news_title'] ?></b>
+                            <p > <?= $row['description'] ?> </p>
+                            <p style="font-size: small" class="btn btn-default btn-xs" > <?= $row['datecreated'] ?> </p>
+                        </div>
                         <?php
                     }
                 }
@@ -298,7 +314,7 @@ VALUES ('$postid',
 
 
 
-       <?php include './_footer.php';?>
+        <?php include './_footer.php'; ?>
 
 
 

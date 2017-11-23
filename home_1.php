@@ -4,11 +4,13 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php session_start(); ?>
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Admin </title>
+        <title>Commu</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -22,6 +24,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
     </head>	
     <body>
+
         <!-- banner -->
         <div class="header">
 
@@ -61,164 +64,253 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     </nav>
 
                 </div>
+
                 <div class="w3_agile_search">
-                   <?php include './_search.php';?>
+                    <?php
+                    include '_search.php';
+                    ?>
                 </div>
+
             </nav>
         </div>
 
 
-        <h3>Manage Post</h3>
-        <hr>
+
+
+
+
         <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-6">
+            <div class="col-md-2">
+                <p style="font-weight: bold;color: #09347a">Open Elections</p>
+                <?php
+                include './model/DB.php';
+                $sqlElection = " SELECT * FROM cms_election WHERE STATUS = 'OPEN' ";
+                $resultEle = getData($sqlElection);
+                if ($resultEle != FALSE) {
+                    while ($row = mysqli_fetch_assoc($resultEle)) {
+//date field check
+                        $date = new DateTime($row['enddatetime']);
+                        $now = new DateTime();
+                        $nowDate = date('Y-m-d');
 
-                <form action="admin_setup_election.php" method="post">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Election Title</label>
-                        <input name="electiontitle" required="" type="text"  class="form-control" id="exampleInputEmail1" >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Post Title</label>
-                        <input name="post_title" required="" type="text"  class="form-control" id="exampleInputEmail1" >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Start Date Time</label>
-                        <input type="date" required="" name="startdatetime" />
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">End Date Time</label>
-                        <input type="date" required="" name="enddatetime" />
-                    </div>
-                    <!--                    <div class="form-group">
-                                            <label for="exampleInputFile">Photo</label>
-                                            <input type="file" id="exampleInputFile">
-                                            <p class="help-block">Related photo upload here.</p>
-                                        </div>-->
 
-                    <button type="submit"  name="btnSub" class="btn btn-primary">Submit</button>
-                </form>
+                        if($nowDate."" == $row['enddatetime']){
+                            echo 'Equalx';
+                        }else{
+                            if ($date > $now) {
+                                echo 'greater tham';
+                            }
+                        }
+                        
+
+                       
+
+                        if ($nowDate != $row['enddatetime']) {
+
+                            
+                        } else {
+
+                            if ($date < $now) {
+                                ?>
+
+
+                                <div>
+                                    <p style="font-weight: bold"><?= $row['electiontitle']; ?></p>
+                                    <p><?= $row['post_title']; ?></p>
+                                    <p>
+                <?php
+                if (isset($_SESSION['ssn_user'])) {
+                    ?>
+                                            <a href="mamber_voting.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']; ?>&post_title=<?= $row['post_title']; ?>" class="btn btn-primary btn-xs">Vote Now</a></p>
+                                            <?php
+                                        }
+                                        ?> 
+                                    <p><span class="btn btn-default btn-xs"> <?= $row['startdatetime']; ?> to <?= $row['enddatetime']; ?> </span></p>
+                                </div>
+                                <hr>
+
 
 
                 <?php
-                include './model/DB.php';
-                include './model/MESSAGE_LIST.php';
-                if (isset($_POST['btnSub'])) {
-                    $sql = " INSERT INTO `cms_election`
-            (`electiontitle`,
-             `startdatetime`,
-             `enddatetime`,
-             `status`,
-             `post_title`,
-             `usercreated`)
-VALUES ('" . $_POST['electiontitle'] . "',
-        '" . $_POST['startdatetime'] . "',
-        '" . $_POST['enddatetime'] . "',
-        'OPEN',
-        '" . $_POST['post_title'] . "',
-        '" . $_SESSION['ssn_user']['id'] . "'); ";
-
-                    setData($sql, TRUE);
-                    
-                    $sms = $_ELECTION_CREATION_SMS.$_POST['electiontitle'];
-                    sendSMStoAll($sms);
-                    
-                }
-                ?>
+            }
+        }
+    }
+}
+?>
 
             </div>
+            <div class="col-md-6">
+
+<?php
+if (isset($_GET['pid'])) {
+    $pid = $_GET['pid'];
+    $action = $_GET['action'];
+    $totalLike = $_GET['totalLike'];
+    $totalDisLike = $_GET['totalDisLike'];
+
+
+    echo 'Vote Posting';
+
+    //user LIKE
+    $sql_1 = " SELECT * FROM cms_post_vote WHERE postid = $pid AND memberid = " . $_SESSION['ssn_user']['id'];
+    $result_1 = getData($sql_1);
+
+
+
+    if ($result_1 != FALSE) {
+        while ($row = mysqli_fetch_assoc($result_1)) {
+            echo $row['type'];
+
+            if ($action != $row['type']) {
+                echo '<br>Invase :' . $action;
+                //update the status
+                switch ($action) {
+                    case "LIKE":
+                        echo '<br>CASE:LIKE';
+                        $totalLike = $totalLike + 1;
+                        $q = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
+                        setUpdate($q, FALSE);
+
+                        if ($totalDisLike != 0) {
+                            $totalDisLike = $totalDisLike - 1;
+                            $q2 = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
+                            setUpdate($q2, FALSE);
+                        } else {
+                            $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
+                            setData($sqlSetUserPost, TRUE);
+                        }
+
+                        $sqlSetUserPost = setUserUpdateVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
+                        setUpdate($sqlSetUserPost, FALSE);
+                        break;
+                    case "DISLIKE":
+
+                        echo '<br>CASE:DISLIKE';
+                        $totalDisLike = $totalDisLike + 1;
+                        $q = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
+                        setUpdate($q, FALSE);
+
+                        if ($totalLike != 0) {
+                            $totalLike = $totalLike - 1;
+                            $q2 = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
+                            setUpdate($q2, FALSE);
+                        } else {
+                            $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
+                            echo '<br>1:' . $sqlSetUserPost;
+                            setData($sqlSetUserPost, TRUE);
+                        }
+
+                        $sqlSetUserPost = setUserUpdateVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
+                        echo '<br>2:' . $sqlSetUserPost;
+                        setUpdate($sqlSetUserPost, FALSE);
+                        break;
+                }
+                //update the user_vote
+            }
+        }
+    } else {
+        //no vote found
+        // echo '<br>Vote Not Found';
+//                          $totalLike = $_GET['totalLike'];
+//                    $totalDisLike = $_GET['totalDisLike'];
+        switch ($action) {
+            case "LIKE":
+                echo 'LIKE';
+                $totalLike = $totalLike + 1;
+                $q = " UPDATE cms_post SET plike  = $totalLike  WHERE id  = $pid ";
+                setUpdate($q, FALSE);
+
+                $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'LIKE');
+                setData($sqlSetUserPost, FALSE);
+                break;
+            case "DISLIKE":
+                echo 'DISLIKE';
+                $totalDisLike = $totalDisLike + 1;
+                $q = " UPDATE cms_post SET dislike  = $totalDisLike  WHERE id  = $pid ";
+                setUpdate($q, FALSE);
+
+                $sqlSetUserPost = setUserPostVote($pid, $_SESSION['ssn_user']['id'], 'DISLIKE');
+                setData($sqlSetUserPost, FALSE);
+                break;
+        }
+    }
+}
+
+function setUserPostVote($postid, $memberid, $type) {
+
+    $sql = " INSERT INTO `cms_post_vote`
+            (`postid`,
+             `memberid`,
+             `type`)
+VALUES ('$postid',
+        '$memberid',
+        '$type'); ";
+    return $sql;
+}
+
+function setUserUpdateVote($postid, $memberid, $type) {
+
+    $sql = " UPDATE cms_post_vote SET TYPE = '$type' WHERE postid = $postid AND memberid = $memberid ";
+    return $sql;
+}
+?>
+                <table class="table table-striped">
+                <?php
+                $sqlPost = " SELECT * FROM cms_post WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
+                $resultAllPost = getData($sqlPost);
+                if ($resultAllPost != FALSE) {
+                    while ($row = mysqli_fetch_assoc($resultAllPost)) {
+                        ?>
+
+                            <tr>
+                                <td><?= $row['id'] ?></td>
+                                <td style="color: black">
+                                    <p style="font-weight: bold"><?= $row['posttitle'] ?></p>
+        <?= $row['description'] ?>
+                                    <p style="font-size: x-small">[ <?= $row['datecreated'] ?> ]</p></td>
+                                <td>
+                                    <a href="home.php?pid=<?= $row['id'] ?>&totalDisLike=<?= $row['dislike'] ?>&totalLike=<?= $row['plike'] ?>&action=LIKE&usr=<?= $row['usercreated'] ?>"> <i class="fa fa-thumbs-up"></i> <?= $row['plike']; ?></a>
+                                    <a href="home.php?pid=<?= $row['id'] ?>&totalDisLike=<?= $row['dislike'] ?>&totalLike=<?= $row['plike'] ?>&action=DISLIKE&usr=<?= $row['usercreated'] ?>"> <i class="fa fa-thumbs-down"></i> <?= $row['dislike']; ?></a>
+                                </td>
+                            </tr>
+                            <td></td>
+                            <td></td>
+
+        <?php
+    }
+}
+?>
+
+                </table> 
+            </div>
             <div class="col-md-4">
-
-
+                <p style="font-weight: bold;color: #09347a">News</p>
+<?php
+$sqlNews = " SELECT * FROM cms_news WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
+$resultNews = getData($sqlNews);
+if ($resultNews != FALSE) {
+    while ($row = mysqli_fetch_assoc($resultNews)) {
+        ?>
+                        <div class="bg-info" style="margin-bottom: 10px"> <b><?= $row['news_title'] ?></b>
+                            <p > <?= $row['description'] ?> </p>
+                            <p style="font-size: small" class="btn btn-default btn-xs" > <?= $row['datecreated'] ?> </p>
+                        </div>
+        <?php
+    }
+}
+?>
             </div>
         </div>
 
 
 
-        <table id="example" class="display" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>Elec ID</th>
-                    <th>Election Title</th>
-                    <th>Members</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th>Elec ID</th>
-                    <th>Election Title</th>
-                    <th>Members</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Status</th>
-                    <th></th>
-
-                </tr>
-            </tfoot>
-            <tbody>
-                <?php
-                $sqlx = " SELECT * FROM `cms_election` ORDER BY id DESC ";
-                $resultx = getData($sqlx);
-                if ($resultx != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultx)) {
-                        ?>
-                        <tr>
-                            <td><?= $row['id']; ?></td>
-                            <td> <?= $row['electiontitle']; ?></td>
-                            <td>
-
-                                        <ul>
-                                            <?php
-                                            //get member list with votes
-                                            $sqlV = " 
-SELECT cms_member.*,cms_election_vote.vote FROM cms_election_vote
-INNER JOIN cms_member
-ON cms_election_vote.memberid = cms_member.id 
-WHERE cms_election_vote.electionid = '" . $row['id'] . "'
-ORDER BY cms_election_vote.vote DESC  ";
-                                            
-      
-
-                                            $resulty = getData($sqlV);
-                                            if ($resulty != FALSE) {
-                                                while ($rowy = mysqli_fetch_assoc($resulty)) {
-                                                    ?>
-                                                    <li <?php if ($rowy['username'] == $row['winner']) { ?>   style="color: red"   <?php } ?>> <i class="fa fa-user"></i> [ <?= $rowy['vote'] ?> ] <?= $rowy['username'] ?> -  <?= $rowy['firstname'] ?>  <?= $rowy['lastname'] ?></li>
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
-                                        </ul>
-                                    </td>
-                            <td><?= $row['startdatetime']; ?></td>
-                            <td><?= $row['enddatetime']; ?></td>
-                            <td><?= $row['status']; ?></td>
-                            <td> <?php
-                                if ($row['status'] == 'OPEN') {
-                                    ?> <a href="admin_election_participats.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']?>&post_title=<?= $row['post_title']?>"> Set Participants </a>  <?php
-                                }
-                                ?></td>
-                        </tr>
-                        <?php
-                    }
-                }
-                ?>
-            </tbody>
-
-        </table>
 
 
 
 
 
-        <!-- footer -->
-        <?php include './_footer.php';?>
-        <!-- //footer -->
+
+<?php include './_footer.php'; ?>
 
 
 
@@ -234,11 +326,11 @@ ORDER BY cms_election_vote.vote DESC  ";
                         <div class="signin-form profile">
                             <h3 class="agileinfo_sign">Sign In</h3>	
                             <div class="login-form">
-                                <form action="#" method="post">
-                                    <input type="email" name="email" placeholder="E-mail" required="">
+                                <form action="index.php" method="post">
+                                    <input type="text" name="username" placeholder="Username" required="">
                                     <input type="password" name="password" placeholder="Password" required="">
                                     <div class="tp">
-                                        <input type="submit" value="Sign In">
+                                        <input type="submit" name="btnLogin" value="Sign In">
                                     </div>
                                 </form>
                             </div>
@@ -422,14 +514,5 @@ ORDER BY cms_election_vote.vote DESC  ";
             });
         </script>
         <!-- //here ends scrolling icon -->
-
-
-        <!--data table-->
-        <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#example').DataTable();
-            });
-        </script>
     </body>
 </html>
