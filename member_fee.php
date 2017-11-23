@@ -1,9 +1,14 @@
-
-<?php session_start(); ?>
+<!--
+author: W3layouts
+author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+<?php session_start();?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Member Reg</title>
+        <title>Commu | Member</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -51,219 +56,148 @@
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
-                    <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu.php'; ?>
-                    </nav>
+                    <?php include './_menu.php';?>
 
                 </div>
                 <div class="w3_agile_search">
-                    <?php include './_search.php'; ?>
+                  <?php include './_search.php';?>
                 </div>
             </nav>
         </div>
 
 
-        <h3>Member Registration</h3>
-        <hr>
 
         <div class="row">
-            <div class="col-md-2">
-
-
-            </div>  
-            <form action="admin_member_registration.php" method="post">
-                <div class="col-md-5">
-
-
-
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+                <form method="post" action="member_fee.php">
+                    
                     <div class="form-group">
-                        <label for="exampleInputName2">First Name</label>
-                        <input type="text" required="" name="firstname" class="form-control" id="exampleInputName2" >
+                        <label for="exampleInputPassword1">Year Pay</label>
+                        <input type="text" name="year_pay" class="form-control" id="exampleInputPassword1" >
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail2">Last Name</label>
-                        <input type="text" required="" name="lastname" class="form-control" id="exampleInputEmail2" placeholder="">
+                        <label for="exampleInputPassword1">Name On The Card</label>
+                        <input type="text" class="form-control" id="exampleInputPassword1" >
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail2">NIC</label>
-                        <input type="text" required="" name="nic" class="form-control" id="exampleInputEmail2" placeholder="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="exampleInputEmail2">Email</label>
-                        <input type="email"  required="" name="email" class="form-control" id="exampleInputEmail2" placeholder="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="exampleInputEmail2">Current Address</label>
-                        <textarea  name="currentaddress" required="" class="form-control"> </textarea>
+                        <label for="exampleInputPassword1">Card Number</label>
+                        <input type="number" class="form-control" id="exampleInputPassword1" >
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail2">Permanent Address</label>
-                        <textarea  name="permanentaddress" class="form-control"> </textarea>
+                        <label for="exampleInputPassword1">CCV</label>
+                        <input type="number" class="form-control" id="exampleInputPassword1" >
                     </div>
-
-                </div>
-
-                <div class="col-md-5">
-
                     <div class="form-group">
-                        <label for="exampleInputName2">Expert In</label>
-                        <select name="experticeid" class="form-control"> 
-                            <option>--select--</option>
+                        <label for="exampleInputPassword1">Amount</label>
+                        <input type="number" name="payment_amount" class="form-control" id="exampleInputPassword1" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1"></label>
+                        <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
+                        <button type="submit" name="btnView" class="btn btn-primary">View</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6">
+                
+                 <?php
+                 include './model/DB.php';
+                if (isset($_POST['btnSub'])) {
+                    $sqlx = " INSERT INTO `cms_payment`
+            ( `year_pay`, 
+            `member_id`,
+             `payment_amount`
+             )
+VALUES ( '" . $_POST['year_pay'] . "',
+        '" . $_SESSION['ssn_user']['id'] . "',
+        '" . $_POST['payment_amount'] . "'); ";
+
+                    setData($sqlx,TRUE);
+                    ?>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Year Pay</th>
+                                <th>Amount</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <?php
-                            include './model/DB.php';
+                            $sqlGet = " SELECT * FROM cms_payment WHERE member_id =  " . $_SESSION['ssn_user']['id'] ;
+                           
+                            
+                            $resultx = getData($sqlGet);
+                            if ($resultx != FALSE) {
+                                while ($row = mysqli_fetch_assoc($resultx)) {
+                                    ?>
 
-                            $sql = " SELECT * FROM cms_expertise  ";
-                            $resultxc = getData($sql);
-                            if ($resultxc != FALSE) {
-                                while ($row = mysqli_fetch_assoc($resultxc)) {
-                                    ?>  <option value="<?= $row['id'] ?>"><?= $row['expertise'] ?></option> <?php
+                                    <tr>
+                                        <td><?= $row['year_pay']; ?></td>
+                                        <td><?= $row['payment_amount']; ?></td>
+                                        <td><?= $row['created_date']; ?></td>
+                                    </tr>
+                                    <?php
                                 }
                             }
                             ?>
+                        </tbody>
+                    </table>
 
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputName2">User Role </label>
-                        <select name="role" class="form-control"> 
-                            <option>--select--</option>
-                            <option value="MEMBER">MEMBER</option>
-                            <option value="MANAGER">MANAGER</option>
-                            <option value="ADMIN">ADMIN</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="exampleInputEmail2">Mobile No</label>
-                        <input type="number"  required="" name="mobileno" class="form-control" id="exampleInputEmail2" placeholder="">
-                    </div>
-
-
-
-                    <button type="submit" name="btnReg" class="btn btn-primary">Register</button>
-
-                </div>
-            </form>
-
-           
-        </div>
-
- <?php
-
-            if (isset($_POST['btnReg'])) {
-
-                $sql = " INSERT INTO `cmsdb`.`cms_member`
-            (`firstname`,
-             `lastname`,
-             `nic`,
-             `email`,
-             `currentaddress`,
-             `experticeid`,
-             `permanentaddress`,
-             `authstatus`,
-             `role`,
-             `mobileno`,
-             `usercreated`)
-VALUES ('" . $_POST['firstname'] . "',
-        '" . $_POST['lastname'] . "',
-        '" . $_POST['nic'] . "',
-        '" . $_POST['email'] . "',
-        '" . $_POST['currentaddress'] . "',
-        '" . $_POST['experticeid'] . "',
-        '" . $_POST['permanentaddress'] . "',
-        'Authorized',
-        '" . $_POST['role'] . "',
-        '" . $_POST['mobileno'] . "',
-        '" . $_SESSION['ssn_user']['id'] . "'); ";
-
-
-                $regNo = setData($sql, TRUE);
-                $username = 'MEM' . $regNo;
-                $sqlUpdate = "UPDATE cms_member SET username = '$username' WHERE id = " . $regNo;
-                setUpdate($sqlUpdate, FALSE);
-
-                //new user creted
-
-                $sqlUsr = " INSERT INTO `cmsdb`.`cms_user`
-            (`username`,
-             `password`,
-             `role`,
-             `status`,
-             `member_id`)
-VALUES ( '$username',
-        PASSWORD('$username'),
-        '" . $_POST['role'] . "',
-        'ACT',
-        '$regNo'); ";
-
-                setData($sqlUsr, FALSE);
-                
-                //message sending
-                include './model/MESSAGE_LIST.php';
-                $sms_1 = $_MEMBER_CREATION.$username;
-                sendSMS($_POST['mobileno'], $sms_1);
-                
-            }
-            ?>
-
-        <hr>
-
-        <table id="example" class="display" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>Member ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>NIC</th>
-                    <th>Status</th>
-                    <th>Approved By</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th>Member ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>NIC</th>
-                    <th>Status</th>
-                    <th>Approved By</th>
-                </tr>
-            </tfoot>
-            <tbody>
-
-                <?php
-                $sqlXX = "SELECT * FROM cms_member";
-                $resultx = getData($sqlXX);
-                if ($resultx != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultx)) {
-                        ?>
-
-
-                        <tr>
-                            <td><?= $row['username'] ?></td>
-                            <td><?= $row['firstname'] ?></td>
-                            <td><?= $row['lastname'] ?></td>
-                            <td><?= $row['nic'] ?></td>
-                            <td><?php if ($row['authstatus'] == 'PENDING') {
-                            ?> 
-                                    <a href="admin_authorization_member.php?mid=<?= $row['id'] ?>&action=AUTHORIZED&username=<?= $row['username'] ?>" class="btn btn-warning"> Pending Approval </a>
-                                    <?php } else {
-                                    ?>
-                                    <span class="btn btn-success">AUTHORIZED</span>
-                                    <?php
-                                }
-                                ?></td>
-                            <td>Created By</td>
-                        </tr>
-                        <?php
-                    }
+                    <?php
                 }
                 ?>
 
-            </tbody>
-        </table>
+
+
+                <?php
+                if (isset($_POST['btnView'])) {
+                    ?>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Year Pay</th>
+                                <th>Amount</th>
+                                <th>Date Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $sqlVi = " SELECT * FROM cms_payment WHERE member_id =   " . $_SESSION['ssn_user']['id'];
+                            //echo $sqlVi;
+                            $resultx = getData($sqlVi);
+                            if ($resultx != FALSE) {
+                                while ($row = mysqli_fetch_assoc($resultx)) {
+                                    ?>
+
+                                    <tr>
+                                        <td><?= $row['year_pay']; ?></td>
+                                        <td><?= $row['payment_amount']; ?></td>
+                                        <td><?= $row['created_date']; ?></td>
+                                    </tr>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                    <?php
+                }
+                ?>
+
+
+                
+            </div>
+        </div>
+
+
+
+
+
+
 
 
 
@@ -312,7 +246,7 @@ VALUES ( '$username',
 
                 </div>
                 <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Community</a></h2>
+                    <h2><a href="index.html">Funding</a></h2>
                     <div class="agileits-social">
                         <ul>
                             <li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -414,19 +348,11 @@ VALUES ( '$username',
         <!-- //Counter required files -->
 
 
-        <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
+
         <script src="js/mainScript.js"></script>
         <script src="js/rgbSlide.min.js"></script>
         <!-- carousal -->
         <script src="js/slick.js" type="text/javascript" charset="utf-8"></script>
-
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#example').DataTable();
-            });
-        </script>
-
-
         <script type="text/javascript">
             $(document).on('ready', function () {
                 $(".center").slick({
@@ -542,5 +468,13 @@ VALUES ( '$username',
             });
         </script>
         <!-- //here ends scrolling icon -->
+        
+        <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
+
+        <script>
+            $(document).ready(function () {
+//                $('#example').DataTable();
+            });
+        </script>
     </body>
 </html>

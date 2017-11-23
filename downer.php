@@ -7,8 +7,31 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
+
+
+    <?php
+    $lang_EN = array("OPEN_ELECTIONS" => "", "OPENING_HOURS" => "Opening Hours", "SEND_US_A_MESSAGE" => "Send us a Message", "GIVE_US_A_CALL" => "Give us a Call");
+    $lang_SI = array("OPEN_ELECTIONS" => "විවෘත මැතිවරණ", "OPENING_HOURS" => "විවෘත වේලාවන්", "SEND_US_A_MESSAGE" => "අපට පණිවිඩයක් එවන්න", "GIVE_US_A_CALL" => "අපිට කෝල් එකක් දෙන්න");
+    $lang_TM = array("OPEN_ELECTIONS" => "திறந்த தேர்தல்  ", "OPENING_HOURS" => "தொடக்க நேரம் ", "SEND_US_A_MESSAGE" => "எங்களுக்கு ஒரு செய்தியை அனுப்புங்கள் ", "GIVE_US_A_CALL" => "எங்களுக்கு ஒரு அழைப்பு கொடுங்கள்");
+
+    if (isset($_GET['lang'])) {
+
+        if ($_GET['lang'] == 'SI') {
+            $lang = $lang_SI;
+        } else if ($_GET['lang'] == 'TM') {
+            $lang = $lang_TM;
+        } else if ($_GET['lang'] == 'EN') {
+            $lang = $lang_EN;
+        }
+    } else {
+
+        $lang = $lang_EN;
+    }
+    ?>
+
+
     <head>
-        <title>Commu | Template</title>
+        <title>Commu</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -22,6 +45,21 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
     </head>	
     <body>
+        <?php
+        include './model/UserModel.php';
+        if (isset($_POST['btnLogin'])) {
+
+            $flag = doLogin();
+
+            if ($flag) {
+                // echo 'User Found';
+                header('Location:home.php');
+            } else {
+
+                echo '<p class="bg-danger">Invalid Username or Password</p>';
+            }
+        }
+        ?>
         <!-- banner -->
         <div class="header">
 
@@ -36,7 +74,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div>
             </div>
             <div class="w3layouts_header_left">
-                <?php include './_top.php'; ?>
+                <ul>
+                    <li><a href="#" data-toggle="modal" data-target="#myModal2">Community Management System</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#myModal2"><i class="fa fa-user" aria-hidden="true"></i> Sign in</a></li>
+                    <!--<li><a href="#" data-toggle="modal" data-target="#myModal3"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Sign Up </a></li>-->
+                </ul>
             </div>
             <div class="clearfix"> </div>
         </div>
@@ -57,194 +99,91 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
                     <nav class="link-effect-2" id="link-effect-2">
-                        <?php include './_menu.php'; ?>
+                        <ul class="nav navbar-nav">
+                            <?php include './_menu_common.php'; ?>
+                            <!--                            <li class="dropdown">
+                                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span data-hover="Short Codes">Short Codes</span> <b class="caret"></b></a>
+                                                            <ul class="dropdown-menu agile_short_dropdown">
+                                                                <li><a href="icons.html">Web Icons</a></li>
+                                                                <li><a href="typography.html">Typography</a></li>
+                                                            </ul>
+                                                        </li>-->
+                            <!--<li><a href="#"><span data-hover="Mail Us">Mail Us</span></a></li>-->
+                        </ul>
                     </nav>
 
                 </div>
                 <div class="w3_agile_search">
-                    <form action="#" method="post">
-                        <input type="search" name="Search" placeholder="Search Keywords..." required="" />
-                        <input type="submit" value="Search">
-                    </form>
+                    <?php
+                    include '_search.php';
+                    ?>
                 </div>
             </nav>
         </div>
 
 
 
-        <div class="row">
-
-
-
-
-            <div class="col-md-12">
-
-
-
-
-                <?php
-                include './model/DB.php';
-                if (isset($_POST['btnReg'])) {
-
-                    $sql = " INSERT INTO `cmsdb`.`cms_member`
-            (`firstname`,
-             `lastname`,
-             `nic`,
-             `email`,
-             `currentaddress`,
-             `experticeid`,
-             `permanentaddress`,
-             `authstatus`,
-             `role`,
-             `usercreated`)
-VALUES ('" . $_POST['firstname'] . "',
-        '" . $_POST['lastname'] . "',
-        '" . $_POST['nic'] . "',
-        '" . $_POST['email'] . "',
-        '" . $_POST['currentaddress'] . "',
-        '" . $_POST['experticeid'] . "',
-        '" . $_POST['permanentaddress'] . "',
-        'Authorized',
-        'MEMBER',
-        '" . $_SESSION['ssn_user']['id'] . "'); ";
-
-
-                    $regNo = setData($sql, TRUE);
-                    $username = 'MEM' . $regNo;
-                    $sqlUpdate = "UPDATE cms_member SET username = '$username' WHERE id = " . $regNo;
-                    setUpdate($sqlUpdate, FALSE);
-
-                    // Always set content-type when sending HTML email
-                    $headers = "MIME-Version: 1.0" . "\r\n";
-                    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-// More headers
-                    $headers .= 'From: <webmaster@commu.com>' . "\r\n";
-                    $headers .= 'Cc: myboss@example.com' . "\r\n";
-
-                    mail($_POST['email'], "Member Registered", "Pleaase login username:" . $username, $headers);
-
-
-//new user creted
-                    /*
-                      $sqlUsr = " INSERT INTO `cmsdb`.`cms_user`
-                      (`username`,
-                      `password`,
-                      `role`,
-                      `status`,
-                      `member_id`)
-                      VALUES ( '$username',
-                      PASSWORD('$username'),
-                      '" . $_POST['role'] . "',
-                      'ACT',
-                      '$regNo'); ";
-                      setData($sqlUsr, FALSE); */
-                }
-                ?>
+        <div class = "header_mid">
+            <div class = "w3layouts_header_mid">
+                <ul>
+                    <li>
+                        <div class = "header_contact_details_agile"><i class = "fa fa-envelope-o" aria-hidden = "true"></i>
+                            <div class = "w3l_header_contact_details_agile">
+                                <div class = "header-contact-detail-title"><?= $lang['SEND_US_A_MESSAGE'] ?></div>
+                                <a href = "mailto:info@commu.com">info@commu.com</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class = "header_contact_details_agile"><i class = "fa fa-phone" aria-hidden = "true"></i>
+                            <div class = "w3l_header_contact_details_agile">
+                                <div class = "header-contact-detail-title"><?= $lang['GIVE_US_A_CALL'] ?></div>
+                                <a class = "w3l_header_contact_details_agile-info_inner"> 071-468-3414 </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class = "header_contact_details_agile"><i class = "fa fa-clock-o" aria-hidden = "true"></i>
+                            <div class = "w3l_header_contact_details_agile">
+                                <div class = "header-contact-detail-title"><?= $lang['OPENING_HOURS']; ?></div>
+                                <a class = "w3l_header_contact_details_agile-info_inner">Mon - Sat: 7:00 - 18:00</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class = "header_contact_details_agile"><i class = "fa fa-map-marker" aria-hidden = "true"></i>
+                            <div class = "w3l_header_contact_details_agile">
+                                <div class = "header-contact-detail-title">POBOX 3007 Union Place</div>
+                                <a class = "w3l_header_contact_details_agile-info_inner">Sri Lanka, Colombo 03 </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
 
 
 
 
-                <?php
-                if (isset($_GET['action'])) {
-                    $mid = $_GET['mid'];
-                    $action = $_GET['action'];
-                    $username = $_GET['username'];
-                    $sql = "UPDATE cms_member SET authstatus = 'AUTHORIZED' , autorizeby = '" . $_SESSION['ssn_user']['id'] . "' WHERE id = " . $mid;
-                    setUpdate($sql, TRUE);
 
-                    //user creation 
-                    $sqlUsr = " INSERT INTO `cmsdb`.`cms_user`
-            (`username`,
-             `password`,
-             `role`,
-             `status`,
-             `member_id`)
-VALUES ( '$username',
-        PASSWORD('$username'),
-        'MEMBER',
-        'ACT',
-        '$mid'); ";
+        <div class = "row">
+            <div class = "col-md-2">
 
-                    setData($sqlUsr, FALSE);
-                    //mail
-                }
-                ?>
-
-
-                <h2>Pendings</h2>
-                <table id="example" class="display" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Member No</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>NIC</th>
-                            <th>Email</th>
-                            <th>Status</th>
-                            <th>Created By</th>
-                            <th>Approved By</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Member No</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>NIC</th>
-                            <th>Email</th>
-                            <th>Status</th>
-                            <th>Created By</th>
-                            <th>Approved By</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-<?php
-$sqlMy = " SELECT * FROM cms_member WHERE authstatus = 'PENDING' ";
-$resultxx = getData($sqlMy);
-if ($resultxx != FALSE) {
-    while ($row = mysqli_fetch_assoc($resultxx)) {
-        /*
-          `id`,
-          `firstname`,
-          `lastname`,
-          `nic`,
-          `username`,
-          `email`,
-          `currentaddress`,
-          `experticeid`,
-          `permanentaddress`,
-          `authstatus`,
-          `datecreated`,
-          `autorizeby`,
-          `role`,
-          `usercreated`
-         *                                  */
-        ?>
-                                <tr>
-                                    <td><?= $row['id']; ?></td>
-                                    <td><?= $row['firstname']; ?></td>
-                                    <td><?= $row['lastname']; ?></td>
-                                    <td><?= $row['nic']; ?></td>
-                                    <td><?= $row['email']; ?></td>
-                                    <td>
-        <?php
-        if ($row['authstatus'] == 'PENDING') {
-            ?><a href="admin_authorization_member.php?mid=<?= $row['id']; ?>&action=AUTHORIZED&username=<?= $row['username']; ?>"> <?= $row['authstatus']; ?></a><?php
-                                        }
-                                        ?>
-                                    </td>
-                                    <td>MEM<?= $row['usercreated']; ?></td>
-                                    <td><?= $row['autorizeby']; ?></td>
-                                </tr>
-        <?php
-    }
-}
-?>
-                    </tbody>
-                </table>
-
-
+            </div>
+            <div class="col-md-6">
+                
+                <h2>Wanna Be a volunteer or a donor</h2>
+                <p>we are a community group which help well-being of the society. Therefore, according to the expertise professionals we have, we have selected some projects that we could help it out. We are providing online training sessions for the people who are interested in joining with us to ensure the society’s well-being and help the poor. At present we have started health and care, disaster management projects etc. Therefore, any one who likes to join us to help our society, only needs to fill below registration form and send it to 
+<a href = "mailto:info@commu.com">info@commu.com</a>
+                </p>
+                <br>
+                <p><a href="application.xlsx">Download Application Here</a></p>
+                <p></p>
+                <br>
+            </div>
+            <div class="col-md-4">
+                
             </div>
         </div>
 
@@ -257,68 +196,7 @@ if ($resultxx != FALSE) {
 
 
         <!-- footer -->
-        <div class="footer_agile_w3ls">
-            <div class="container">
-                <div class="agileits_w3layouts_footer_grids">
-                    <div class="col-md-3 footer-w3-agileits">
-                        <h3>Training Grounds</h3>
-                        <ul>
-                            <li>Etiam quis placerat</li>
-                            <li>the printing</li>
-                            <li>unknown printer</li>
-                            <li>Lorem Ipsum</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3 footer-agileits">
-                        <h3>Specialized</h3>
-                        <ul>
-                            <li>the printing</li>
-                            <li>Etiam quis placerat</li>
-                            <li>Lorem Ipsum</li>
-                            <li>unknown printer</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3 footer-wthree">
-                        <h3>Partners</h3>
-                        <ul>
-                            <li>unknown printer</li>
-                            <li>Lorem Ipsum</li>
-                            <li>the printing</li>
-                            <li>Etiam quis placerat</li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-3 footer-agileits-w3layouts">
-                        <h3>Our Links</h3>
-                        <ul>
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="events.html">Events</a></li>
-                            <li><a href="mail.html">Contact</a></li>
-                        </ul>
-                    </div>
-                    <div class="clearfix"></div>
-
-                </div>
-                <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Funding</a></h2>
-                    <div class="agileits-social">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa fa-rss"></i></a></li>
-                            <li><a href="#"><i class="fa fa-vk"></i></a></li>
-                        </ul>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <div class="wthree_copy_right">
-            <div class="container">
-                <p>© 2017 All rights reserved | Design by COMMU</p>
-            </div>
-        </div>
+        <?php include './_footer.php'; ?>
         <!-- //footer -->
 
 
@@ -335,11 +213,11 @@ if ($resultxx != FALSE) {
                         <div class="signin-form profile">
                             <h3 class="agileinfo_sign">Sign In</h3>	
                             <div class="login-form">
-                                <form action="#" method="post">
-                                    <input type="email" name="email" placeholder="E-mail" required="">
+                                <form action="index.php" method="post">
+                                    <input type="text" name="username" placeholder="Username" required="">
                                     <input type="password" name="password" placeholder="Password" required="">
                                     <div class="tp">
-                                        <input type="submit" value="Sign In">
+                                        <input type="submit" name="btnLogin" value="Sign In">
                                     </div>
                                 </form>
                             </div>
@@ -350,7 +228,7 @@ if ($resultxx != FALSE) {
                                     <li><a href="#"><i class="fa fa-rss"></i></a></li>
                                 </ul>
                             </div>
-                            <p><a href="#" data-toggle="modal" data-target="#myModal3" > Don't have an account?</a></p>
+                            <!--<p><a href="#" data-toggle="modal" data-target="#myModal3" > Don't have an account?</a></p>-->
                         </div>
                     </div>
                 </div>
@@ -523,14 +401,5 @@ if ($resultxx != FALSE) {
             });
         </script>
         <!-- //here ends scrolling icon -->
-
-
-        <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
-
-        <script>
-            $(document).ready(function () {
-                $('#example').DataTable();
-            });
-        </script>
     </body>
 </html>
