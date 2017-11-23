@@ -64,6 +64,12 @@ session_start();
                     </nav>
 
                 </div>
+                
+                <div class="w3_agile_search">
+                    <?php
+                    include '_search.php';
+                    ?>
+                </div>
 
             </nav>
         </div>
