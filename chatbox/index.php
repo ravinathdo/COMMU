@@ -1,9 +1,13 @@
 <?php
-
+session_start();
 require_once dirname(__FILE__)."/src/phpfreechat.class.php";
 $params = array();
 $params["title"] = "Quick chat";
-$params["nick"] = "guest".rand(1,1000);  // setup the intitial nickname
+//echo $_SESSION['ssn_user']['firstname'];
+$un = $_SESSION['ssn_user']['firstname'];
+//$params["nick"] = "guest".rand(1,1000);  // setup the intitial nickname
+$params["nick"] = $un;  // setup the intitial nickname
+
 $params['firstisadmin'] = true;
 //$params["isadmin"] = true; // makes everybody admin: do not use it on production servers ;)
 $params["serverid"] = md5(__FILE__); // calculate a unique id for this chat

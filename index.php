@@ -10,9 +10,9 @@ author: Thisara
 
 
     <?php
-    $lang_EN = array("OPEN_ELECTIONS"=>"","OPENING_HOURS"=>"Opening Hours","SEND_US_A_MESSAGE" => "Send us a Message", "GIVE_US_A_CALL" => "Give us a Call");
-    $lang_SI = array("OPEN_ELECTIONS"=>"විවෘත මැතිවරණ","OPENING_HOURS"=>"විවෘත වේලාවන්","SEND_US_A_MESSAGE" => "අපට පණිවිඩයක් එවන්න", "GIVE_US_A_CALL" => "අපිට කෝල් එකක් දෙන්න");    
-    $lang_TM = array("OPEN_ELECTIONS"=>"திறந்த தேர்தல்  ","OPENING_HOURS"=>"தொடக்க நேரம் ","SEND_US_A_MESSAGE" => "எங்களுக்கு ஒரு செய்தியை அனுப்புங்கள் ", "GIVE_US_A_CALL" => "எங்களுக்கு ஒரு அழைப்பு கொடுங்கள்");
+    $lang_EN = array("OPEN_ELECTIONS" => "", "OPENING_HOURS" => "Opening Hours", "SEND_US_A_MESSAGE" => "Send us a Message", "GIVE_US_A_CALL" => "Give us a Call");
+    $lang_SI = array("OPEN_ELECTIONS" => "විවෘත මැතිවරණ", "OPENING_HOURS" => "විවෘත වේලාවන්", "SEND_US_A_MESSAGE" => "අපට පණිවිඩයක් එවන්න", "GIVE_US_A_CALL" => "අපිට කෝල් එකක් දෙන්න");
+    $lang_TM = array("OPEN_ELECTIONS" => "திறந்த தேர்தல்  ", "OPENING_HOURS" => "தொடக்க நேரம் ", "SEND_US_A_MESSAGE" => "எங்களுக்கு ஒரு செய்தியை அனுப்புங்கள் ", "GIVE_US_A_CALL" => "எங்களுக்கு ஒரு அழைப்பு கொடுங்கள்");
 
     if (isset($_GET['lang'])) {
 
@@ -43,6 +43,23 @@ author: Thisara
 
         <?php include_once './basecss.php'; ?>
 
+        <link rel="stylesheet" href="ism/css/my-slider.css"/>
+        <script src="ism/js/ism-2.2.min.js"></script>
+
+
+        <style type="text/css">
+         
+            
+            @media screen and (min-width: 0px) and (max-width: 400px) {
+  #commu-slider { display: none; }  /* show it on small screens */
+}
+
+@media screen and (min-width: 401px) and (max-width: 1024px) {
+  #commu-slider { display: block; }   /* hide it elsewhere */
+}
+
+
+        </style>
     </head>	
     <body>
         <?php
@@ -76,7 +93,7 @@ author: Thisara
             <div class="w3layouts_header_left">
                 <ul>
                     <li><a href="#" data-toggle="modal" data-target="#myModal2">Community Management System</a></li>
-                    <li><a href="#" data-toggle="modal" data-target="#myModal2"><i class="fa fa-user" aria-hidden="true"></i> Sign in</a></li>
+                    <!--<li><a href="#" data-toggle="modal" data-target="#myModal2"><i class="fa fa-user" aria-hidden="true"></i> Sign in</a></li>-->
                     <!--<li><a href="#" data-toggle="modal" data-target="#myModal3"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Sign Up </a></li>-->
                 </ul>
             </div>
@@ -137,7 +154,7 @@ author: Thisara
                     <li>
                         <div class = "header_contact_details_agile"><i class = "fa fa-phone" aria-hidden = "true"></i>
                             <div class = "w3l_header_contact_details_agile">
-                                <div class = "header-contact-detail-title"><?= $lang['GIVE_US_A_CALL']?></div>
+                                <div class = "header-contact-detail-title"><?= $lang['GIVE_US_A_CALL'] ?></div>
                                 <a class = "w3l_header_contact_details_agile-info_inner"> 071-468-3414 </a>
                             </div>
                         </div>
@@ -145,7 +162,7 @@ author: Thisara
                     <li>
                         <div class = "header_contact_details_agile"><i class = "fa fa-clock-o" aria-hidden = "true"></i>
                             <div class = "w3l_header_contact_details_agile">
-                                <div class = "header-contact-detail-title"><?= $lang['OPENING_HOURS'];?></div>
+                                <div class = "header-contact-detail-title"><?= $lang['OPENING_HOURS']; ?></div>
                                 <a class = "w3l_header_contact_details_agile-info_inner">Mon - Sat: 7:00 - 18:00</a>
                             </div>
                         </div>
@@ -168,102 +185,48 @@ author: Thisara
 
 
         <div class = "row">
-            <div class = "col-md-2">
-                <p style="font-weight: bold;color: #09347a">Open Elections</p>
-                <?php
-                $sqlElection = " SELECT * FROM cms_election WHERE STATUS = 'OPEN' ";
-                $resultEle = getData($sqlElection);
-                if ($resultEle != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultEle)) {
-//date field check
-                        $date = new DateTime($row['enddatetime']);
-                        $now = new DateTime();
-                        $nowDate = date('Y-m-d');
-                        if ($nowDate != $row['enddatetime']) {
-                            
-                        } else {
-
-                            if ($date < $now) {
-                                ?>
-
-
-                                <div>
-                                    <p><?= $row['electiontitle']; ?></p>
-                                    <p><?= $row['post_title']; ?></p>
-                                    <p>
-                                        <?php
-                                        if (isset($_SESSION['ssn_user'])) {
-                                            ?>
-                                            <a href="mamber_voting.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']; ?>&post_title=<?= $row['post_title']; ?>" class="btn btn-primary btn-xs">Vote Now</a></p>
-                                        <?php
-                                    }
-                                    ?> 
-                                    <p><span class="btn btn-default btn-xs"> <?= $row['startdatetime']; ?> to <?= $row['enddatetime']; ?> </span></p>
-                                </div>
-
-
-
-                                <?php
-                            }
-                        }
-                    }
-                }
-                ?>
-
+            <div class = "col-md-8" id="commu-slider">
+                <div class="ism-slider" id="my-slider">
+                    <ol>
+                        <li>
+                            <img src="ism/image/slides/flower-729514_1280.jpg">
+                            <div class="ism-caption ism-caption-0">Community Management</div>
+                        </li>
+                        <li>
+                            <img src="ism/image/slides/beautiful-701678_1280.jpg">
+                            <div class="ism-caption ism-caption-0">Social Activity</div>
+                        </li>
+                        <li>
+                            <img src="ism/image/slides/summer-192179_1280.jpg">
+                            <div class="ism-caption ism-caption-0">Child Protection Event</div>
+                        </li>
+                    </ol>
+                </div>
             </div>
-            <div class="col-md-6">
-                <br>
-                <?php ?>
-                <table class="table table-striped">
-                    <?php
-                    $sqlPost = " SELECT * FROM cms_post WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
-                    $resultAllPost = getData($sqlPost);
-                    if ($resultAllPost != FALSE) {
-                        while ($row = mysqli_fetch_assoc($resultAllPost)) {
-                            ?>
-
-                            <tr >
-                                <td><?= $row['id'] ?></td>
-                                <td style="color: black">
-                                    <p style="font-weight: bold"><?= $row['posttitle'] ?></p>
-                                    <?= $row['description'] ?>
-                                    <p style="font-size: x-small">[ <?= $row['datecreated'] ?> ]</p></td>
-                                <td>
-                                    <a href="index.php?pid=<?= $row['id'] ?>&action=LIKE"> <i class="fa fa-thumbs-up"></i> <?= $row['plike']; ?></a>
-                                    <a href="index.php?pid=<?= $row['id'] ?>&action=DISLIKE"> <i class="fa fa-thumbs-down"></i> <?= $row['dislike']; ?></a>
-                                </td>
-                            </tr>
-                            <td></td>
-                            <td></td>
-
-                            <?php
-                        }
-                    }
-                    ?>
-
-                </table>
 
 
 
 
-            </div>
             <div class="col-md-4">
-                <p style="font-weight: bold;color: #09347a">News</p>
-                <?php
-                $sqlNews = " SELECT * FROM cms_news WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
-                $resultNews = getData($sqlNews);
-                if ($resultNews != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultNews)) {
-                        ?>
-                        <div class="bg-info" style="margin-bottom: 10px"> <b><?= $row['news_title'] ?></b>
-                            <p > <?= $row['description'] ?> </p>
-                            <p style="font-size: small"> <?= $row['datecreated'] ?> </p>
-                        </div>
-                        <?php
-                    }
-                }
-                ?>
+                <div class="panel panel-primary">
+                    <div class="panel-heading ">Member Login</div>
+                    <div class="panel-body">
 
+                        <form>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Username</label>
+                                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Password</label>
+                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Sign In</button>
+                        </form>
+
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -480,6 +443,8 @@ author: Thisara
 
             });
         </script>
+
+
         <!-- //here ends scrolling icon -->
     </body>
 </html>

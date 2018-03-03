@@ -1,10 +1,10 @@
  <!-- footer -->
-        <div class="footer_agile_w3ls">
+ <div class="footer_agile_w3ls" style="padding: 5">
             
             
             
          <div class="container">
-                <div class="agileits_w3layouts_footer_grids">
+<!--                <div class="agileits_w3layouts_footer_grids">
                     <div class="col-md-3 footer-w3-agileits">
                         <h3>Training Grounds</h3>
                         <ul>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="clearfix"></div>
 
-                </div>
+                </div>-->
                 <div class="agileits_w3layouts_logo logo2">
                     <h2><a href="index.html">Community</a></h2>
                     <div class="agileits-social">

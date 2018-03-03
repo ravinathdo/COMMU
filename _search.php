@@ -6,8 +6,10 @@
 <a href="?lang=TM"><img src="images/ta.gif" ></a>
 <a href="?lang=EN">ENGLISH</a>
 
+<?php 
+if (isset($_SESSION['ssn_user'])){ ?>
 <a href="#" onclick="openChatWin()"><i class="fa fa-commenting" aria-hidden="true"></i>CHAT NOW</a>
-
+<?php } ?>
 
 <script>
     function openChatWin() {
