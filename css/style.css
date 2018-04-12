@@ -4,6 +4,20 @@ author: Thisara
   
   
 --*/
+.mando-msg{
+    color:red;
+}
+.msg-error{
+    color: red;
+    text-align: center;
+    font-weight: bold;
+}
+.msg-success{
+    color: green;
+    text-align: center;
+    font-weight: bold;
+}
+
 html, body{
     font-size: 100%;
 font-family: 'Source Sans Pro', sans-serif;

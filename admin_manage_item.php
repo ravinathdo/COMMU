@@ -4,7 +4,12 @@ author: Thisara
   
   
 -->
-<?php session_start(); ?>
+<?php session_start(); 
+
+if($_SESSION['ssn_user']['role'] != 'ADMIN'){
+    header("Location:index.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -72,16 +77,23 @@ author: Thisara
         <h3>Manage Items</h3>
         <hr>
         <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-4">
+            <div class="col-md-1"></div>
+            <div class="col-md-3">
+                
+                
 
+                <div class="panel panel-primary">
+                <div class="panel-heading ">Manage Item</div>
+                <div class="panel-body">
+                
                 <form action="admin_manage_item.php" method="post">
+                    <span class="mando-msg">* fields are mandatory</span>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Item Name</label>
+                        <label for="exampleInputEmail1"><span class="mando-msg">*</span>Item Name</label>
                         <input type="text" required="" name="itemname" class="form-control" id="exampleInputEmail1" >
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Qty</label>
+                        <label for="exampleInputEmail1"><span class="mando-msg">*</span>Qty</label>
                         <input type="number" required="" name="qty"  class="form-control" id="exampleInputEmail1" >
                     </div>
 
@@ -94,6 +106,14 @@ author: Thisara
                     <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
                 </form>
 
+                    </div></div>
+                
+
+            </div>
+            <div class="col-md-8">
+
+
+                
                 <?php
                 include './model/DB.php';
                 if (isset($_POST['btnSub'])) {
@@ -105,11 +125,6 @@ VALUES ('" . $_POST['itemname'] . "',
                     setData($sql, TRUE);
                 }
                 ?>
-
-            </div>
-            <div class="col-md-6">
-
-
                 
 
 

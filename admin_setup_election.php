@@ -4,7 +4,11 @@ author: Thisara
   
   
 -->
-<?php session_start(); ?>
+<?php session_start(); 
+if($_SESSION['ssn_user']['role'] != 'ADMIN'){
+    header("Location:index.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -74,33 +78,7 @@ author: Thisara
             <div class="col-md-2"></div>
             <div class="col-md-6">
 
-                <form action="admin_setup_election.php" method="post">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Election Title</label>
-                        <input name="electiontitle" required="" type="text"  class="form-control" id="exampleInputEmail1" >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Post Title</label>
-                        <input name="post_title" required="" type="text"  class="form-control" id="exampleInputEmail1" >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Start Date Time</label>
-                        <input type="date" required="" name="startdatetime" />
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">End Date Time</label>
-                        <input type="date" required="" name="enddatetime" />
-                    </div>
-                    <!--                    <div class="form-group">
-                                            <label for="exampleInputFile">Photo</label>
-                                            <input type="file" id="exampleInputFile">
-                                            <p class="help-block">Related photo upload here.</p>
-                                        </div>-->
-
-                    <button type="submit"  name="btnSub" class="btn btn-primary">Submit</button>
-                </form>
-
-
+                
                 <?php
                 include './model/DB.php';
                 include './model/MESSAGE_LIST.php';
@@ -126,6 +104,43 @@ VALUES ('" . $_POST['electiontitle'] . "',
                     
                 }
                 ?>
+                
+                
+                <div class="panel panel-primary">
+                <div class="panel-heading ">Manage Election</div>
+                <div class="panel-body">
+                      <span class="mando-msg">* fields are mandatory</span>
+                      <form action="admin_setup_election.php" method="post">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1"><span class="mando-msg">*</span>Election Title</label>
+                        <input name="electiontitle" required="" type="text"  class="form-control" id="exampleInputEmail1" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1"><span class="mando-msg">*</span>Post Title</label>
+                        <input name="post_title" required="" type="text"  class="form-control" id="exampleInputEmail1" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1"><span class="mando-msg">*</span>Start Date Time</label>
+                        <input type="date" required="" name="startdatetime" />
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1"><span class="mando-msg">*</span>End Date Time</label>
+                        <input type="date" required="" name="enddatetime" />
+                    </div>
+                    <!--                    <div class="form-group">
+                                            <label for="exampleInputFile">Photo</label>
+                                            <input type="file" id="exampleInputFile">
+                                            <p class="help-block">Related photo upload here.</p>
+                                        </div>-->
+
+                    <button type="submit"  name="btnSub" class="btn btn-primary">Submit</button>
+                </form>
+                </div></div>
+                
+              
+
+
+                
 
             </div>
             <div class="col-md-4">

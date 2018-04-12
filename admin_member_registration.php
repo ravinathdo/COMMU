@@ -1,5 +1,14 @@
 
-<?php session_start(); ?>
+<?php session_start(); 
+
+
+if($_SESSION['ssn_user']['role'] != 'ADMIN'){
+    header("Location:index.php");
+}
+
+include './model/UserModel.php';
+
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -63,98 +72,23 @@
         </div>
 
 
-        <h3>Member Registration</h3>
         <hr>
 
         <div class="row">
             <div class="col-md-2">
 
+            </div> 
+            <div class="col-md-8">
+                
+                 <div class="row">
+                     
+                     
+                      <?php
+                      
+                      
+        if (isset($_POST['btnReg'])) {
 
-            </div>  
-            <form action="admin_member_registration.php" method="post">
-                <div class="col-md-5">
-
-
-
-                    <div class="form-group">
-                        <label for="exampleInputName2">First Name</label>
-                        <input type="text" required="" name="firstname" class="form-control" id="exampleInputName2" >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail2">Last Name</label>
-                        <input type="text" required="" name="lastname" class="form-control" id="exampleInputEmail2" placeholder="">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail2">NIC</label>
-                        <input type="text" required="" name="nic" class="form-control" id="exampleInputEmail2" placeholder="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="exampleInputEmail2">Email</label>
-                        <input type="email"  required="" name="email" class="form-control" id="exampleInputEmail2" placeholder="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="exampleInputEmail2">Current Address</label>
-                        <textarea  name="currentaddress" required="" class="form-control"> </textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail2">Permanent Address</label>
-                        <textarea  name="permanentaddress" class="form-control"> </textarea>
-                    </div>
-
-                </div>
-
-                <div class="col-md-5">
-
-                    <div class="form-group">
-                        <label for="exampleInputName2">Expert In</label>
-                        <select name="experticeid" class="form-control"> 
-                            <option>--select--</option>
-                            <?php
-                            include './model/DB.php';
-
-                            $sql = " SELECT * FROM cms_expertise  ";
-                            $resultxc = getData($sql);
-                            if ($resultxc != FALSE) {
-                                while ($row = mysqli_fetch_assoc($resultxc)) {
-                                    ?>  <option value="<?= $row['id'] ?>"><?= $row['expertise'] ?></option> <?php
-                                }
-                            }
-                            ?>
-
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputName2">User Role </label>
-                        <select name="role" class="form-control"> 
-                            <option>--select--</option>
-                            <option value="MEMBER">MEMBER</option>
-                            <option value="MANAGER">MANAGER</option>
-                            <option value="ADMIN">ADMIN</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="exampleInputEmail2">Mobile No</label>
-                        <input type="number"  required="" name="mobileno" class="form-control" id="exampleInputEmail2" placeholder="">
-                    </div>
-
-
-
-                    <button type="submit" name="btnReg" class="btn btn-primary">Register</button>
-
-                </div>
-            </form>
-
-           
-        </div>
-
- <?php
-
-            if (isset($_POST['btnReg'])) {
-
-                $sql = " INSERT INTO `cmsdb`.`cms_member`
+            $sql = " INSERT INTO `cmsdb`.`cms_member`
             (`firstname`,
              `lastname`,
              `nic`,
@@ -163,6 +97,7 @@
              `experticeid`,
              `permanentaddress`,
              `authstatus`,
+             `autorizeby`,
              `role`,
              `mobileno`,
              `usercreated`)
@@ -174,19 +109,36 @@ VALUES ('" . $_POST['firstname'] . "',
         '" . $_POST['experticeid'] . "',
         '" . $_POST['permanentaddress'] . "',
         'Authorized',
+        '1',
         '" . $_POST['role'] . "',
         '" . $_POST['mobileno'] . "',
         '" . $_SESSION['ssn_user']['id'] . "'); ";
 
 
-                $regNo = setData($sql, TRUE);
+            $regNo = setData($sql, TRUE);
+            
+            
+            $role = $_POST['role'];
+            switch ($role) {
+                case 'MEMBER':
                 $username = 'MEM' . $regNo;
-                $sqlUpdate = "UPDATE cms_member SET username = '$username' WHERE id = " . $regNo;
-                setUpdate($sqlUpdate, FALSE);
+                    break;
+                case 'VOLUNTEER':
+                $username = 'VOL' . $regNo;
+                    break;
 
-                //new user creted
+                default:
+                    break;
+            }
+            
+            
+           
+            $sqlUpdate = "UPDATE cms_member SET username = '$username' WHERE id = " . $regNo;
+            setUpdate($sqlUpdate, FALSE);
 
-                $sqlUsr = " INSERT INTO `cmsdb`.`cms_user`
+            //new user creted
+
+            $sqlUsr = " INSERT INTO `cmsdb`.`cms_user`
             (`username`,
              `password`,
              `role`,
@@ -198,19 +150,110 @@ VALUES ( '$username',
         'ACT',
         '$regNo'); ";
 
-                setData($sqlUsr, FALSE);
-                
-                //message sending
-                include './model/MESSAGE_LIST.php';
-                $sms_1 = $_MEMBER_CREATION.$username;
-                sendSMS($_POST['mobileno'], $sms_1);
-                
-            }
-            ?>
+            setData($sqlUsr, FALSE);
+
+            //message SMS sending
+            include './model/MESSAGE_LIST.php';
+            $sms_1 = $_MEMBER_CREATION . $username;
+            sendSMS($_POST['mobileno'], $sms_1);
+        }
+        ?>
+                     
+                <div class="panel panel-primary">
+                <div class="panel-heading ">Member Registration</div>
+                <div class="panel-body">
+                    <span class="mando-msg">* fields are mandatory</span>
+                    <form action="admin_member_registration.php" method="post">
+                        <div class="col-md-6">
+
+
+
+                            <div class="form-group">
+                                <label for="exampleInputName2"><span class="mando-msg">*</span>First Name</label>
+                                <input type="text" required="" name="firstname" class="form-control" id="exampleInputName2" >
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail2"><span class="mando-msg">*</span>Last Name</label>
+                                <input type="text" required="" name="lastname" class="form-control" id="exampleInputEmail2" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail2"><span class="mando-msg">*</span>NIC</label>
+                                <input type="text" required="" name="nic" class="form-control" id="exampleInputEmail2" placeholder="">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail2"><span class="mando-msg">*</span>Email</label>
+                                <input type="email"  required="" name="email" class="form-control" id="exampleInputEmail2" placeholder="">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail2">Current Address</label>
+                                <textarea  name="currentaddress" required="" class="form-control"> </textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail2">Permanent Address</label>
+                                <textarea  name="permanentaddress" class="form-control"> </textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <label for="exampleInputName2"><span class="mando-msg">*</span>Expert In</label>
+                                <select name="experticeid" class="form-control" required=""> 
+                                    <option>--select--</option>
+                                    <?php
+
+                                    $sql = " SELECT * FROM cms_expertise  ";
+                                    $resultxc = getData($sql);
+                                    if ($resultxc != FALSE) {
+                                        while ($row = mysqli_fetch_assoc($resultxc)) {
+                                            ?>  <option value="<?= $row['id'] ?>"><?= $row['expertise'] ?></option> <?php
+                                        }
+                                    }
+                                    ?>
+
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputName2"><span class="mando-msg">*</span>User Role </label>
+                                <select name="role" class="form-control" required=""> 
+                                    <option>--select--</option>
+                                    <option value="MEMBER">MEMBER</option>
+                                    <option value="MANAGER">MANAGER</option>
+                                    <option value="ADMIN">ADMIN</option>
+                                    <option value="VOLUNTEER">VOLUNTEER</option>
+                                    <option value="DONOR">DONOR</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail2">Mobile No</label>
+                                <input type="number"  required="" name="mobileno" class="form-control" id="exampleInputEmail2" placeholder="">
+                            </div>
+
+
+
+                            <button type="submit" name="btnReg" class="btn btn-primary">Register</button>
+
+                        </div>
+                    </form>
+                </div></div>
+                 </div>
+            </div>
+            <div class="col-md-2">
+
+
+            </div>  
+
+        </div>
+
+       
 
         <hr>
 
-        <table id="example" class="display" cellspacing="0" width="100%">
+        <table id="example" class="display" cellspacing="0" width="100%" style="font-size: small">
             <thead>
                 <tr>
                     <th>Member ID</th>
@@ -218,7 +261,7 @@ VALUES ( '$username',
                     <th>Last Name</th>
                     <th>NIC</th>
                     <th>Status</th>
-                    <th>Approved By</th>
+                    <th>Registered Date</th>
                 </tr>
             </thead>
             <tfoot>
@@ -228,17 +271,17 @@ VALUES ( '$username',
                     <th>Last Name</th>
                     <th>NIC</th>
                     <th>Status</th>
-                    <th>Approved By</th>
+                    <th>Registered Date</th>
                 </tr>
             </tfoot>
             <tbody>
 
-                <?php
-                $sqlXX = "SELECT * FROM cms_member";
-                $resultx = getData($sqlXX);
-                if ($resultx != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultx)) {
-                        ?>
+<?php
+$sqlXX = "SELECT * FROM cms_member";
+$resultx = getData($sqlXX);
+if ($resultx != FALSE) {
+    while ($row = mysqli_fetch_assoc($resultx)) {
+        ?>
 
 
                         <tr>
@@ -247,20 +290,20 @@ VALUES ( '$username',
                             <td><?= $row['lastname'] ?></td>
                             <td><?= $row['nic'] ?></td>
                             <td><?php if ($row['authstatus'] == 'PENDING') {
-                            ?> 
+                    ?> 
                                     <a href="admin_authorization_member.php?mid=<?= $row['id'] ?>&action=AUTHORIZED&username=<?= $row['username'] ?>" class="btn btn-warning"> Pending Approval </a>
-                                    <?php } else {
+                                <?php } else {
                                     ?>
-                                    <span class="btn btn-success">AUTHORIZED</span>
+                                    <span class="btn btn-success btn-xs">AUTHORIZED</span>
                                     <?php
                                 }
                                 ?></td>
-                            <td>Created By</td>
+                            <td><?= $row['datecreated'] ?></td>
                         </tr>
-                        <?php
-                    }
-                }
-                ?>
+        <?php
+    }
+}
+?>
 
             </tbody>
         </table>
@@ -422,7 +465,7 @@ VALUES ( '$username',
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#example').DataTable();
+                $('#example').DataTable({ "order": [[ 0, "desc" ]] });
             });
         </script>
 

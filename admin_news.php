@@ -5,6 +5,15 @@ author: Thisara
   
 -->
 <?php session_start(); ?>
+
+<?php //echo '<tt><pre>'.var_export($_SESSION['ssn_user'], TRUE).'</pre></tt>';
+
+if($_SESSION['ssn_user']['role'] != 'ADMIN'){
+    header("Location:index.php");
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -92,26 +101,27 @@ VALUES ('" . $_POST['news_title'] . "',
                     sendSMStoAll($sms);
                 }
                 ?>
+                
+                
+                <div class="panel panel-primary">
+                <div class="panel-heading ">Member Registration</div>
+                <div class="panel-body">
+                <span class="mando-msg">* fields are mandatory</span>
                 <form action="admin_news.php" method="post">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">News Title</label>
+                        <label for="exampleInputEmail1"><span class="mando-msg">*</span>News Title</label>
                         <input name="news_title" required="" type="text" class="form-control" id="exampleInputEmail1" >
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Description</label>
+                        <label for="exampleInputPassword1"><span class="mando-msg">*</span>Description</label>
                         <textarea name="description" required="" class="form-control" ></textarea>
                     </div>
-                    <!--   
-                    `id`,
-             `news_title`,
-             `description`,
-             `usercreated`,
-             `datecreated`,
-             `status`
-                    -->
                     <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
                 </form>
 
+                
+                </div></div>
+                
             </div>
             <div class="col-md-4"></div>
         </div>
@@ -125,7 +135,7 @@ VALUES ('" . $_POST['news_title'] . "',
             setUpdate($query, TRUE);
         }
         ?>
-        <table id="example" class="display" cellspacing="0" width="100%">
+        <table id="example" class="display" cellspacing="0" width="100%" style="font-size: small">
             <thead>
                 <tr>
                     <th>News ID</th>
@@ -390,7 +400,7 @@ VALUES ('" . $_POST['news_title'] . "',
         <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#example').DataTable();
+                 $('#example').DataTable({ "order": [[ 0, "desc" ]] });
             });
         </script>
     </body>

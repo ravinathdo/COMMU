@@ -73,7 +73,7 @@ author: Thisara
                 header('Location:home.php');
             } else {
 
-                echo '<p class="bg-danger">Invalid Username or Password</p>';
+                echo '<p class="bg-danger msg-error">Invalid Username or Password</p>';
             }
         }
         ?>
@@ -207,22 +207,22 @@ author: Thisara
 
 
 
-            <div class="col-md-4">
+            <div class="col-md-4" style="padding: 10px">
                 <div class="panel panel-primary">
                     <div class="panel-heading ">Member Login</div>
                     <div class="panel-body">
 
-                        <form>
+                         <form action="index.php" method="post">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Username</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                                <input type="text" name="username" class="form-control" id="exampleInputEmail1" placeholder="Username">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputPassword1">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Sign In</button>
+                             <input name="btnLogin" type="submit" class="btn btn-primary" value="Login" />
                         </form>
 
                     </div>

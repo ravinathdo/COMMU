@@ -5,6 +5,14 @@ author: Thisara
   
 -->
 <?php session_start(); ?>
+
+<?php //echo '<tt><pre>'.var_export($_SESSION['ssn_user'], TRUE).'</pre></tt>';
+
+if($_SESSION['ssn_user']['role'] != 'ADMIN'){
+    header("Location:index.php");
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -74,25 +82,6 @@ author: Thisara
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-6">
-                <form action="admin_post.php" method="post">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Post Title</label>
-                        <input required="" name="posttitle" type="text" class="form-control" id="exampleInputEmail1" >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Description</label>
-                        <textarea required="" name="description" class="form-control" ></textarea>
-                    </div>
-                    <!--                    <div class="form-group">
-                                            <label for="exampleInputFile">Photo</label>
-                                            <input type="file" id="exampleInputFile">
-                                            <p class="help-block">Related photo upload here.</p>
-                                        </div>-->
-
-                    <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
-                </form>
-
-
                 <?php
                 include './model/DB.php';
                 include './model/MESSAGE_LIST.php';
@@ -111,14 +100,9 @@ VALUES ('" . $_POST['posttitle'] . "',
                     sendSMStoAll($sms);
                 }
                 ?>
-
-            </div>
-            <div class="col-md-4"></div>
-        </div>
-
-
-
-        <?php
+                
+                
+                 <?php
         if (isset($_GET['pid'])) {
             $pid = $_GET['pid'];
             $action = $_GET['action'];
@@ -126,8 +110,46 @@ VALUES ('" . $_POST['posttitle'] . "',
             setUpdate($sql,TRUE);
         }
         ?>
+                
+                <div class="panel panel-primary">
+                <div class="panel-heading ">Member Registration</div>
+                <div class="panel-body">
+                                        <span class="mando-msg">* fields are mandatory</span>
 
-        <table id="example" class="display" cellspacing="0" width="100%">
+                <form action="admin_post.php" method="post">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1"><span class="mando-msg">*</span>Post Title</label>
+                        <input required="" name="posttitle" type="text" class="form-control" id="exampleInputEmail1" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1"><span class="mando-msg">*</span>Description</label>
+                        <textarea required="" name="description" class="form-control" ></textarea>
+                    </div>
+                    <!--                    <div class="form-group">
+                                            <label for="exampleInputFile">Photo</label>
+                                            <input type="file" id="exampleInputFile">
+                                            <p class="help-block">Related photo upload here.</p>
+                                        </div>-->
+
+                    <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
+                </form>
+                
+                </div></div>
+                
+                
+
+
+                
+
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+
+
+
+       
+
+        <table id="example" class="display" cellspacing="0" width="100%" style="font-size: small">
             <thead>
                 <tr>
                     <th>POST ID</th>
@@ -415,7 +437,8 @@ VALUES ('" . $_POST['posttitle'] . "',
 <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#example').DataTable();
+       // $('#example').DataTable();
+        $('#example').DataTable({ "order": [[ 0, "desc" ]] });
     });
 </script>
 </body>

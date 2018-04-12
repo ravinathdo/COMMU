@@ -26,3 +26,12 @@
                             ?>
                         </tbody>
                     </table>
+
+
+
+if($_SESSION['ssn_user']['role'] != 'ADMIN'){
+    header("Location:index.php");
+}
+
+
+  <span class="mando-msg">* fields are mandatory</span>
