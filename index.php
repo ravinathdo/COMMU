@@ -1,8 +1,5 @@
 <!--
 author: Thisara
- 
-  
-  
 -->
 <?php session_start(); ?>
 <!DOCTYPE html>
@@ -208,8 +205,8 @@ author: Thisara
 
 
             <div class="col-md-4" style="padding: 10px">
-                <div class="panel panel-primary">
-                    <div class="panel-heading ">Member Login</div>
+                <div class="panel panel-primary" style="margin: 20px">
+                    <div class="panel-heading ">Login</div>
                     <div class="panel-body">
 
                          <form action="index.php" method="post">

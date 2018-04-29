@@ -150,10 +150,10 @@ author: Thisara
 			<div class="w3_agile_team_grid">
 				<div class="w3_agile_team_grid_left">
 					<h3 class="w3l_header w3_agileits_header">Our <span>Events</span></h3>
-		            <p class="sub_para_agile">Ipsum dolor sit amet consectetur adipisicing elit</p>
+		            <!--<p class="sub_para_agile">Ipsum dolor sit amet consectetur adipisicing elit</p>-->
 				</div>
 			</div>
-			<div class="agile_team_grids_top">
+<!--			<div class="agile_team_grids_top">
 				<div class="col-md-4 w3_agile_services_grid">
 					<div class="agile_services_grid1 wthree_services_grid1">
 						<h3>Funding</h3>
@@ -323,7 +323,7 @@ author: Thisara
 					</div>
 				</div>
 				<div class="clearfix"> </div>
-			</div>
+			</div>-->
 		</div>
 	</div>
 <!-- //courses -->

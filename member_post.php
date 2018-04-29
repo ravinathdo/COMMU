@@ -1,14 +1,11 @@
 <!--
 author: Thisara
- 
-  
-  
 -->
 <?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Admin </title>
+        <title>Commu | Post </title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -62,40 +59,19 @@ author: Thisara
 
                 </div>
                 <div class="w3_agile_search">
-                    <form action="#" method="post">
-                        <input type="search" name="Search" placeholder="Search Keywords..." required="" />
-                        <input type="submit" value="Search">
-                    </form>
+                    <?php
+                    include '_search.php';
+                    ?>
                 </div>
             </nav>
         </div>
 
 
-        <h3>Manage Post</h3>
-        <hr>
+      
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-6">
-
-                <form action="member_post.php" method="post">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Post Title</label>
-                        <input name="posttitle" type="text" class="form-control" id="exampleInputEmail1" >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Description</label>
-                        <textarea name="description" class="form-control" ></textarea>
-                    </div>
-                    <!--                    <div class="form-group">
-                                            <label for="exampleInputFile">Photo</label>
-                                            <input type="file" id="exampleInputFile">
-                                            <p class="help-block">Related photo upload here.</p>
-                                        </div>-->
-
-                    <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
-                </form>
-
-
+                
                 <?php
                 include './model/DB.php';
                 if (isset($_POST['btnSub'])) {
@@ -111,13 +87,42 @@ VALUES ('" . $_POST['posttitle'] . "',
                 }
                 ?>
 
+                <div class="panel panel-primary">
+                    <div class="panel-heading ">Member Post</div>
+                    <div class="panel-body">
+                                                               <span class="mando-msg">* fields are mandatory</span>
+ 
+                <form action="member_post.php" method="post">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1"><span class="mando-msg">*</span> Post Title</label>
+                        <input name="posttitle" type="text" required="" class="form-control" id="exampleInputEmail1" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1"><span class="mando-msg">*</span> Description</label>
+                        <textarea name="description" class="form-control" required=""></textarea>
+                    </div>
+                    <!--                    <div class="form-group">
+                                            <label for="exampleInputFile">Photo</label>
+                                            <input type="file" id="exampleInputFile">
+                                            <p class="help-block">Related photo upload here.</p>
+                                        </div>-->
+
+                    <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
+                </form>
+
+                    </div>
+                </div>
+                
+
+                
+
             </div>
             <div class="col-md-4"></div>
         </div>
 
 
 
-        <table id="example" class="display" cellspacing="0" width="100%">
+        <table id="example" class="display" cellspacing="0" width="100%" style="font-size: small">
             <thead>
                 <tr>
                     <th>POST ID</th>
@@ -176,68 +181,7 @@ VALUES ('" . $_POST['posttitle'] . "',
 
 
         <!-- footer -->
-        <div class="footer_agile_w3ls">
-            <div class="container">
-                <div class="agileits_w3layouts_footer_grids">
-                    <div class="col-md-3 footer-w3-agileits">
-                        <h3>Training Grounds</h3>
-                        <ul>
-                            <li>Etiam quis placerat</li>
-                            <li>the printing</li>
-                            <li>unknown printer</li>
-                            <li>Lorem Ipsum</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3 footer-agileits">
-                        <h3>Specialized</h3>
-                        <ul>
-                            <li>the printing</li>
-                            <li>Etiam quis placerat</li>
-                            <li>Lorem Ipsum</li>
-                            <li>unknown printer</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3 footer-wthree">
-                        <h3>Partners</h3>
-                        <ul>
-                            <li>unknown printer</li>
-                            <li>Lorem Ipsum</li>
-                            <li>the printing</li>
-                            <li>Etiam quis placerat</li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-3 footer-agileits-w3layouts">
-                        <h3>Our Links</h3>
-                        <ul>
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="events.html">Events</a></li>
-                            <li><a href="mail.html">Contact</a></li>
-                        </ul>
-                    </div>
-                    <div class="clearfix"></div>
-
-                </div>
-                <div class="agileits_w3layouts_logo logo2">
-                    <h2><a href="index.html">Community</a></h2>
-                    <div class="agileits-social">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa fa-rss"></i></a></li>
-                            <li><a href="#"><i class="fa fa-vk"></i></a></li>
-                        </ul>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <div class="wthree_copy_right">
-            <div class="container">
-                <p>© 2017 All rights reserved | Design by COMMU</p>
-            </div>
-        </div>
+        <?php include './_footer.php'; ?>
         <!-- //footer -->
 
 

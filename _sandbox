@@ -35,3 +35,17 @@ if($_SESSION['ssn_user']['role'] != 'ADMIN'){
 
 
   <span class="mando-msg">* fields are mandatory</span>
+
+
+
+
+<div class="panel panel-primary">
+                <div class="panel-heading ">Member Registration</div>
+                <div class="panel-body">
+</div>
+</div>
+
+
+
+--php
+loopdata  // loop through the result set data

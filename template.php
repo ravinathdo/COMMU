@@ -1,8 +1,5 @@
 <!--
-author: Thisara
- 
-  
-  
+author: Thisara 
 -->
 <?php session_start();?>
 <!DOCTYPE html>

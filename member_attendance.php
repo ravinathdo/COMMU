@@ -1,14 +1,11 @@
 <!--
 author: Thisara
- 
-  
-  
 -->
 <?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Template</title>
+        <title>Commu | Attendance</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -60,10 +57,7 @@ author: Thisara
 
                 </div>
                 <div class="w3_agile_search">
-                    <form action="#" method="post">
-                        <input type="search" name="Search" placeholder="Search Keywords..." required="" />
-                        <input type="submit" value="Search">
-                    </form>
+                    <?php include './_search.php'; ?>
                 </div>
             </nav>
         </div>
@@ -76,11 +70,12 @@ author: Thisara
 
                 <?php
                 include './model/DB.php';
-                $sql = "  SELECT * FROM cms_member_attend WHERE memberid = '" . $_SESSION['ssn_user']['id'] . "' ";
+                $sql = "  SELECT * FROM cms_attendance WHERE member_id = '" . $_SESSION['ssn_user']['id'] . "' ";
                 ?>
                 <table id="example" class="display" cellspacing="0" width="100%">
                     <thead>
                         <tr>
+                            <th>Event Name</th>
                             <th>Attend Date Time</th>
                         </tr>
                     </thead>
@@ -92,7 +87,8 @@ author: Thisara
                                 ?>
 
                                 <tr>
-                                    <td><?= $row['attend_date']; ?></td>
+                                    <td><?= $row['event_name']; ?></td>
+                                    <td><?= $row['attend_datetime']; ?></td>
                                 </tr>
                                 <?php
                             }

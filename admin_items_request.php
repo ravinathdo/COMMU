@@ -69,7 +69,7 @@ author: Thisara
 
                 </div>
                 <div class="w3_agile_search">
-                    <?php include './_search.php'; ?>
+                   <?php include './_search.php'; ?>
 
                 </div>
             </nav>

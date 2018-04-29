@@ -3,6 +3,7 @@
     <li ><a href="manager_authorization_member.php"><span data-hover="Member Authorization">Member Authorization</span></a></li>
     <li ><a href="manager_member_recommonds.php"><span data-hover="Recommonds">Recommonds</span></a></li>
     <li ><a href="member_attendance.php"><span data-hover="Attendance">Attendance</span></a></li>
+    <li ><a href="attendance.php"><span data-hover="Attendance">Add Attendance</span></a></li>
     <!--<li><a href="about.html"><span data-hover="About Us">About Us</span></a></li>-->
     <!--<li><a href="events.html"><span data-hover="Events">Events</span></a></li>-->
     

@@ -5,6 +5,7 @@
     <li><a href="manager_suggest_member.php"><span data-hover="Nominate">Nominate</span></a></li>
     <li ><a href="member_attendance.php"><span data-hover="Attendance">Attendance</span></a></li>
     <li ><a href="member_fee.php"><span data-hover="Member Fee">Fee</span></a></li>
+    <li ><a href="member_training.php"><span data-hover=Training">Training</span></a></li>
 <!--    <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span data-hover="Inventory">Inventory</span> <b class="caret"></b></a>
         <ul class="dropdown-menu agile_short_dropdown">

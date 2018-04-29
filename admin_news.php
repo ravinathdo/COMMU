@@ -17,7 +17,7 @@ if($_SESSION['ssn_user']['role'] != 'ADMIN'){
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Admin </title>
+        <title>Commu | News </title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -77,8 +77,7 @@ if($_SESSION['ssn_user']['role'] != 'ADMIN'){
         </div>
 
 
-        <h3>Manage News</h3>
-        <hr>
+      
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-6">
@@ -104,7 +103,7 @@ VALUES ('" . $_POST['news_title'] . "',
                 
                 
                 <div class="panel panel-primary">
-                <div class="panel-heading ">Member Registration</div>
+                <div class="panel-heading ">News</div>
                 <div class="panel-body">
                 <span class="mando-msg">* fields are mandatory</span>
                 <form action="admin_news.php" method="post">
