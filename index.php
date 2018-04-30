@@ -57,7 +57,13 @@ author: Thisara
 
 
         </style>
+        
+        
+        
     </head>	
+    
+    
+    
     <body>
         <?php
         include './model/UserModel.php';
