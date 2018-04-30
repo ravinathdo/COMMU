@@ -1,11 +1,10 @@
 <!--
 author: Thisara
- 
-  
-  
 -->
 <?php
 session_start();
+
+//echo '<tt><pre>' . var_export($_SESSION['ssn_user'], TRUE) . '</pre></tt>';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -98,6 +97,7 @@ session_start();
                         if ($nowDate . "" == $row['enddatetime']) {
                             ?>
                             <div>
+
                                 <p style="font-weight: bold"><?= $row['electiontitle']; ?></p>
                                 <p><?= $row['post_title']; ?></p>
                                 <p>
@@ -115,29 +115,30 @@ session_start();
                         } else {
                             if ($date > $now) {
                                 ?>
-                            <div>
-                                <p style="font-weight: bold"><?= $row['electiontitle']; ?></p>
-                                <p><?= $row['post_title']; ?></p>
-                                <p>
-                                    <?php
-                                    if (isset($_SESSION['ssn_user'])) {
-                                        ?>
-                                        <a href="mamber_voting.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']; ?>&post_title=<?= $row['post_title']; ?>" class="btn btn-primary btn-xs">Vote Now</a></p>
-                                    <?php
-                                }
-                                ?> 
-                                <p><span class="btn btn-default btn-xs"> <?= $row['startdatetime']; ?> to <?= $row['enddatetime']; ?> </span></p>
-                            </div>
-                            <hr>
-                            <?php
+                                <div>
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"><?= $row['electiontitle']; ?></div>
+                                        <div class="panel-body"><p><?= $row['post_title']; ?></p>
+                                            <p>
+                                                <?php
+                                                if (isset($_SESSION['ssn_user'])) {
+                                                    ?>
+                                                    <a href="mamber_voting.php?eid=<?= $row['id']; ?>&election=<?= $row['electiontitle']; ?>&post_title=<?= $row['post_title']; ?>" class="btn btn-primary btn-xs">Vote Now</a></p>
+                                                <?php
+                                            }
+                                            ?> 
+                                            <p><span class="btn btn-default btn-xs"> <?= $row['startdatetime']; ?> to <?= $row['enddatetime']; ?> </span></p></div>
+                                    </div>
+
+
+
+                                </div>
+                                <hr>
+                                <?php
                             }
                         }
                         //================
-
-
-
-
-                       
                     }
                 }
                 ?>
@@ -258,34 +259,40 @@ VALUES ('$postid',
                     return $sql;
                 }
                 ?>
-                <table class="table table-striped">
-                    <?php
-                    $sqlPost = " SELECT * FROM cms_post WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
-                    $resultAllPost = getData($sqlPost);
-                    if ($resultAllPost != FALSE) {
-                        while ($row = mysqli_fetch_assoc($resultAllPost)) {
-                            ?>
 
-                            <tr>
-                                <td><?= $row['id'] ?></td>
-                                <td style="color: black">
-                                    <p style="font-weight: bold"><?= $row['posttitle'] ?></p>
-                                    <?= $row['description'] ?>
-                                    <p style="font-size: x-small">[ <?= $row['datecreated'] ?> ]</p></td>
-                                <td>
-                                    <a href="home.php?pid=<?= $row['id'] ?>&totalDisLike=<?= $row['dislike'] ?>&totalLike=<?= $row['plike'] ?>&action=LIKE&usr=<?= $row['usercreated'] ?>"> <i class="fa fa-thumbs-up"></i> <?= $row['plike']; ?></a>
-                                    <a href="home.php?pid=<?= $row['id'] ?>&totalDisLike=<?= $row['dislike'] ?>&totalLike=<?= $row['plike'] ?>&action=DISLIKE&usr=<?= $row['usercreated'] ?>"> <i class="fa fa-thumbs-down"></i> <?= $row['dislike']; ?></a>
-                                </td>
-                            </tr>
-                            <td></td>
-                            <td></td>
-
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table table-striped">
                             <?php
-                        }
-                    }
-                    ?>
+                            $sqlPost = " SELECT * FROM cms_post WHERE STATUS = 'ACTIVE' ORDER BY id DESC  ";
+                            $resultAllPost = getData($sqlPost);
+                            if ($resultAllPost != FALSE) {
+                                while ($row = mysqli_fetch_assoc($resultAllPost)) {
+                                    ?>
 
-                </table> 
+
+                                    <tr>
+                                        <td><?= $row['id'] ?></td>
+                                        <td style="color: black">
+                                            <p style="font-weight: bold"><?= $row['posttitle'] ?></p>
+                                            <?= $row['description'] ?>
+                                            <p style="font-size: x-small">[ <?= $row['datecreated'] ?> ]</p></td>
+                                        <td>
+                                            <a href="home.php?pid=<?= $row['id'] ?>&totalDisLike=<?= $row['dislike'] ?>&totalLike=<?= $row['plike'] ?>&action=LIKE&usr=<?= $row['usercreated'] ?>"> <i class="fa fa-thumbs-up"></i> <?= $row['plike']; ?></a>
+                                            <a href="home.php?pid=<?= $row['id'] ?>&totalDisLike=<?= $row['dislike'] ?>&totalLike=<?= $row['plike'] ?>&action=DISLIKE&usr=<?= $row['usercreated'] ?>"> <i class="fa fa-thumbs-down"></i> <?= $row['dislike']; ?></a>
+                                        </td>
+                                    </tr>
+                                    <td></td>
+                                    <td></td>
+
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </table> 
+                    </div>
+                </div>     
+
             </div>
             <div class="col-md-4">
                 <p style="font-weight: bold;color: #09347a">News</p>
@@ -295,9 +302,12 @@ VALUES ('$postid',
                 if ($resultNews != FALSE) {
                     while ($row = mysqli_fetch_assoc($resultNews)) {
                         ?>
-                        <div class="bg-info" style="margin-bottom: 10px"> <b><?= $row['news_title'] ?></b>
-                            <p > <?= $row['description'] ?> </p>
-                            <p style="font-size: small" class="btn btn-default btn-xs" > <?= $row['datecreated'] ?> </p>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading "><?= $row['news_title'] ?></div>
+                            <div class="panel-body">
+                                <p > <?= $row['description'] ?> </p>
+                                <p style="font-size: small" class="btn btn-default btn-xs" > <?= $row['datecreated'] ?> </p>  
+                            </div>
                         </div>
                         <?php
                     }

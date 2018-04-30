@@ -7,17 +7,17 @@
  */
 
 function getDBConnection() {
-    
+
     $servername = "localhost";
     $username = "root";
     $password = "123";
     $db = "cmsdb";
-	/*
-	 $servername = "localhost";
-    $username = "commulkc_user";
-    $password = "password#1";
-    $db = "commulkc_cmsdb";
-*/
+    /*
+      $servername = "localhost";
+      $username = "commulkc_user";
+      $password = "password#1";
+      $db = "commulkc_cmsdb";
+     */
 
 // Create connection
     $conn = mysqli_connect($servername, $username, $password, $db);
@@ -90,17 +90,20 @@ function setUpdate($sql, $MSG) {
 }
 
 function sendSMS($toMobile, $msg) {
-
-    $sql = " INSERT INTO `ozekimessageout`
-            (`sender`,
-             `receiver`,
-             `msg`,
-             `status`)
-VALUES ('0716483414',
-        '$toMobile',
-        '$msg',
-        'send'); ";
-    setData($sql, FALSE);
+  $msgx =  str_replace(" ", "+", $msg);
+    /*
+http://127.0.0.1:9501/api?action=sendmessage&username=admin&password=abc123&
+recipient=06203105366&messagetype=SMS:TEXT&messagedata=Hello+World
+    */
+    $curl = curl_init();
+//    $url = "http://127.0.0.1:9501/api?action=sendmessage&username=admin&password=admin&recipient=" . $toMobile . "&messagetype = SMS:TEXT&messagedata = " . $msg;
+    $url = "http://127.0.0.1:9501/api?action=sendmessage&username=admin&password=admin&recipient=$toMobile&messagetype=SMS:TEXT&messagedata=$msgx";
+    //http://127.0.0.1:9501/api?action=sendmessage&username=admin&password=admin&recipient=+94715833470&messagetype=SMS:TEXT&messagedata=Hello+World
+    echo $url;
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    $str = curl_exec($curl);
 }
 
 function sendSMStoAll($msg) {

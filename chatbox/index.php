@@ -5,6 +5,7 @@ $params = array();
 $params["title"] = "Quick chat";
 //echo $_SESSION['ssn_user']['firstname'];
 $un = $_SESSION['ssn_user']['firstname'];
+
 //$params["nick"] = "guest".rand(1,1000);  // setup the intitial nickname
 $params["nick"] = $un;  // setup the intitial nickname
 
@@ -12,6 +13,8 @@ $params['firstisadmin'] = true;
 //$params["isadmin"] = true; // makes everybody admin: do not use it on production servers ;)
 $params["serverid"] = md5(__FILE__); // calculate a unique id for this chat
 $params["debug"] = false;
+
+//echo '<tt><pre>' . var_export($params, TRUE) . '</pre></tt>';
 $chat = new phpFreeChat( $params );
 
 ?>

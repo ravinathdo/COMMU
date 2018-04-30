@@ -1,10 +1,7 @@
 <!--
 author: Thisara
- 
-  
-  
 -->
-<?php session_start();?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -19,6 +16,17 @@ author: Thisara
         <!-- //custom-theme -->
 
         <?php include_once './basecss.php'; ?>
+
+        <!--calander-->
+
+        <style>
+            .ui-datepicker-calendar {
+                display: none;
+            }
+        </style>
+        <!--calander-->
+
+
 
     </head>	
     <body>
@@ -56,53 +64,71 @@ author: Thisara
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
-                    <?php include './_menu.php';?>
+                    <?php include './_menu.php'; ?>
 
                 </div>
                 <div class="w3_agile_search">
-                  <?php include './_search.php';?>
+                    <?php include './_search.php'; ?>
                 </div>
             </nav>
         </div>
 
 
-
+  <div class="row">
+            <div class="col-md-12">
+                <h3 style="text-align: center">Member Fee</h3>
+                   <hr>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-1"></div>
             <div class="col-md-5">
-                <form method="post" action="member_fee.php">
-                    
+                
+                
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Member Fee</div>
+                    <div class="panel-body">
+  <form method="post" action="member_fee.php">
+                    <span class="mando-msg">* fields are mandatory</span>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Year Pay</label>
-                        <input type="text" name="year_pay" class="form-control" id="exampleInputPassword1" >
+                        <label for="exampleInputPassword1">Year Pay <span class="mando-msg">*</span></label>
+                        <input name="year_pay" id="year_pay" class="date-picker"  required=""/>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Name On The Card</label>
-                        <input type="text" class="form-control" id="exampleInputPassword1" >
+                        <label for="exampleInputPassword1">Name On The Card <span class="mando-msg">*</span></label>
+                        <input type="text" required="" class="form-control" id="exampleInputPassword1" >
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Card Number</label>
-                        <input type="number" class="form-control" id="exampleInputPassword1" >
+                        <label for="exampleInputPassword1">Card Number <span class="mando-msg">*</span></label>
+                        <input type="number" required="" class="form-control" id="exampleInputPassword1" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">CCV</label>
                         <input type="number" class="form-control" id="exampleInputPassword1" >
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Amount</label>
-                        <input type="number" name="payment_amount" class="form-control" id="exampleInputPassword1" >
+                        <label for="exampleInputPassword1">Amount <span class="mando-msg">*</span></label>
+                        <input type="number" name="payment_amount" required="" class="form-control" id="exampleInputPassword1" >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1"></label>
                         <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
                         <button type="submit" name="btnView" class="btn btn-primary">View</button>
+
+
                     </div>
                 </form>
+                    </div>
+                    <div class="panel-footer"></div>
+                </div>
+
+              
             </div>
             <div class="col-md-6">
-                
-                 <?php
-                 include './model/DB.php';
+
+                <?php
+                include './model/DB.php';
                 if (isset($_POST['btnSub'])) {
                     $sqlx = " INSERT INTO `cms_payment`
             ( `year_pay`, 
@@ -113,7 +139,7 @@ VALUES ( '" . $_POST['year_pay'] . "',
         '" . $_SESSION['ssn_user']['id'] . "',
         '" . $_POST['payment_amount'] . "'); ";
 
-                    setData($sqlx,TRUE);
+                    setData($sqlx, TRUE);
                     ?>
 
                     <table class="table table-bordered">
@@ -126,9 +152,9 @@ VALUES ( '" . $_POST['year_pay'] . "',
                         </thead>
                         <tbody>
                             <?php
-                            $sqlGet = " SELECT * FROM cms_payment WHERE member_id =  " . $_SESSION['ssn_user']['id'] ;
-                           
-                            
+                            $sqlGet = " SELECT * FROM cms_payment WHERE member_id =  " . $_SESSION['ssn_user']['id'];
+
+
                             $resultx = getData($sqlGet);
                             if ($resultx != FALSE) {
                                 while ($row = mysqli_fetch_assoc($resultx)) {
@@ -189,7 +215,7 @@ VALUES ( '" . $_POST['year_pay'] . "',
                 ?>
 
 
-                
+
             </div>
         </div>
 
@@ -407,12 +433,34 @@ VALUES ( '" . $_POST['year_pay'] . "',
             });
         </script>
         <!-- //here ends scrolling icon -->
-        
+
         <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
 
         <script>
             $(document).ready(function () {
 //                $('#example').DataTable();
+            });
+        </script>
+
+
+
+
+
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+        <link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/base/jquery-ui.css">
+        <script type="text/javascript">
+            $(function () {
+                $('.date-picker').datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    showButtonPanel: true,
+                    dateFormat: 'MM yy',
+                    onClose: function (dateText, inst) {
+                        $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+                    }
+                });
             });
         </script>
     </body>

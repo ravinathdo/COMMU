@@ -1,8 +1,5 @@
 <!--
 author: Thisara
- 
-  
-  
 -->
 <?php session_start(); ?>
 

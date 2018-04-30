@@ -87,6 +87,8 @@ include './model/UserModel.php';
                       
                       
         if (isset($_POST['btnReg'])) {
+            
+            $sms = $_POST['mobileno'];
 
             $sql = " INSERT INTO `cmsdb`.`cms_member`
             (`firstname`,
@@ -126,6 +128,9 @@ VALUES ('" . $_POST['firstname'] . "',
                 case 'VOLUNTEER':
                 $username = 'VOL' . $regNo;
                     break;
+                case 'MANAGER':
+                $username = 'MGR' . $regNo;
+                    break;
 
                 default:
                     break;
@@ -150,12 +155,16 @@ VALUES ( '$username',
         'ACT',
         '$regNo'); ";
 
+            
+            echo $sms;
+           
             setData($sqlUsr, FALSE);
-
             //message SMS sending
             include './model/MESSAGE_LIST.php';
             $sms_1 = $_MEMBER_CREATION . $username;
             sendSMS($_POST['mobileno'], $sms_1);
+            
+           
         }
         ?>
                      
@@ -165,9 +174,6 @@ VALUES ( '$username',
                     <span class="mando-msg">* fields are mandatory</span>
                     <form action="admin_member_registration.php" method="post">
                         <div class="col-md-6">
-
-
-
                             <div class="form-group">
                                 <label for="exampleInputName2"><span class="mando-msg">*</span>First Name</label>
                                 <input type="text" required="" name="firstname" class="form-control" id="exampleInputName2" >
@@ -230,7 +236,7 @@ VALUES ( '$username',
 
                             <div class="form-group">
                                 <label for="exampleInputEmail2">Mobile No</label>
-                                <input type="number"  required="" name="mobileno" class="form-control" id="exampleInputEmail2" placeholder="">
+                                <input type="tel"  required="" name="mobileno" class="form-control" id="exampleInputEmail2" placeholder="">
                             </div>
 
 

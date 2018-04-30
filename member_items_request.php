@@ -1,8 +1,5 @@
 <!--
 author: Thisara
- 
-  
-  
 -->
 <?php session_start(); ?>
 <!DOCTYPE html>
@@ -77,7 +74,12 @@ author: Thisara
         </div>
 
 
-
+   <div class="row">
+            <div class="col-md-12">
+                <h3 style="text-align: center">Member Inventory</h3>
+                   <hr>
+            </div>
+        </div>
 
 
         <div class="row">
@@ -110,53 +112,57 @@ VALUES ('" . $_POST['itemid'] . "',
                 <div id='calendar'></div>
             </div>
 
-           
-            
-            
-            
-            <form action="member_items_request.php" method="post">
-                <div class="col-md-3">
-                                        <span class="mando-msg">* fields are mandatory</span>
 
-                    <div class="form-group">
-                        <label for="exampleInputEmail1"><span class="mando-msg">*</span> Event Title</label>
-                        <input type="text" required="" name="eventname" class="form-control" id="exampleInputEmail1" >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1"><span class="mando-msg">*</span>Item </label>
-                        <select name="itemid" class="form-control" required="">
-                            <option>--select--</option>
-                            <?php
-                            $sqlItems = " SELECT * FROM cms_item  ";
-                            $resultXXX = getData($sqlItems);
-                            if ($resultXXX != FALSE) {
-                                while ($row = mysqli_fetch_assoc($resultXXX)) {
-                                    ?>  <option value="<?= $row['id'] ?>"><?= $row['itemname'] ?></option> <?php
-                                }
-                            }
-                            ?>
-                        </select> 
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1"><span class="mando-msg">*</span> QTY</label>
-                        <input name="qty" type="text"class="form-control" required="" />
-                    </div>
+            <div class="col-md-6">
+               <div class="panel panel-primary">
+        <div class="panel-heading">Inventory Request</div>
+        <div class="panel-body">
+             <form action="member_items_request.php" method="post">
+                        <div class="col-md-6">
+                            <span class="mando-msg">* fields are mandatory</span>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1"><span class="mando-msg">*</span> Event Title</label>
+                                <input type="text" required="" name="eventname" class="form-control" id="exampleInputEmail1" >
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1"><span class="mando-msg">*</span>Item </label>
+                                <select name="itemid" class="form-control" required="">
+                                    <option>--select--</option>
+                                    <?php
+                                    $sqlItems = " SELECT * FROM cms_item  ";
+                                    $resultXXX = getData($sqlItems);
+                                    if ($resultXXX != FALSE) {
+                                        while ($row = mysqli_fetch_assoc($resultXXX)) {
+                                            ?>  <option value="<?= $row['id'] ?>"><?= $row['itemname'] ?></option> <?php
+                                        }
+                                    }
+                                    ?>
+                                </select> 
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1"><span class="mando-msg">*</span> QTY</label>
+                                <input name="qty" type="text"class="form-control" required="" />
+                            </div>
 
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="exampleInputPassword1"><span class="mando-msg">*</span> From Date</label>
-                        <input type="date"  name="fromdate" required="" class="form-control" id="exampleInputEmail1" >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1"><span class="mando-msg">*</span> To Date</label>
-                        <input type="date"  name="todate" required="" class="form-control" id="exampleInputEmail1" >
-                    </div>
-                    <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1"><span class="mando-msg">*</span> From Date</label>
+                                <input type="date"  name="fromdate" required="" class="form-control" id="exampleInputEmail1" >
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1"><span class="mando-msg">*</span> To Date</label>
+                                <input type="date"  name="todate" required="" class="form-control" id="exampleInputEmail1" >
+                            </div>
+                            <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+        </div>
+        <div class="panel-footer"></div>
+      </div>
+               
+            </div>
 
-            
         </div>
 
         <div class="row">
@@ -166,7 +172,7 @@ VALUES ('" . $_POST['itemid'] . "',
             </div>
             <div class="col-md-6">
 
-               
+
 
 
 
@@ -223,7 +229,7 @@ ON cms_inventory.itemid = cms_item.id WHERE cms_inventory.createduser = " . $_SE
 
 
         <!-- footer -->
-       <?php include './_footer.php'; ?>
+        <?php include './_footer.php'; ?>
         <!-- //footer -->
 
 

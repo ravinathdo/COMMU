@@ -159,10 +159,13 @@ author: Thisara
                 if ($resultNews != FALSE) {
                     while ($row = mysqli_fetch_assoc($resultNews)) {
                         ?>
-                        <div class="bg-info" style="margin-bottom: 10px"> <b><?= $row['news_title'] ?></b>
-                            <p > <?= $row['description'] ?> </p>
-                            <p style="font-size: small"> <?= $row['datecreated'] ?> </p>
-                        </div>
+<div class="panel panel-primary">
+        <div class="panel-heading"><?= $row['news_title'] ?></div>
+        <div class="panel-body">
+           <?= $row['description'] ?>
+            <br> <span class="btn btn-default btn-xs"><?= $row['datecreated'] ?></span>
+        </div>
+      </div>
                         <?php
                     }
                 }

@@ -153,12 +153,14 @@ author: Thisara
 		            <!--<p class="sub_para_agile">Ipsum dolor sit amet consectetur adipisicing elit</p>-->
 				</div>
 			</div>
-<!--			<div class="agile_team_grids_top">
+                    
+                    
+			<div class="agile_team_grids_top">
 				<div class="col-md-4 w3_agile_services_grid">
 					<div class="agile_services_grid1 wthree_services_grid1">
 						<h3>Funding</h3>
 						<div class="agile_services_grid1_sub">
-							<p>05 January 2017</p>
+							<p>05 January 2018</p>
 						</div>
 						<h4><span>Fund</span>ing</h4>
 					</div>
@@ -323,7 +325,7 @@ author: Thisara
 					</div>
 				</div>
 				<div class="clearfix"> </div>
-			</div>-->
+			</div>
 		</div>
 	</div>
 <!-- //courses -->

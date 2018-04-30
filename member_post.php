@@ -67,11 +67,18 @@ author: Thisara
         </div>
 
 
-      
+
         <div class="row">
-            <div class="col-md-2"></div>
+            <div class="col-md-12">
+                <h3 style="text-align: center">Member Post</h3>
+                <hr>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3"></div>
             <div class="col-md-6">
-                
+
                 <?php
                 include './model/DB.php';
                 if (isset($_POST['btnSub'])) {
@@ -83,41 +90,41 @@ VALUES ('" . $_POST['posttitle'] . "',
         '" . $_POST['description'] . "',
         '" . $_SESSION['ssn_user']['id'] . "'); ";
 
-                    setData($sql,TRUE);
+                    setData($sql, TRUE);
                 }
                 ?>
 
                 <div class="panel panel-primary">
                     <div class="panel-heading ">Member Post</div>
                     <div class="panel-body">
-                                                               <span class="mando-msg">* fields are mandatory</span>
- 
-                <form action="member_post.php" method="post">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1"><span class="mando-msg">*</span> Post Title</label>
-                        <input name="posttitle" type="text" required="" class="form-control" id="exampleInputEmail1" >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1"><span class="mando-msg">*</span> Description</label>
-                        <textarea name="description" class="form-control" required=""></textarea>
-                    </div>
-                    <!--                    <div class="form-group">
-                                            <label for="exampleInputFile">Photo</label>
-                                            <input type="file" id="exampleInputFile">
-                                            <p class="help-block">Related photo upload here.</p>
-                                        </div>-->
+                        <span class="mando-msg">* fields are mandatory</span>
 
-                    <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
-                </form>
+                        <form action="member_post.php" method="post">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1"><span class="mando-msg">*</span> Post Title</label>
+                                <input name="posttitle" type="text" required="" class="form-control" id="exampleInputEmail1" >
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1"><span class="mando-msg">*</span> Description</label>
+                                <textarea name="description" class="form-control" required=""></textarea>
+                            </div>
+                            <!--                    <div class="form-group">
+                                                    <label for="exampleInputFile">Photo</label>
+                                                    <input type="file" id="exampleInputFile">
+                                                    <p class="help-block">Related photo upload here.</p>
+                                                </div>-->
+
+                            <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
+                        </form>
 
                     </div>
                 </div>
-                
 
-                
+
+
 
             </div>
-            <div class="col-md-4"></div>
+            <div class="col-md-3"></div>
         </div>
 
 
@@ -151,14 +158,14 @@ VALUES ('" . $_POST['posttitle'] . "',
                 if ($resultPost != FALSE) {
                     while ($row = mysqli_fetch_assoc($resultPost)) {
                         /*
-  `id`,
-             `posttitle`,
-             `description`,
-             `like`,
-             `dislike`,
-             `usercreated`,
-             `datecreated`,
-             `status`
+                          `id`,
+                          `posttitle`,
+                          `description`,
+                          `like`,
+                          `dislike`,
+                          `usercreated`,
+                          `datecreated`,
+                          `status`
                          *                          */
                         ?>
                         <tr>
