@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-include 'DB.php';
+//include 'DB.php';
 
 function doLogin() {
     $conn = getDBConnection();

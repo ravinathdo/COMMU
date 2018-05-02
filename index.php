@@ -66,6 +66,7 @@ author: Thisara
     
     <body>
         <?php
+        include './model/DB.php';
         include './model/UserModel.php';
         if (isset($_POST['btnLogin'])) {
 
