@@ -1,11 +1,22 @@
 <!--
 author: Thisara
+ 
+  
+  
 -->
-<?php session_start(); ?>
+<?php
+session_start();
+
+include './model/DB.php';
+
+if ($_SESSION['ssn_user']['role'] != 'ADMIN') {
+    header("Location:index.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Commu | Member</title>
+        <title>Commu | Payment</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -16,17 +27,6 @@ author: Thisara
         <!-- //custom-theme -->
 
         <?php include_once './basecss.php'; ?>
-
-        <!--calander-->
-
-        <style>
-            .ui-datepicker-calendar {
-                display: none;
-            }
-        </style>
-        <!--calander-->
-
-
 
     </head>	
     <body>
@@ -69,158 +69,174 @@ author: Thisara
                 </div>
                 <div class="w3_agile_search">
                     <?php include './_search.php'; ?>
+
                 </div>
             </nav>
         </div>
 
 
-        <div class="row">
-            <div class="col-md-12">
-                <h3 style="text-align: center">Member Fee</h3>
-                <hr>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-5">
 
-
+        <div class="row">
+            <div class="col-md-3">
 
                 <div class="panel panel-primary">
-                    <div class="panel-heading">Member Fee</div>
+                    <div class="panel-heading ">View Member Fee</div>
                     <div class="panel-body">
-                        <form method="post" action="member_fee.php">
+
+                        <form action="admin_member_fee_view.php" method="post" >
                             <span class="mando-msg">* fields are mandatory</span>
+                            <select name="member_id" >
+                                <option>--select--</option>
+                                <?php
+                                $sql = "SELECT * FROM cms_member WHERE role != 'ADMIN'";
+                                $resultm = getData($sql);
+                                if (mysqli_num_rows($resultm) > 0) {
+                                    // output data of each row
+                                    while ($row = mysqli_fetch_assoc($resultm)) {
+                                        ?>
+                                        <option value="<?= $row["id"] ?>"><?= $row["username"] ?></option>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </select>
+
                             <div class="form-group">
                                 <label for="exampleInputPassword1">Year Pay <span class="mando-msg">*</span></label>
                                 <input name="year_pay" id="year_pay" class="date-picker"  required=""/>
                             </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">Name On The Card <span class="mando-msg">*</span></label>
-                                <input type="text" required="" class="form-control" id="exampleInputPassword1" >
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">Card Number <span class="mando-msg">*</span></label>
-                                <input type="number" required="" class="form-control" id="exampleInputPassword1" >
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">CCV</label>
-                                <input type="number" class="form-control" id="exampleInputPassword1" >
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">Amount <span class="mando-msg">*</span></label>
-                                <input type="number" name="payment_amount" required="" class="form-control" id="exampleInputPassword1" >
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword1"></label>
-                                <button type="submit" name="btnSub" class="btn btn-primary">Submit</button>
-
-
-                            </div>
+                            <button type="submit" name="btnFee" class="btn btn-primary">Submit</button>
                         </form>
-
-                        <a href="member_fee.php?btnView=VIEW" class="btn btn-primary">View</a>
-
-
                     </div>
-                    <div class="panel-footer"></div>
                 </div>
 
+            </div>
+            <div class="col-md-9" id="nowPrint">
+
+                <?php if (isset($_POST['btnFee'])) { ?>
+
+
+                    <h3 style="text-align: center">Membership payments <?= $_POST['year_pay'] ?> </h3><br>
+
+                    <table id="example" class="display" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Year-Month</th>
+                                <th>Payment</th>
+                                <th>DateTime</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $sqlx = "SELECT * FROM cms_payment WHERE member_id = '" . $_POST['member_id'] . "'";
+                            $resultm = getData($sqlx);
+                            if (mysqli_num_rows($resultm) > 0) {
+                                // output data of each row
+                                while ($row = mysqli_fetch_assoc($resultm)) {
+                                    ?>
+                                    <tr>
+                                        <td><?= $row["year_pay"] ?></td>
+                                        <td><?= $row["payment_amount"] ?></td>
+                                        <td><?= $row["created_date"] ?></td>
+                                    </tr>
+            <?php
+        }
+    }
+    ?>
+                        </tbody>
+                    </table>
+
+
+                    <a href="#" onclick="PrintElem('nowPrint')">print</a>
+<?php }
+?>
+            </div>
+        </div>
+        <hr>
+
+
+
+
+        <div class="row">
+            <div class="col-md-3">
+
+                <div class="panel panel-danger">
+                    <div class="panel-heading ">Pending Member Fee</div>
+                    <div class="panel-body">
+
+                        <form action="admin_member_fee_view.php" method="post" >
+
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Year Pay <span class="mando-msg">*</span></label>
+                                <input name="year_pay" id="year_pay" class="date-picker"  required=""/>
+                            </div>
+                            <button type="submit" name="btnFeePending" class="btn btn-primary">View</button>
+                        </form>
+                    </div>
+                </div>
 
             </div>
-            <div class="col-md-6">
+            <div class="col-md-9" id="printMe">
 
-                <?php
-                include './model/DB.php';
-                if (isset($_POST['btnSub'])) {
-                    $sqlx = " INSERT INTO `cms_payment`
-            ( `year_pay`, 
-            `member_id`,
-             `payment_amount`
-             )
-VALUES ( '" . $_POST['year_pay'] . "',
-        '" . $_SESSION['ssn_user']['id'] . "',
-        '" . $_POST['payment_amount'] . "'); ";
 
-                    setData($sqlx, TRUE);
-                    ?>
+<?php if (isset($_POST['btnFeePending'])) {
+    ?>      
 
-                    <table class="table table-bordered">
+                    <h3 style="text-align: center">Membership payment pending <?= $_POST['year_pay'] ?> </h3><br>
+                    <table id="example" class="display" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th>Year Pay</th>
-                                <th>Amount</th>
-                                <th></th>
+                                <th>Member ID</th>
+                                <th>Member Name</th>
+                                <th>DateTime</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            $sqlGet = " SELECT * FROM cms_payment WHERE member_id =  " . $_SESSION['ssn_user']['id'];
+    <?php
+    $sqlx = "SELECT * FROM cms_member WHERE role = 'MEMBER' AND
+ id NOT IN (SELECT member_id FROM cms_payment WHERE year_pay =  '" . $_POST['year_pay'] . "') ";
 
+    $_SESSION['sms_sql'] = "SELECT mobileno FROM cms_member WHERE role = 'MEMBER' AND
+ id NOT IN (SELECT member_id FROM cms_payment WHERE year_pay = '" . $_POST['year_pay'] . "') ";
+    $_SESSION['sms_message'] = "Please proceed the " . $_POST['year_pay'] . " membership payment";
 
-                            $resultx = getData($sqlGet);
-                            if ($resultx != FALSE) {
-                                while ($row = mysqli_fetch_assoc($resultx)) {
-                                    ?>
-
+    $resultm = getData($sqlx);
+    if (mysqli_num_rows($resultm) > 0) {
+        // output data of each row
+        while ($row = mysqli_fetch_assoc($resultm)) {
+            ?>
                                     <tr>
-                                        <td><?= $row['year_pay']; ?></td>
-                                        <td><?= $row['payment_amount']; ?></td>
-                                        <td><?= $row['created_date']; ?></td>
+                                        <td><?= $row["username"] ?></td>
+                                        <td><?= $row["firstname"] ?> <?= $row["lastname"] ?></td>
+                                        <td><?= $row["mobileno"] ?></td>
                                     </tr>
-                                    <?php
-                                }
-                            }
-                            ?>
+            <?php
+        }
+        ?>
+                                <tr>
+                                    <td><a href="SMS_bulk.php">Send SMS Reminder</a></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+        <?php
+    }
+    ?>
                         </tbody>
                     </table>
 
-                    <?php
-                }
-                ?>
 
+                    <a href="#" onclick="PrintElem('printMe')">print</a>
 
-
-                <?php
-                if (isset($_GET['btnView'])) {
-                    ?>
-
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Year Pay</th>
-                                <th>Amount</th>
-                                <th>Date Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $sqlVi = " SELECT * FROM cms_payment WHERE member_id =   " . $_SESSION['ssn_user']['id'];
-                            //echo $sqlVi;
-                            $resultx = getData($sqlVi);
-                            if ($resultx != FALSE) {
-                                while ($row = mysqli_fetch_assoc($resultx)) {
-                                    ?>
-
-                                    <tr>
-                                        <td><?= $row['year_pay']; ?></td>
-                                        <td><?= $row['payment_amount']; ?></td>
-                                        <td><?= $row['created_date']; ?></td>
-                                    </tr>
-                                    <?php
-                                }
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                    <?php
-                }
-                ?>
-
+    <?php
+}
+?>
 
 
             </div>
         </div>
+
+
+
 
 
 
@@ -231,7 +247,7 @@ VALUES ( '" . $_POST['year_pay'] . "',
 
 
         <!-- footer -->
-        <?php include './_footer.php'; ?>
+<?php include './_footer.php'; ?>
         <!-- //footer -->
 
 
@@ -306,12 +322,12 @@ VALUES ( '" . $_POST['year_pay'] . "',
         <script type="text/javascript" src="js/dscountdown.min.js"></script>
         <script src="js/demo-1.js"></script>
         <script>
-            jQuery(document).ready(function ($) {
-                $('.demo2').dsCountDown({
-                    endDate: new Date("December 24, 2020 23:59:00"),
-                    theme: 'black'
-                });
-            });
+                    jQuery(document).ready(function ($) {
+                        $('.demo2').dsCountDown({
+                            endDate: new Date("December 24, 2020 23:59:00"),
+                            theme: 'black'
+                        });
+                    });
         </script>
         <!-- //Counter required files -->
 
@@ -322,34 +338,34 @@ VALUES ( '" . $_POST['year_pay'] . "',
         <!-- carousal -->
         <script src="js/slick.js" type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript">
-            $(document).on('ready', function () {
-                $(".center").slick({
-                    dots: true,
-                    infinite: true,
-                    centerMode: true,
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                    responsive: [
-                        {
-                            breakpoint: 768,
-                            settings: {
-                                arrows: true,
-                                centerMode: false,
-                                slidesToShow: 2
-                            }
-                        },
-                        {
-                            breakpoint: 480,
-                            settings: {
-                                arrows: true,
-                                centerMode: false,
-                                centerPadding: '40px',
-                                slidesToShow: 1
-                            }
-                        }
-                    ]
-                });
-            });
+                    $(document).on('ready', function () {
+                        $(".center").slick({
+                            dots: true,
+                            infinite: true,
+                            centerMode: true,
+                            slidesToShow: 2,
+                            slidesToScroll: 2,
+                            responsive: [
+                                {
+                                    breakpoint: 768,
+                                    settings: {
+                                        arrows: true,
+                                        centerMode: false,
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 480,
+                                    settings: {
+                                        arrows: true,
+                                        centerMode: false,
+                                        centerPadding: '40px',
+                                        slidesToShow: 1
+                                    }
+                                }
+                            ]
+                        });
+                    });
         </script>
         <!-- //carousal -->
         <!-- flexisel -->
@@ -439,14 +455,13 @@ VALUES ( '" . $_POST['year_pay'] . "',
 
         <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
 
-        <script>
+
+
+        <script type="text/javascript">
             $(document).ready(function () {
-//                $('#example').DataTable();
+                $('#example').DataTable();
             });
         </script>
-
-
-
 
 
 
@@ -466,5 +481,7 @@ VALUES ( '" . $_POST['year_pay'] . "',
                 });
             });
         </script>
+
+        <script src="js/commu-script.js" type="text/javascript"></script>
     </body>
 </html>

@@ -1,6 +1,6 @@
 /*
 SQLyog Ultimate v8.55 
-MySQL - 5.5.54 : Database - cmsdb
+MySQL - 5.5.5-10.2.7-MariaDB : Database - cmsdb
 *********************************************************************
 */
 
@@ -26,7 +26,7 @@ CREATE TABLE `cms_attendance` (
   `member_id` varchar(10) DEFAULT NULL,
   `attend_datetime` varchar(50) DEFAULT NULL,
   `created_user` int(5) DEFAULT NULL,
-  `created_datetime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_datetime` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `NewIndex1` (`event_name`,`member_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
@@ -46,7 +46,7 @@ CREATE TABLE `cms_election` (
   `enddatetime` varchar(50) DEFAULT NULL,
   `status` varchar(10) DEFAULT NULL,
   `usercreated` int(5) DEFAULT NULL,
-  `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `datecreated` timestamp NOT NULL DEFAULT current_timestamp(),
   `post_title` varchar(50) DEFAULT NULL,
   `winner` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -66,7 +66,7 @@ CREATE TABLE `cms_election_vote` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `electionid` int(5) DEFAULT NULL,
   `memberid` int(5) DEFAULT NULL,
-  `vote` int(5) DEFAULT '0',
+  `vote` int(5) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `FK_cms_election_vote_election` (`electionid`),
   KEY `FK_cms_election_vote_member` (`memberid`),
@@ -104,7 +104,7 @@ CREATE TABLE `cms_inventory` (
   `fromdate` varchar(25) DEFAULT NULL,
   `todate` varchar(25) DEFAULT NULL,
   `createduser` int(5) DEFAULT NULL,
-  `createdtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdtime` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` varchar(10) DEFAULT NULL,
   `qty` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -149,7 +149,7 @@ CREATE TABLE `cms_member` (
   `experticeid` int(5) DEFAULT NULL,
   `permanentaddress` varchar(250) DEFAULT NULL,
   `authstatus` varchar(10) DEFAULT NULL COMMENT 'PND|AUTH|DACT',
-  `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `datecreated` timestamp NOT NULL DEFAULT current_timestamp(),
   `autorizeby` int(5) DEFAULT NULL COMMENT 'cms_user',
   `role` varchar(50) DEFAULT NULL,
   `usercreated` int(5) DEFAULT NULL,
@@ -169,7 +169,7 @@ DROP TABLE IF EXISTS `cms_member_election`;
 CREATE TABLE `cms_member_election` (
   `member_id` int(5) NOT NULL,
   `election_id` int(5) NOT NULL,
-  `createtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createtime` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`member_id`,`election_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -186,7 +186,7 @@ CREATE TABLE `cms_news` (
   `news_title` varchar(50) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
   `usercreated` int(5) DEFAULT NULL COMMENT 'cms_user',
-  `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `datecreated` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` varchar(10) DEFAULT 'ACTIVE' COMMENT 'ACT|DACT',
   PRIMARY KEY (`id`),
   KEY `FK_cms_news_user` (`usercreated`),
@@ -203,16 +203,16 @@ DROP TABLE IF EXISTS `cms_payment`;
 
 CREATE TABLE `cms_payment` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
-  `year_pay` int(5) DEFAULT NULL,
+  `year_pay` varchar(50) DEFAULT NULL,
   `payment_amount` decimal(10,5) DEFAULT NULL,
-  `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `member_id` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 /*Data for the table `cms_payment` */
 
-insert  into `cms_payment`(`id`,`year_pay`,`payment_amount`,`created_date`,`member_id`) values (1,1,'99999.99999','2017-11-22 22:48:25',1),(2,2017,'3009.00000','2017-11-23 14:51:57',6),(3,2018,'2500.00000','2018-04-18 22:06:48',6);
+insert  into `cms_payment`(`id`,`year_pay`,`payment_amount`,`created_date`,`member_id`) values (1,'1','99999.99999','2017-11-22 22:48:25',1),(2,'2017','3009.00000','2017-11-23 14:51:57',6),(3,'2018','2500.00000','2018-04-18 22:06:48',6),(4,'May 2018','2500.00000','2018-05-03 17:11:29',11);
 
 /*Table structure for table `cms_post` */
 
@@ -222,10 +222,10 @@ CREATE TABLE `cms_post` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `posttitle` varchar(250) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
-  `plike` int(5) DEFAULT '0',
-  `dislike` int(5) DEFAULT '0',
+  `plike` int(5) DEFAULT 0,
+  `dislike` int(5) DEFAULT 0,
   `usercreated` int(5) DEFAULT NULL COMMENT 'cms_member',
-  `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `datecreated` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` varchar(10) DEFAULT 'PENDING' COMMENT 'PENDING|ACTIVE|CLOSE',
   PRIMARY KEY (`id`),
   KEY `FK_cms_post_member` (`usercreated`),
@@ -244,7 +244,7 @@ CREATE TABLE `cms_post_vote` (
   `postid` int(5) NOT NULL,
   `memberid` int(5) NOT NULL,
   `type` varchar(30) DEFAULT NULL,
-  `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `datecreated` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`postid`,`memberid`),
   KEY `FK_cms_post_vote_member` (`memberid`),
   CONSTRAINT `FK_cms_post_vote_member` FOREIGN KEY (`memberid`) REFERENCES `cms_member` (`id`),
@@ -262,10 +262,10 @@ DROP TABLE IF EXISTS `cms_training`;
 CREATE TABLE `cms_training` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
-  `description` text,
+  `description` text DEFAULT NULL,
   `document` varchar(200) DEFAULT NULL,
   `status` varchar(10) DEFAULT 'ACTIVE',
-  `created_datetime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_datetime` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
@@ -280,9 +280,9 @@ DROP TABLE IF EXISTS `cms_user`;
 CREATE TABLE `cms_user` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `username` varchar(100) DEFAULT NULL,
-  `password` text,
+  `password` text DEFAULT NULL,
   `role` varchar(25) DEFAULT NULL COMMENT 'ADMIN|TREASURY ',
-  `datecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `datecreated` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` varchar(10) DEFAULT 'ACT' COMMENT 'ACT|DACT',
   `member_id` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -300,7 +300,7 @@ CREATE TABLE `ozekimessagein` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sender` varchar(30) DEFAULT NULL,
   `receiver` varchar(30) DEFAULT NULL,
-  `msg` text,
+  `msg` text DEFAULT NULL,
   `senttime` varchar(100) DEFAULT NULL,
   `receivedtime` varchar(100) DEFAULT NULL,
   `operator` varchar(100) DEFAULT NULL,
@@ -320,7 +320,7 @@ CREATE TABLE `ozekimessageout` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sender` varchar(30) DEFAULT NULL,
   `receiver` varchar(30) DEFAULT NULL,
-  `msg` text,
+  `msg` text DEFAULT NULL,
   `senttime` varchar(100) DEFAULT NULL,
   `receivedtime` varchar(100) DEFAULT NULL,
   `reference` varchar(100) DEFAULT NULL,
