@@ -9,6 +9,8 @@ if($_SESSION['ssn_user']['role'] != 'ADMIN'){
     header("Location:index.php");
 }
 
+
+
 ?>
 
 <!DOCTYPE html>

@@ -1,5 +1,5 @@
  <ul class="nav navbar-nav">
-     <li class="active"><a href="home.php"><span data-hover="Home">Home</span></a></li>
+     <li ><a href="home.php"><span data-hover="Home">Home</span></a></li>
      <li><a href="admin_member_registration.php"><span data-hover="New Reg.">New Reg.</span></a></li>
                             <li><a href="admin_news.php"><span data-hover="News">News</span></a></li>
                             <li><a href="admin_post.php"><span data-hover="Post">Post</span></a></li>

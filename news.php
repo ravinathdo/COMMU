@@ -4,7 +4,9 @@ author: Thisara
   
   
 -->
-<?php session_start(); ?>
+<?php session_start(); 
+   include './model/DB.php';
+   ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>

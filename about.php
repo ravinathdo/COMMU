@@ -141,18 +141,43 @@ author: Thisara
 
 
 
-       <!-- courses -->
-	<div class="team">
-		<div class="container"> 
-			<div class="w3_agile_team_grid">
-				<div class="w3_agile_team_grid_left">
-					<h3 class="w3l_header w3_agileits_header">About <span>US</span></h3>
-		            <p class="sub_para_agile">Ipsum dolor sit amet consectetur adipisicing elit</p>
-				</div>
-			</div>
-		</div>
-	</div>
-<!-- //courses -->
+        <!-- courses -->
+        <div class="team">
+            <div class="container"> 
+                <div class="w3_agile_team_grid">
+                    <div class="w3_agile_team_grid_left">
+                        <h3 class="w3l_header w3_agileits_header">About <span>US</span></h3>
+                        <p class="sub_para_agile">
+                            The Sri Lanka Red Cross Society has operated since 1936, first as a branch of the British Red Cross and then from 1949 to 1971 as the Ceylon Red Cross Society. It was recognized by the ICRC and admitted into the League of Red Cross Societies (now the International Federation of Red Cross & Red Crescent Societies) in 1952. The Ceylon Red Cross Society was renamed as Sri Lanka Red Cross Society in 1972. The society was recognized by Royal Charter in 1951 and as a charitable organization also in the same year by a gazette notification of the Finance Ministry. It was also registered under the Social Service Act 33 of 1980.
+
+                            In 2002, SLRCS adopted a new constitution and organizational changes. The current management structure includes a Director General, three Deputy Director Generals for HR, finance and operations, and directors/executive directors of administration, finance, disaster management, communication, human resource development, and organizational development.
+
+                            The SLRCS covers all 25 administrative Districts of the country and has 25 branches.
+
+                            SLRCS Intention is to ensure that all activities, projects and programmes planned and implemented in the mid to long term by the various components of the Red Cross and Red Crescent Movement are carried out in full respect of the spirit of the Seville Agreement, and the 2010 Strategy for the Movement. A Tripartite Memorandum of Understanding signed in March 2003 between the SLRCS, the Federation and the ICRC, acts as a guide in all its partnership formations.
+
+                            Movement support of the SLRCS has been strengthened by the conclusion of an International Federation Status Agreement with the GoSL in 2004.
+
+                            The total membership 100,000. The total number of active volunteers 6,500
+
+                        </p><br>
+
+                        <h3 class="w3l_header w3_agileits_header">Vision <span></span></h3>
+
+                        <p class="sub_para_agile">
+                            Safer, resilient and socially inclusive communities through improving lifestyles and changing mind-sets.
+                        </p>
+                        <h3 class="w3l_header w3_agileits_header">Mission <span></span></h3>
+
+                        <p class="sub_para_agile">
+                           Reduce risk, build capacity and promote principles and values by mobilizing resources, creating universal access to services through volunteerism and partnership
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- //courses -->
 
 
 
