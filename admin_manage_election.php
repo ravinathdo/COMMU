@@ -159,11 +159,6 @@ ORDER BY cms_election_vote.vote DESC  ";
 
 
 
-
-
-
-
-
         <!-- footer -->
         <?php include './_footer.php'; ?>
         <!-- //footer -->
