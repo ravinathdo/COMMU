@@ -6,6 +6,7 @@ if($_SESSION['ssn_user']['role'] != 'ADMIN'){
     header("Location:index.php");
 }
 
+include './model/DB.php';
 include './model/UserModel.php';
 
 ?>
@@ -208,7 +209,7 @@ VALUES ( '$username',
                             <div class="form-group">
                                 <label for="exampleInputName2"><span class="mando-msg">*</span>Expert In</label>
                                 <select name="experticeid" class="form-control" required=""> 
-                                    <option>--select--</option>
+                                    <option value="">--select--</option>
                                     <?php
 
                                     $sql = " SELECT * FROM cms_expertise  ";
