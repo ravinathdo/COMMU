@@ -86,7 +86,7 @@ author: Thisara
                  include './model/DB.php';
                 if (isset($_POST['btnReg'])) {
 
-                    $sql = " INSERT INTO `cmsdb`.`cms_member`
+                    $sql = " INSERT INTO `cms_member`
             (`firstname`,
              `lastname`,
              `nic`,
@@ -120,7 +120,7 @@ VALUES ('" . $_POST['firstname'] . "',
 
 //new user creted
                     /*
-                      $sqlUsr = " INSERT INTO `cmsdb`.`cms_user`
+                      $sqlUsr = " INSERT INTO `cms_user`
                       (`username`,
                       `password`,
                       `role`,
@@ -148,7 +148,7 @@ if(isset($_GET['action'])){
   setUpdate($sql, TRUE);
   
   //user creation 
-   $sqlUsr = " INSERT INTO `cmsdb`.`cms_user`
+   $sqlUsr = " INSERT INTO `cms_user`
             (`username`,
              `password`,
              `role`,

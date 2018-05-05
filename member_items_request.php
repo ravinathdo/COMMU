@@ -85,7 +85,7 @@ author: Thisara
         <div class="row">
             <?php
             if (isset($_POST['btnSub'])) {
-                $sql = " INSERT INTO `cmsdb`.`cms_inventory`
+                $sql = " INSERT INTO `cms_inventory`
             (`itemid`,
              `memberid`,
              `eventname`,

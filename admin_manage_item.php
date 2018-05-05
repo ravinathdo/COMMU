@@ -117,7 +117,7 @@ if($_SESSION['ssn_user']['role'] != 'ADMIN'){
                 <?php
                 include './model/DB.php';
                 if (isset($_POST['btnSub'])) {
-                    $sql = " INSERT INTO `cmsdb`.`cms_item`
+                    $sql = " INSERT INTO `cms_item`
             (`itemname`,
              `qyt`)
 VALUES ('" . $_POST['itemname'] . "',

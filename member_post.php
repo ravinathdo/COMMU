@@ -82,7 +82,7 @@ author: Thisara
                 <?php
                 include './model/DB.php';
                 if (isset($_POST['btnSub'])) {
-                    $sql = " INSERT INTO `cmsdb`.`cms_post`
+                    $sql = " INSERT INTO `cms_post`
             (`posttitle`,
              `description`,
              `usercreated`)

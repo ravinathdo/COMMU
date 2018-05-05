@@ -8,16 +8,17 @@
 
 function getDBConnection() {
 
+  /**/
     $servername = "localhost";
     $username = "root";
     $password = "123";
-    $db = "cmsdb";
+    $db = "cmsdb"; 
     /*
       $servername = "localhost";
       $username = "commulkc_user";
       $password = "password#1";
       $db = "commulkc_cmsdb";
-     */
+    */
 
 // Create connection
     $conn = mysqli_connect($servername, $username, $password, $db);

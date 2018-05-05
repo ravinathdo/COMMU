@@ -146,7 +146,7 @@ author: Thisara
                 <?php
                 if (isset($_POST['btnReg'])) {
 
-                    $sql = " INSERT INTO `cmsdb`.`cms_member`
+                    $sql = " INSERT INTO `cms_member`
             (`firstname`,
              `lastname`,
              `nic`,

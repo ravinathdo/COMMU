@@ -83,7 +83,7 @@ if($_SESSION['ssn_user']['role'] != 'ADMIN'){
                 include './model/MESSAGE_LIST.php';
                 
                 if (isset($_POST['btnSub'])) {
-                    $sql = " INSERT INTO `cmsdb`.`cms_post`
+                    $sql = " INSERT INTO `cms_post`
             (`posttitle`,
              `description`,
              `usercreated`)
@@ -92,7 +92,7 @@ VALUES ('" . $_POST['posttitle'] . "',
         '" . $_SESSION['ssn_user']['id'] . "'); ";
 
                     setData($sql,TRUE);
-                     $sms = $_POST_CREATION_SMS.$_POST['posttitle'];
+                     $sms = $_POST['posttitle'];
                     sendSMStoAll($sms);
                 }
                 ?>

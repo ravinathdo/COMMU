@@ -91,7 +91,7 @@ include './model/UserModel.php';
             
             $sms = $_POST['mobileno'];
 
-            $sql = " INSERT INTO `cmsdb`.`cms_member`
+            $sql = " INSERT INTO `cms_member`
             (`firstname`,
              `lastname`,
              `nic`,
@@ -144,7 +144,7 @@ VALUES ('" . $_POST['firstname'] . "',
 
             //new user creted
 
-            $sqlUsr = " INSERT INTO `cmsdb`.`cms_user`
+            $sqlUsr = " INSERT INTO `cms_user`
             (`username`,
              `password`,
              `role`,
