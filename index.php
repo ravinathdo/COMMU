@@ -28,7 +28,7 @@ author: Thisara
 
 
     <head>
-        <title>Commu V2</title>
+        <title>Commu-V2</title>
         <!-- custom-theme -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
