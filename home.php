@@ -54,7 +54,7 @@ session_start();
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <h1><a class="navbar-brand" href="index.html"><span>C</span>OMMU</a></h1>
+                    <h1><a class="navbar-brand" href="home.php"><span>C</span>OMMU</a></h1>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">

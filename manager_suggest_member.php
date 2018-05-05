@@ -92,7 +92,11 @@ author: Thisara
 
                     <div class="form-group">
                         <label for="exampleInputEmail2">Email</label>
-                        <input type="text" name="email" class="form-control" id="exampleInputEmail2" placeholder="">
+                        <input type="email" name="email" class="form-control" id="exampleInputEmail2" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">Mobile Number</label>
+                        <input type="text" name="mobileno" class="form-control" id="exampleInputEmail2" placeholder="+94">
                     </div>
 
 
@@ -147,6 +151,7 @@ author: Thisara
              `lastname`,
              `nic`,
              `email`,
+             `mobileno`,
              `currentaddress`,
              `experticeid`,
              `permanentaddress`,
@@ -157,6 +162,7 @@ VALUES ('" . $_POST['firstname'] . "',
         '" . $_POST['lastname'] . "',
         '" . $_POST['nic'] . "',
         '" . $_POST['email'] . "',
+        '" . $_POST['mobileno'] . "',
         '" . $_POST['currentaddress'] . "',
         '" . $_POST['experticeid'] . "',
         '" . $_POST['permanentaddress'] . "',

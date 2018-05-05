@@ -1,7 +1,15 @@
 <!--
 author: Thisara
+ 
+  
+  
 -->
-<?php session_start(); ?>
+<?php session_start();
+
+if($_SESSION['ssn_user']['role'] != 'ADMIN'){
+    header("Location:index.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -53,11 +61,12 @@ author: Thisara
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
-                    <?php include './_menu.php'; ?>
+                    <?php include './_menu.php';?>
 
                 </div>
                 <div class="w3_agile_search">
-                    
+                                      <?php include './_search.php';?>
+
                 </div>
             </nav>
         </div>
@@ -65,100 +74,97 @@ author: Thisara
 
 
         <div class="row">
-            <div class="col-md-3"> </div>
-            <div class="col-md-6">
-                <h2>Election Details</h2>
-                <hr>
-                <?php
-                include './model/DB.php';
-                $electionTitle = $_GET['election'];
-                $eid = $_GET['eid'];
-                $post_title = $_GET['post_title'];
-                echo '<h1> ' . $electionTitle . '</h1>';
-                echo '<h2> ' . $post_title . '</h2>';
-                ?>
-
-
-
-
-
-                <?php
-                //is  member voted 
-                $VT = FALSE;
-                $sqlMemVote = " SELECT * FROM cms_member_election WHERE member_id = " . $_SESSION['ssn_user']['id'] . " AND election_id = $eid ";
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
                 
-                $resultVote = getData($sqlMemVote);
-                if ($resultVote != FALSE) {
-                    while ($row = mysqli_fetch_assoc($resultVote)) {
-                        $VT = TRUE;
-                    }
-                }
-
-                if ($VT) {
-                    echo '<p style="color: red">You Already Vote On this</p>';
-                } else {
-                    //set member vote 
-                    //get member vote
-
-
-                    if (isset($_GET['action'])) {
-
-                        $v = $_GET['vote'] + 1;
-                        $sqlUpMV = "UPDATE cms_election_vote SET vote = $v WHERE id = '" . $_GET['id'] . "' ";
-                        //echo $sqlUpMV;
-                        setUpdate($sqlUpMV, FALSE);
-                        $sqlIn = " INSERT INTO `cms_member_election`
-            (`member_id`,
-             `election_id`)
-VALUES ('" . $_SESSION['ssn_user']['id'] . "',
-        '" . $eid . "'); ";
-
-                        setData($sqlIn, TRUE);
-                    }
-                }
-                ?>
+           <?php 
+           include './model/DB.php';
+           function setTraining($trn_title,$trn_description,$docName) {
+                $sql = "INSERT INTO cms_training
+            (`title`,
+             `description`,
+             `document`)
+VALUES ('$trn_title',
+        '$trn_description',
+        '$docName');";
+              
+                setData($sql, TRUE);
+                
+           }
+           ?>     
+                
+                
+                
+               <?php
+$target_dir = "uploads/";
+$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+$uploadOk = 1;
 
 
-                <table id="example" class="display" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Member ID</th>
-                            <th>Name</th>
-                            <th>Votes</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-//get member list
-                        $sqlM = " SELECT cms_election_vote.*,cms_member.username,cms_member.firstname,cms_member.lastname FROM cms_election_vote
-INNER JOIN cms_member
-ON cms_election_vote.memberid = cms_member.id
-WHERE electionid =  " . $eid;
 
-                        $resultx = getData($sqlM);
-                        if ($resultx != FALSE) {
-                            while ($row = mysqli_fetch_assoc($resultx)) {
-                                ?>
 
-                                <tr>
-                                    <td><?= $row['username']; ?></td>
-                                    <td><?= $row['firstname']; ?> <?= $row['lastname']; ?></td>
-                                    <td><?= $row['vote']; ?></td>
-                                    <td><?php if (!$VT) { ?>
-                                            <a href="mamber_voting.php?eid=<?= $eid ?>&username=<?= $row['username']; ?>&post_title=<?= $post_title ?>&election=<?= $electionTitle ?>&vote=<?= $row['vote'] ?>&id=<?= $row['id'] ?>&action=VOTE">Set Vinner</a></td>
-                                    <?php } ?>
-                                </tr>
-                                <?php
-                            }
-                        }
-                        ?>
-                    </tbody>
-                </table>
 
+$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+// Check if image file is a actual image or fake image
+if(isset($_POST["submit"])) {
+    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+    
+    
+
+    
+    if($check !== false) {
+        echo "File is an image - " . $check["mime"] . ".";
+        $uploadOk = 1;
+    } else {
+        echo "File is not an image.";
+        $uploadOk = 0;
+    }
+}
+// Check if file already exists
+if (file_exists($target_file)) {
+    echo "Sorry, file already exists.";
+    $uploadOk = 0;
+}
+// Check file size
+if ($_FILES["fileToUpload"]["size"] > 500000) {
+    echo "Sorry, your file is too large.";
+    $uploadOk = 0;
+}
+// Allow certain file formats
+if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+&& $imageFileType != "gif" && $imageFileType != "mp4" && $imageFileType != "docx" && $imageFileType != "pdf" ) {
+    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+    $uploadOk = 0;
+}
+// Check if $uploadOk is set to 0 by an error
+if ($uploadOk == 0) {
+    echo "Sorry, your file was not uploaded.";
+// if everything is ok, try to upload file
+} else {
+    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+       // echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+        
+        
+        //collect input
+        $trn_title = $_POST["trn_title"];
+        $trn_description = $_POST['trn_description'];
+        $docName = basename( $_FILES["fileToUpload"]["name"]);
+        
+        //set data to database
+        setTraining($trn_title, $trn_description, $docName);
+        
+        
+    } else {
+        echo "Sorry, there was an error uploading your file.";
+    }
+}
+?>
             </div>
-            <div class="col-md-3"> </div>
+            <div class="col-md-2"></div>
         </div>
+        
+        
+            
 
 
 
@@ -169,7 +175,68 @@ WHERE electionid =  " . $eid;
 
 
         <!-- footer -->
-         <?php include './_footer.php'; ?>
+        <div class="footer_agile_w3ls">
+            <div class="container">
+                <div class="agileits_w3layouts_footer_grids">
+                    <div class="col-md-3 footer-w3-agileits">
+                        <h3>Training Grounds</h3>
+                        <ul>
+                            <li>Etiam quis placerat</li>
+                            <li>the printing</li>
+                            <li>unknown printer</li>
+                            <li>Lorem Ipsum</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 footer-agileits">
+                        <h3>Specialized</h3>
+                        <ul>
+                            <li>the printing</li>
+                            <li>Etiam quis placerat</li>
+                            <li>Lorem Ipsum</li>
+                            <li>unknown printer</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 footer-wthree">
+                        <h3>Partners</h3>
+                        <ul>
+                            <li>unknown printer</li>
+                            <li>Lorem Ipsum</li>
+                            <li>the printing</li>
+                            <li>Etiam quis placerat</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-3 footer-agileits-w3layouts">
+                        <h3>Our Links</h3>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="events.html">Events</a></li>
+                            <li><a href="mail.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+
+                </div>
+                <div class="agileits_w3layouts_logo logo2">
+                    <h2><a href="index.html">Funding</a></h2>
+                    <div class="agileits-social">
+                        <ul>
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-rss"></i></a></li>
+                            <li><a href="#"><i class="fa fa-vk"></i></a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="wthree_copy_right">
+            <div class="container">
+                <p>© 2017 All rights reserved | Design by COMMU</p>
+            </div>
+        </div>
         <!-- //footer -->
 
 
@@ -374,12 +441,12 @@ WHERE electionid =  " . $eid;
             });
         </script>
         <!-- //here ends scrolling icon -->
-
+        
         <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
 
         <script>
             $(document).ready(function () {
-                $('#example').DataTable();
+//                $('#example').DataTable();
             });
         </script>
     </body>

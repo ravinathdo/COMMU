@@ -237,7 +237,7 @@ VALUES ( '$username',
 
                             <div class="form-group">
                                 <label for="exampleInputEmail2">Mobile No</label>
-                                <input type="tel"  required="" name="mobileno" class="form-control" id="exampleInputEmail2" placeholder="">
+                                <input type="tel"  required="" name="mobileno"  class="form-control" id="exampleInputEmail2" placeholder="+94">
                             </div>
 
 
@@ -266,6 +266,7 @@ VALUES ( '$username',
                     <th>Member ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
+                    <th>Role</th>
                     <th>NIC</th>
                     <th>Status</th>
                     <th>Registered Date</th>
@@ -276,6 +277,7 @@ VALUES ( '$username',
                     <th>Member ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
+                    <th>Role</th>
                     <th>NIC</th>
                     <th>Status</th>
                     <th>Registered Date</th>
@@ -295,10 +297,11 @@ if ($resultx != FALSE) {
                             <td><?= $row['username'] ?></td>
                             <td><?= $row['firstname'] ?></td>
                             <td><?= $row['lastname'] ?></td>
+                            <td><?= $row['role'] ?></td>
                             <td><?= $row['nic'] ?></td>
                             <td><?php if ($row['authstatus'] == 'PENDING') {
                     ?> 
-                                    <a href="admin_authorization_member.php?mid=<?= $row['id'] ?>&action=AUTHORIZED&username=<?= $row['username'] ?>" class="btn btn-warning"> Pending Approval </a>
+                                    <a href="admin_authorization_member.php?mid=<?= $row['id'] ?>&action=AUTHORIZED&username=<?= $row['username'] ?>&$mobileno=" class="btn btn-warning"> Pending Approval </a>
                                 <?php } else {
                                     ?>
                                     <span class="btn btn-success btn-xs">AUTHORIZED</span>

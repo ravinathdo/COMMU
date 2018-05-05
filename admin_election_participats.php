@@ -130,7 +130,7 @@ WHERE electionid =  " . $eid;
                                     <td><?= $row['username']; ?></td>
                                     <td><?= $row['firstname']; ?> <?= $row['lastname']; ?></td>
                                     <td><?= $row['vote']; ?></td>
-                                    <td><a href="admin_close_election.php?eid=<?= $eid ?>&username=<?= $row['username']; ?>&post_title=<?= $row['post_title'] ?>">Set Vinner</a></td>
+                                    <td><a href="admin_close_election.php?eid=<?= $eid ?>&username=<?= $row['username']; ?>&post_title=<?= $_GET['post_title'] ?>">Set Vinner</a></td>
                                 </tr>
                                 <?php
                             }

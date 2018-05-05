@@ -115,7 +115,7 @@ author: Thisara
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <h1><a class="navbar-brand" href="index.html"><span>C</span>OMMU v1</a></h1>
+                    <h1><a class="navbar-brand" href="index.php"><span>C</span>OMMU v1</a></h1>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
@@ -151,7 +151,7 @@ author: Thisara
                         <div class = "header_contact_details_agile"><i class = "fa fa-envelope-o" aria-hidden = "true"></i>
                             <div class = "w3l_header_contact_details_agile">
                                 <div class = "header-contact-detail-title"><?= $lang['SEND_US_A_MESSAGE'] ?></div>
-                                <a href = "mailto:info@commu.com">info@commu.com</a>
+                                <a href = "mailto:info@commu.com">info@commulk.com</a>
                             </div>
                         </div>
                     </li>
